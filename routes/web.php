@@ -106,15 +106,33 @@ Route::post('/activate-employee', [regValidation::class, 'activateEmployee'])->n
 Route::get('/dashboards/dbHealthWorker', [regValidation::class, 'dashboardHW']);
 Route::get('dashboards/healthWorkerDb/dailyServiceRecord', [regValidation::class, 'dailyServiceRecord']);
 Route::get('dashboards/healthWorkerDb/individualClientReport', [regValidation::class, 'indiClientReport']);
+
 Route::get('dashboards/healthWorkerDb/optDeworming', [regValidation::class, 'optDeworming']);
+Route::post('inputFirstOpt', [regValidation::class, 'inputFirstOpt'])->name('regValidation.inputFirstOpt');
+Route::post('/update-optSec/{opt_id}', [regValidation::class, 'updateSecOpt']);
+Route::post('/edit-optForm/{opt_id}', [regValidation::class, 'updateOptForm']);
+Route::post('/update-opt-status', [regValidation::class, 'updateOptStatus']);
+Route::get('dashboards/healthWorkerDb/optFullRecord', [regValidation::class, 'optFullRecord']);
+
+
 Route::get('dashboards/healthWorkerDb/riskAssessment', [regValidation::class, 'riskAssessment']);
 Route::get('dashboards/healthWorkerDb/dstb', [regValidation::class, 'dstb']);
 Route::get('dashboards/healthWorkerDb/familyPlanning', [regValidation::class, 'familyPlanning']);
 Route::get('dashboards/healthWorkerDb/rhu', [regValidation::class, 'rhu']);
+Route::get('dashboards/healthWorkerDb/destrict', [regValidation::class, 'destrict']);
 Route::get('dashboards/healthWorkerDb/dengue', [regValidation::class, 'dengue']);
+Route::get('dashboards/healthWorkerDb/maternal', [regValidation::class, 'maternal']);
+Route::get('dashboards/healthWorkerDb/immunization', [regValidation::class, 'immunization']);
 
+Route::get('dashboards/healthWorkerDb/dessegragation', [regValidation::class, 'dessegragation']);
+Route::get('/api/residents-by-purok', [regValidation::class, 'fetchResidentsAge']);
 
 Route::get('dashboards/healthWorkerDb/medicine', [regValidation::class, 'medicineRecord']);
+Route::post('inputMedicine', [regValidation::class, 'inputMedicine'])->name('regValidation.inputMedicine');
+Route::post('/update-medicine/{med_id}', [regValidation::class, 'updateMedicine']);
+Route::post('/update-med-status', [regValidation::class, 'updateMedStatus']);
+Route::post('/update-medOut-status', [regValidation::class, 'updateMedStatus']);
+
 
 //FOR CAPTAIN
 Route::get('/dashboards/dbBrgyCap', [regValidation::class, 'dashboardCap']);

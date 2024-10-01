@@ -136,7 +136,7 @@
 <body>
 
   <!-- ======= Header ======= -->
-    @include('layouts.headerHealthWorkers')
+  @include('layouts.headerHealthWorkers')
   <!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
@@ -154,8 +154,8 @@
     </div><!-- End Page Title -->
     
     <div class="column mb-3 pName">
-        <label for="inputPatient" class="form-label">Patient Name</label>
-        <select id="inputPatient" class="form-select pNames" name="patient">
+        <label for="searchPatient" class="form-label">Name</label>
+        <select id="searchPatient" class="form-select pNames" name="searchPatient">
             <option selected disabled>Choose...</option>
             <option value="1">John Doe</option>
             <option value="2">Jane Smith</option>
@@ -238,7 +238,7 @@
                             
                             <div class="column mb-3" style="display: flex; flex-direction: column;">
                                 <label for="inputPatient" class="form-label">Patient</label>
-                                <select id="inputPatient" class="form-select" name="patient">
+                                <select id="inputPatient" class="form-select pNames" name="inputPatient">
                                     <option selected disabled>Choose...</option>
                                     <option value="1">John Doe</option>
                                     <option value="2">Jane Smith</option>
@@ -351,13 +351,29 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    //SEARCH PATIENT SELECT
+    $(document).ready(function() {
+        $('#searchPatient').select2({
+            placeholder: "Choose...",
+            allowClear: false
+        });
+
+        // Initialize Select2 on modal show
+        $('#ExtralargeModal').on('shown.bs.modal', function () {
+            $('#searchPatient').select2({
+                dropdownParent: $('#ExtralargeModal')
+            });
+        });
+    });
+
+    //INPUT PATIENT SELECT
     $(document).ready(function() {
         $('#inputPatient').select2({
             placeholder: "Choose...",
-            allowClear: true
+            allowClear: false
         });
 
         // Initialize Select2 on modal show
@@ -367,6 +383,9 @@
             });
         });
     });
+
+
+
 </script>
 
 

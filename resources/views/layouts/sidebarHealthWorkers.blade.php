@@ -69,7 +69,7 @@
                 </a>
             </li>
             <li>
-                <a href="components-cards.html">
+              <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/destrict') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@destrict') }}">
                     <i class="bi bi-circle"></i><span>Referred District</span>
                 </a>
             </li>
@@ -85,23 +85,23 @@
       </li>
   
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/captainDb/dashboardCapCert') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dashboardCapCert') }}">
+        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/immunization') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@immunization') }}">
           <i class="bi bi-journal-text"></i>
           <span>Immunization</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/captainDb/dashboardCapBusiness') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dashboardCapBusiness') }}">
+        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/maternal') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@maternal') }}">
           <i class="bi bi-file-richtext"></i>
-          <span>Prenatal/Postnatal</span>
+          <span>Maternal Health Record</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/captainDb/dashboardCapClearance') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dashboardCapClearance') }}">
+        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/dessegragation') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dessegragation') }}">
           <i class="bi bi-card-list"></i>
-          <span>Dessegragation of Sex & Age</span>
+          <span>Dissagragation of Sex & Age</span>
         </a>
       </li>
   

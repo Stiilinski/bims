@@ -9,27 +9,54 @@
         justify-content: space-between;
     }
 
-    .form-control {
-        width: 450px;
+    .inputGroupContainer{
+        width: 100%;
+        border: #ccc 1px solid;
+        border-radius: 0.375rem;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 10px;
+    }
+
+    .titleCaseFinding {
+        width: 100%;
+        border-bottom: #ccc 1px solid;
+        padding: 10px;
+        background-color: #acabab
+    }
+
+    .inputArea {
+        padding: 10px;
     }
 
     .modal-body {
         display: flex;
-        flex-direction: column
+        flex-direction: column;
+        gap: 10px;
     }
 
     .personalInfo {
         display: flex;
         justify-content: space-evenly;
+        width: 100%;
     }
 
     .inputGroup {
         display: flex;
-        justify-content: space-evenly;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .form-control.selectize-control {
+        width: 84%;
     }
 
     .grpField {
-        width: 150px!important;
+        width: 100%!important;
+    }
+
+    .grpField2 {
+        width: 100%!important;
     }
 
     .smokers {
@@ -42,14 +69,6 @@
         width: 100%;
     }
 
-    .smokersCon {
-    
-    }
-
-    .grpField2 {
-        width: 100%!important;
-    }
-
     .inputGroup2 {
         display: flex;
         width: 100%!important;
@@ -57,6 +76,14 @@
         justify-content: space-between;
         align-items: center;
         
+    }
+    .inputField1, .inputField2 {
+       width: 100%;
+    }
+
+    .inputField3 {
+        display: flex;
+        flex-direction: column;
     }
 
     .medicines {
@@ -93,7 +120,7 @@
     <div class="pagetitle">
         <h1>Daily Service Record</h1>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-primary">View Full Record</button>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">New Record</button>  
         </div>
     </div><!-- End Page Title -->
@@ -114,15 +141,7 @@
                     <th scope="col">Age</th>
                     <th scope="col">Sex</th>
                     <th scope="col">Purok</th>
-                    <th scope="col">BP</th>
-                    <th scope="col">Temp</th>
-                    <th scope="col">HT</th>
-                    <th scope="col">WT</th>
-                    <th scope="col">Complaints</th>
-                    <th scope="col">Smoker</th>
-                    <th scope="col">Alcohol</th>
-                    <th scope="col">Medicine Given</th>
-                    <th scope="col">Patient's Signature</th>
+                    <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -144,178 +163,180 @@
             <form> <!-- Horizontal Form -->
             @csrf
                 <div class="modal-body">
-                    <div class="personalInfo">
-                        <div class="inputField1"> 
-                            <div class="column mb-3">
-                                <label for="inputDate" class="col-sm-5 col-form-label">Date Visit</label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="inputDate" name="dateVisit">
+
+                    <div class="inputGroupContainer">
+                        <div class="titleCaseFinding">
+                            <span>Patient Information</span>
+                        </div>
+                        <div class="inputArea">
+                            <div class="personalInfo">
+                                <div class="inputField1">
+                                    <div class="column mb-3">
+                                        <label for="inputDate" class="col-sm-5 col-form-label">Date Visit</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" id="inputDate" name="dateVisit">
+                                        </div>
+                                    </div>
+                                    <x-resident-select />
                                 </div>
-                            </div>
-                            <div class="column mb-3">
-                                <label for="inputFname" class="col-sm-5 col-form-label">First Name</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputFname" name="fname">
-                                </div>
-                            </div>
-                            <div class="column mb-3">
-                                <label for="inputMname" class="col-sm-5 col-form-label">Middle Name</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputMname" name="mname">
-                                </div>
-                            </div>
-                            <div class="column mb-3">
-                                <label for="inputLname" class="col-sm-5 col-form-label">Family Name</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputLname" name="lname">
+
+                                <div class="inputField2"> 
+                                    <div class="column mb-3">
+                                        <label for="inputBdate" class="col-sm-5 col-form-label">BirthDate</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" id="inputBdate" name="bDate" readonly>
+                                        </div>
+                                    </div>
+        
+                                    <div class="column mb-3">
+                                        <label for="inputSex" class="col-sm-5 col-form-label">Sex</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputSex" name="sex" readonly>
+                                        </div>
+                                    </div>
+        
+                                    <div class="column mb-3">
+                                        <label for="inputPurok" class="col-sm-5 col-form-label">Purok</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputPurok" name="purok" readonly>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>   
 
-                        <div class="inputField2"> 
-                            <div class="column mb-3">
-                                <label for="inputSuffix" class="form-label">Suffix (If none leave it)</label>
-                                <select id="inputSuffix" class="form-select" name="suffix">
-                                <option selected disabled>Choose...</option>
-                                <option value="Jr.">Jr.</option>
-                                <option value="I">I</option>
-                                <option value="II.">II</option>
-                                <option value="III">III</option>
-                                <option value="IV">IV</option>
-                                <option value="V">V</option>
-                                </select>
-                            </div>
+                    <div class="inputGroupContainer">
+                        <div class="titleCaseFinding">
+                            <span>Vital Signs and Measurements</span>
+                        </div>
+                        <div class="inputArea">
+                            <div class="medicalInfo">
+                                <div class="inputField3"> 
+                                    <div class="inputGroup">
+                                        <div class="column mb-3">
+                                            <label for="inputBp" class="col-sm-2 col-form-label">BP</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control grpField" id="inputBp" name="bP">
+                                            </div>
+                                        </div>
 
-                            <div class="column mb-3">
-                                <label for="inputBdate" class="col-sm-5 col-form-label">BirthDate</label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="inputBdate" name="bDate">
+                                        <div class="column mb-3">
+                                            <label for="inputTemp" class="col-sm-2 col-form-label">Temperature</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control grpField" id="inputTemp" name="temp">
+                                            </div>
+                                        </div>
+
+                                        <div class="column mb-3">
+                                            <label for="inputHeight" class="col-sm-2 col-form-label">Height</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control grpField" id="inputHeight" name="ht">
+                                            </div>
+                                        </div>
+
+                                        <div class="column mb-3">
+                                            <label for="inputWeight" class="col-sm-2 col-form-label">Weight</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control grpField" id="inputWeight" name="wt">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="column mb-3">
+                                        <label for="inputComplaints" class="col-sm-2 col-form-label">Complaints</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="inputComplaints" name="complaints">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputSex" class="form-label">Sex</label>
-                                <select id="inputSex" class="form-select" name="sex">
-                                <option selected value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <div class="column mb-3">
-                                <label for="inputPurok" class="form-label">Purok</label>
-                                <select id="inputPurok" class="form-select" name="purok">
-                                <option selected disabled>Choose...</option>
-                                <option value="Tugas">Tugas</option>
-                                <option value="Tambis">Tambis</option>
-                                <option value="Mahogany">Mahogany</option>
-                                <option value="Guyabano">Guyabano</option>
-                                <option value="Mansinitas">Mansinitas</option>
-                                <option value="Ipil-ipil">Ipil-ipil</option>
-                                <option value="Lubi">Lubi</option>
-                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <hr>
-
-                    <div class="medicalInfo">
-                        <div class="inputField3"> 
-                            <div class="inputGroup">
-                                <div class="column mb-3">
-                                    <label for="inputBp" class="col-sm-2 col-form-label">BP</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control grpField" id="inputBp" name="bP">
+                    <div class="inputGroupContainer">
+                        <div class="titleCaseFinding">
+                            <span>Habit</span>
+                        </div>
+                        <div class="inputArea">
+                            <div class="habitInfo">
+                                <fieldset class="row mb-3">
+                                    <legend class="col-form-label col-sm-2 pt-0">Smoker</legend>
+                                    <div class="col-sm-10 d-flex" style="gap: 20px;">
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="smoker" id="smokerYes" value="Yes" checked>
+                                        <label class="form-check-label" for="smokerYes">
+                                            Yes
+                                        </label>
+                                        </div>
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="smoker" id="smokerNo" value="No">
+                                        <label class="form-check-label" for="smokerNo">
+                                            No
+                                        </label>
+                                        </div>
                                     </div>
-                                </div>
+                                </fieldset>
 
-                                <div class="column mb-3">
-                                    <label for="inputTemp" class="col-sm-2 col-form-label">Temperature</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control grpField" id="inputTemp" name="temp">
+                                <fieldset class="row mb-3">
+                                    <legend class="col-form-label col-sm-2 pt-0">Alcohol</legend>
+                                    <div class="col-sm-10 d-flex" style="gap: 20px;">
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="alcohol" id="alcoholYes" value="Yes" checked>
+                                        <label class="form-check-label" for="alcoholYes">
+                                            Yes
+                                        </label>
+                                        </div>
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="alcohol" id="alcoholNo" value="No">
+                                        <label class="form-check-label" for="alcoholNo">
+                                            No
+                                        </label>
+                                        </div>
                                     </div>
-                                </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div class="column mb-3">
-                                    <label for="inputHeight" class="col-sm-2 col-form-label">Height</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control grpField" id="inputHeight" name="ht">
-                                    </div>
-                                </div>
+                    <div class="inputGroupContainer">
+                        <div class="titleCaseFinding">
+                            <span>Medicine</span>
+                        </div>
+                        <div class="inputArea">
+                            <div class="habitInfo">
+                                <div class="inputGroup2">
 
-                                <div class="column mb-3">
-                                    <label for="inputWeight" class="col-sm-2 col-form-label">Weight</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control grpField" id="inputWeight" name="wt">
+                                    <div class="column mb-3 medicines">
+                                        <label for="inputMed" class="form-label">Medicine Given</label>
+                                        <select id="inputMed" class="form-select" name="meds">
+                                            <option selected disabled>Choose...</option>
+                                        </select>
                                     </div>
+
+                                    <div class="column mb-3 quants">
+                                        <label for="inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control quants" id="inputQuantity" name="quantity">
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="column mb-3">
-                                <label for="inputComplaints" class="col-sm-2 col-form-label">Complaints</label>
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control grpField2" id="inputComplaints" name="complaints">
+                    <div class="inputGroupContainer">
+                        <div class="titleCaseFinding">
+                            <span>Signature</span>
+                        </div>
+                        <div class="inputArea">
+                            <div class="habitInfo">
+                                <div class="signature-container">
+                                    <canvas id="signaturePad"></canvas>
+                                    <button type="button" id="clearSignature" class="btn btn-danger mt-2">Clear</button>
                                 </div>
                             </div>
-
-    
-                            <fieldset class="row mb-3 smokers">
-                                <legend class="col-form-label col-sm-2 pt-0">Smoker</legend>
-                                <div class="col-sm-10 smokersCon">
-                                    <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="smoker" id="smokerYes" value="Yes" checked>
-                                    <label class="form-check-label" for="smokerYes">
-                                        Yes
-                                    </label>
-                                    </div>
-                                    <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="smoker" id="smokerNo" value="No">
-                                    <label class="form-check-label" for="smokerNo">
-                                        No
-                                    </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                            <fieldset class="row mb-3 smokers">
-                                <legend class="col-form-label col-sm-2 pt-0">Alcohol</legend>
-                                <div class="col-sm-10 smokersCon">
-                                    <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="alcohol" id="alcoholYes" value="Yes" checked>
-                                    <label class="form-check-label" for="alcoholYes">
-                                        Yes
-                                    </label>
-                                    </div>
-                                    <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="alcohol" id="alcoholNo" value="No">
-                                    <label class="form-check-label" for="alcoholNo">
-                                        No
-                                    </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                            <div class="inputGroup2">
-                                <div class="column mb-3 medicines">
-                                    <label for="inputMed" class="form-label">Medicine Given</label>
-                                    <select id="inputMed" class="form-select" name="meds">
-                                        <option selected disabled>Choose...</option>
-                                    </select>
-                                </div>
-
-                                <div class="column mb-3 quants">
-                                    <label for="inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
-                                    <div class="col-sm-10">
-                                        <input type="number" class="form-control quants" id="inputQuantity" name="quantity">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="signature-container">
-                                <label for="signaturePad" class="form-label">Signature</label>
-                                <canvas id="signaturePad"></canvas>
-                                <button type="button" id="clearSignature" class="btn btn-danger mt-2">Clear</button>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -329,6 +350,31 @@
       </div><!-- End Extra Large Modal-->
 
 </main><!-- End #main -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <script>
+    $(document).ready(function () {
+        $('#inputPatientName').selectize({
+            sortField: 'text'
+        });
+    });
+
+
+    function updateResidentDetails(selectElement) {
+        const residentData = JSON.parse(selectElement.value);
+        
+        if (residentData) {
+            document.getElementById('inputBdate').value = residentData.res_bdate; // Adjust based on your actual field name
+            document.getElementById('inputSex').value = residentData.res_sex;
+            document.getElementById('inputPurok').value = residentData.res_purok;
+        } else {
+            // Clear the fields if no resident is selected
+            document.getElementById('inputBdate').value = '';
+            document.getElementById('inputSex').value = '';
+            document.getElementById('inputPurok').value = '';
+        }
+    }
+    </script>
 
   @include('layouts.footerHealthWorkers')
 </body>

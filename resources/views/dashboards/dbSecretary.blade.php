@@ -1,4 +1,4 @@
-@extends('layouts.dblayout')
+@extends('layouts.dbLayout')
 
 @section('style')
     <link rel="stylesheet" href="/css/dbSecretary.css">

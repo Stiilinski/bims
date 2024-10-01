@@ -99,10 +99,16 @@
         width: 450px;
     }
 
+    .wrapGroup {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
     .rowGroup {
         display: flex;
         justify-content: space-evenly;
-        gap: 10px
+        gap: 10px;
     }
 
     .columnGroup {
@@ -145,7 +151,7 @@
 
     .columnCon {
         width: 100%;
-        border: #dee2e6 solid 1px;
+        /* border: #dee2e6 solid 1px; */
         padding: 10px;
         display: flex;
         gap: 20px;
@@ -156,14 +162,14 @@
 
     .rowCon {
         width: 32.8%;
-        border: #dee2e6 solid 1px;
+        /* border: #dee2e6 solid 1px; */
         padding: 10px;
     }
 
     .rowConWhole {
         width: 100%;
-        border: #dee2e6 solid 1px;
-        padding: 10px;
+        display: flex;
+        justify-content: space-between
     }
 
     .additionalCon {
@@ -260,6 +266,10 @@
         display: flex;
         flex-direction: column;
         padding-left: 15px;
+    }
+
+    .ifYes, .ifNo {
+        display: none;
     }
 
 </style>
@@ -396,9 +406,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>   
+                        </div>
 
-                                    <div class="columnCon" style="width: 100%">
-                                        
+                        <div class="inputGroupContainer">
+                            <div class="titleCaseFinding">
+                                <span>Dengue Symptoms</span>
+                            </div>
+                            <div class="inputArea">
+                                <div class="rowFirst columnGroup familyPlaningCon">                                                
+                                    <div class="columnCon" style="width: 100%">                                       
                                             <div class="column mb-3">
                                                 <label for="dengueDateSymp" class="col-sm-8 col-form-label">Date of Onset Symptoms</label>
                                                 <div class="col-sm-12">
@@ -409,42 +427,42 @@
                                             <div class="column mb-3">
                                                 <label for="dengueScPl" class="col-sm-8 col-form-label">School/Places</label>
                                                 <div class="col-sm-12">
-                                                    <input type="text" class="form-control mediumField" id="dengueScPl" name="dengueScPl">
+                                                    <input type="text" class="form-control" id="dengueScPl" name="dengueScPl">
                                                 </div>
                                             </div>
     
                                             <div class="column mb-3">
                                                 <label for="dengueInSymp" class="col-sm-8 col-form-label">Initial Symptoms</label>
                                                 <div class="col-sm-12">
-                                                    <input type="text" class="form-control mediumField" id="dengueInSymp" name="dengueInSymp">
+                                                    <input type="text" class="form-control" id="dengueInSymp" name="dengueInSymp">
                                                 </div>
                                             </div>
     
                                             <div class="column mb-3">
                                                 <label for="dengueDateFever" class="col-sm-10 col-form-label">Date of Onset Fever</label>
                                                 <div class="col-sm-12">
-                                                    <input type="date" class="form-control" style="width: 200px" id="dengueDateFever" name="dengueDateFever" readonly>
+                                                    <input type="date" class="form-control mediumField" id="dengueDateFever" name="dengueDateFever" >
                                                 </div>
                                             </div>
     
                                             <div class="column mb-3">
                                                 <label for="dengueTempHigh" class="col-sm-5 col-form-label">High</label>
                                                 <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="dengueTempHigh" name="dengueTempHigh" readonly>
+                                                    <input type="text" class="form-control shortField" id="dengueTempHigh" name="dengueTempHigh" placeholder="38.6 - 41" >
                                                 </div>
                                             </div>
     
                                             <div class="column mb-3">
                                                 <label for="dengueTempMod" class="col-sm-5 col-form-label">Moderate</label>
                                                 <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="dengueTempMod" name="dengueTempMod" readonly>
+                                                    <input type="text" class="form-control shortField" id="dengueTempMod" name="dengueTempMod" placeholder="38.1 - 38.5" >
                                                 </div>
                                             </div>
     
                                             <div class="column mb-3">
                                                 <label for="dengueTempSli" class="col-sm-5 col-form-label">Slight</label>
                                                 <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="dengueTempSli" name="dengueTempSli" readonly>
+                                                    <input type="text" class="form-control shortField" id="dengueTempSli" name="dengueTempSli" placeholder="37.5 - 35" >
                                                 </div>
                                             </div>
                                     </div>
@@ -453,13 +471,496 @@
                             </div>   
                         </div>
 
+                        <div class="rowConWhole">
+                            <div class="inputGroupContainer" style="width:50%">
+                                <div class="titleCaseFinding">
+                                    <span>Dengue Signs & Symptoms</span>
+                                </div>
 
-                    </div>
+                                <div class="inputArea">
+                                    <div class="rowGroup familyPlaningCon"> 
+                                        <div class="rowCon" style="width: 100%">
+                                        
+                                            <div class="column mb-3">
+                                                <label for="dengueStartDateSymp" class="col-sm-8 col-form-label">Start Date of Fever</label>
+                                                <div class="col-sm-12">
+                                                    <input type="date" class="form-control" id="dengueStartDateSymp" name="dengueStartDateSymp">
+                                                </div>
+                                            </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Save</button>
-                    </div>
+                                            <div class="column mb-3">
+                                                <label for="dengueDurFev" class="col-sm-8 col-form-label">Duration of Fever</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control shortField" id="dengueDurFev" name="dengueDurFev">
+                                                </div>
+                                            </div>
+
+                                            <fieldset class="row mb-3 diagnosisArea">
+                                                <legend class="col-form-label col-sm-12 pt-0">Signs & Symptoms</legend>
+                                                
+                                                <div class="col-sm-12 d-flex" style="gap: 10px">
+                                                    <div class="rightCorner" style="width: 50%">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueHeadAche" value="Headache">
+                                                            <label class="form-check-label" for="dengueHeadAche">Headache - Labad sa Ulo</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueRetroPain" value="Retro-Ocular Pain">
+                                                            <label class="form-check-label" for="dengueRetroPain">Retro-Ocular Pain - Sakit Ang Palibot Sa Mata</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueJointPain" value="Joint Pain">
+                                                            <label class="form-check-label" for="dengueJointPain">Joint Pain - Sakit Ang Lutahan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueJointSwelling" value="Joint Swelling">
+                                                            <label class="form-check-label" for="dengueJointSwelling">Joint Swelling - Namaga Ang Mga Lutahan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueMusclePain" value="Muscle Pain">
+                                                            <label class="form-check-label" for="dengueMusclePain">Muscle Pain - Sakit Ang Kaunuran</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueSoreThroat" value="Sore Throat">
+                                                            <label class="form-check-label" for="dengueSoreThroat">Sore Throat - Sakit/Karat Ang Tutonlan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueNoseBleeding" value="Nose Bleeding">
+                                                            <label class="form-check-label" for="dengueNoseBleeding">Nose Bleeding - Sunggo</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueHepa" value="Hepatomegaly">
+                                                            <label class="form-check-label" for="dengueHepa">Hepatomegaly - Bugon Sa Tuo Ubos Gusok</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueNausea" value="Nausea">
+                                                            <label class="form-check-label" for="dengueNausea">Nausea - Luod/Kasukaon</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="leftCorner" style="width: 50%">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueVomiting" value="Vomiting">
+                                                            <label class="form-check-label" for="dengueVomiting">Vomiting - Nagsuka</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueDiarreha" value="Diarreha">
+                                                            <label class="form-check-label" for="dengueDiarreha">Diarreha - Nagkalibang</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="denguePetechiae" value="Petechiae">
+                                                            <label class="form-check-label" for="denguePetechiae">Petechiae - Pintik-pintik Nga Pula Sa Panit</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueGumBleeding" value="Gum Bleeding">
+                                                            <label class="form-check-label" for="dengueGumBleeding">Gum Bleeding - Nagdugo Ang Lagus</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueEcohymosis" value="Ecohymosis">
+                                                            <label class="form-check-label" for="dengueEcohymosis">Ecohymosis - Lagum-lagum Ang Panit</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueMaculo" value="Maculo Popular Rash">
+                                                            <label class="form-check-label" for="dengueMaculo">Maculo Popular Rash - Panurok</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueAbdominalPain" value="Abdominal Pain">
+                                                            <label class="form-check-label" for="dengueAbdominalPain">Abdominal Pain - Sakit Sa Tiyan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="dengueSignSymp[]" id="dengueGiBleeding" value="G.I Bleeding">
+                                                            <label class="form-check-label" for="dengueGiBleeding">G.I Bleeding - Suka Ug Itom Murag Dinuguan/Nalibang Ug Itom Murag Dinuguan</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+
+                            <div class="inputGroupContainer" style="width:50%">
+                                <div class="titleCaseFinding">
+                                    <span>Treatment & Condition</span>
+                                </div>
+
+                                <div class="inputArea">
+                                    <div class="rowFirst columnGroup familyPlaningCon"> 
+
+                                        <div class="column mb-3">
+                                            <label for="dengueMedTake" class="col-sm-8 col-form-label">Medication Taken</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="dengueMedTake" name="dengueMedTake">
+                                            </div>
+                                        </div>
+
+                                        <fieldset class="row mb-3">
+                                            <legend class="col-form-label col-sm-8 pt-0">Hospitalized</legend>
+                                            <div class="col-sm-10">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueHosp" id="dengueHospYes" value="Yes">
+                                                    <label class="form-check-label" for="dengueHospYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueHosp" id="dengueHospNo" value="No">
+                                                    <label class="form-check-label" for="dengueHospNo">No</label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <div class="ifYes">
+                                            <div class="column mb-3">
+                                                <label for="dengueWhen" class="col-sm-8 col-form-label">When?</label>
+                                                <div class="col-sm-12">
+                                                    <input type="date" class="form-control mediumField" id="dengueWhen" name="dengueWhen">
+                                                </div>
+                                            </div>
+
+                                            <div class="column mb-3">
+                                                <label for="dengueHowLong" class="col-sm-8 col-form-label">How Long?</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control mediumField" id="dengueHowLong" name="dengueHowLong">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="ifNo">
+                                            <div class="column mb-3">
+                                                <label for="dengueIncDate" class="col-sm-8 col-form-label">Inclusive Date</label>
+                                                <div class="col-sm-12">
+                                                    <input type="date" class="form-control mediumField" id="dengueIncDate" name="dengueIncDate">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <fieldset class="row mb-3">
+                                            <legend class="col-form-label col-sm-8 pt-0">Outcome</legend>
+                                            <div class="col-sm-10">
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueOutcome" id="dengueRecovered" value="Recovered">
+                                                    <label class="form-check-label" for="dengueRecovered">Recovered</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueOutcome" id="dengueNotImp" value="Not Improved">
+                                                    <label class="form-check-label" for="dengueNotImp">Not Improved</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueOutcome" id="dengueDied" value="Died">
+                                                    <label class="form-check-label" for="dengueDied">Died</label>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+
+                                        <fieldset class="row mb-3">
+                                            <legend class="col-form-label col-sm-8 pt-0">History of Travel</legend>
+                                            <div class="col-sm-10">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueTravelHist" id="dengueTravelHistYes" value="Yes">
+                                                    <label class="form-check-label" for="dengueTravelHistYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueTravelHist" id="dengueTravelHistNo" value="No">
+                                                    <label class="form-check-label" for="dengueTravelHistNo">No</label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <div class="column mb-3">
+                                            <label for="dengueTravelWhere" class="col-sm-8 col-form-label">Where</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control mediumField" id="dengueTravelWhere" name="dengueTravelWhere">
+                                            </div>
+                                        </div>
+
+                                        <fieldset class="row mb-3">
+                                            <legend class="col-form-label col-sm-10 pt-0">Exposed to Person Similar Manifestation</legend>
+                                            <div class="col-sm-10">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueExpPer" id="dengueExpPerYes" value="Yes">
+                                                    <label class="form-check-label" for="dengueExpPerYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="dengueExpPer" id="dengueExpPerNo" value="No">
+                                                    <label class="form-check-label" for="dengueExpPerNo">No</label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <fieldset class="row mb-3" style="width: 100%">
+                                            <legend class="col-form-label col-sm-12 pt-0">Tests</legend>
+                                            
+                                            <div class="row-sm-12" style="display: flex; gap:20px;">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueTests[]" id="dengueCbc" value="CBC">
+                                                    <label class="form-check-label" for="dengueCbc">CBC</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueTests[]" id="denguePlatelet" value="Platelet">
+                                                    <label class="form-check-label" for="denguePlatelet">Platelet</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueTests[]" id="dengueNs" value="Dengue NS 1">
+                                                    <label class="form-check-label" for="dengueNs">Dengue NS 1</label>
+                                                </div>
+                                            </div>
+                                    
+                                        </fieldset>
+
+                                    </div>
+                                </div>  
+
+                            </div>
+                        </div>
+
+                        <div class="inputGroupContainer">
+                            <div class="titleCaseFinding">
+                                <span>Name & Address of Contacts</span>
+                            </div>
+
+                            <div class="inputArea" style="width: 100%">
+                                <div class="rowFirst columnGroup familyPlaningCon" style="width: 100%"> 
+                                    <div id="fields-container" class="columnCon" style="width: 100%;">
+                                        <!-- First set of input fields -->
+                                        <div class="field-set mb-3 d-flex" style="width: 100%; justify-content: center!important; gap:15px;">
+                                            <div class="column mb-3">
+                                                <label for="dengueNameContact" class="col-sm-5 col-form-label">Names</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control" name="dengueNameContact[]" placeholder="Name...">
+                                                </div>
+                                            </div>
+                                            <div class="column mb-3">
+                                                <label for="dengueAddressContact" class="col-sm-5 col-form-label">Address</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control" name="dengueAddressContact[]" placeholder="Address...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btnArea" style="width: 100%; display: flex; justify-content: flex-end;">
+                                        <button type="button" class="btn btn-primary" onclick="addFields()">Add More</button>
+                                    </div>
+                                </div>
+                            </div>
+                               
+                        </div>
+
+                        <div class="rowConWhole">
+                            <div class="inputGroupContainer" style="width:50%">
+                                <div class="titleCaseFinding">
+                                    <span>Presence of Animals in your house or within the neighborhood 10 meters from your house</span>
+                                </div>
+
+                                <div class="inputArea">
+                                    <div class="rowFirst columnGroup familyPlaningCon"> 
+
+                                        <fieldset class="row mb-3" style="width: 100%">                                        
+                                            <div class="row-sm-12" style="display: flex; gap:20px; flex-wrap:wrap;">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalChicken" value="Chicken">
+                                                    <label class="form-check-label" for="dengueAnimalChicken">Chicken</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalBirds" value="Birds">
+                                                    <label class="form-check-label" for="dengueAnimalBirds">Birds</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalRats" value="Rats">
+                                                    <label class="form-check-label" for="dengueAnimalRats">Rats</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalMosquito" value="Mosquito">
+                                                    <label class="form-check-label" for="dengueAnimalMosquito">Mosquito</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalCat" value="Cat">
+                                                    <label class="form-check-label" for="dengueAnimalCat">Cat</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalFlies" value="Flies">
+                                                    <label class="form-check-label" for="dengueAnimalFlies">Flies</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueAnimalPres[]" id="dengueAnimalDog" value="Dog">
+                                                    <label class="form-check-label" for="dengueAnimalDog">Dog</label>
+                                                </div>
+
+                                                <div class="column mb-3">
+                                                    <label for="dengueAddressContact" class="col-sm-12 col-form-label">Other Forms of Birds(Specify)</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control" name="dengueAnimalPres[]" placeholder="Specify...">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>  
+                            </div>
+
+                            <div class="inputGroupContainer" style="width:50%">
+                                <div class="titleCaseFinding">
+                                    <span>Presencce of Water Containers Inside Your house</span>
+                                </div>
+
+                                <div class="inputArea">
+                                    <div class="rowFirst columnGroup familyPlaningCon"> 
+
+                                        <fieldset class="row mb-3" style="width: 100%">                                        
+                                            <div class="row-sm-12" style="display: flex; gap:20px; flex-wrap:wrap;">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueWaterCon[]" id="dengueWaterConFb" value="Flower Vase">
+                                                    <label class="form-check-label" for="dengueWaterConFb">Flower Vase</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="dengueWaterCon[]" id="dengueWaterConStore" value="Water Storage Container">
+                                                    <label class="form-check-label" for="dengueWaterConStore">Water Storage Container</label>
+                                                </div>
+                                                <div class="column mb-3">
+                                                    <label for="dengueAddressContact" class="col-sm-12 col-form-label">Others(Specify)</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control" name="dengueWaterCon[]" placeholder="Specify...">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+
+                        <div class="inputGroupContainer" style="width:100%">
+                            <div class="titleCaseFinding">
+                                <span>Presence of Water Containers outside your house or w/in the neighborhood 10 meters from your house</span>
+                            </div>
+
+                            <div class="inputArea">
+                                <div class="rowFirst columnGroup familyPlaningCon"> 
+
+                                    <fieldset class="row mb-3" style="width: 100%">                                        
+                                        <div class="row-sm-12" style="display: flex; gap:20px; flex-wrap:wrap;">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcTinCan" value="Tin Cans">
+                                                <label class="form-check-label" for="dengueWcTinCan">Tin Cans</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcUsedTires" value="Used Tires">
+                                                <label class="form-check-label" for="dengueWcUsedTires">Used Tires</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcShell" value="Coconut Shells / Husk">
+                                                <label class="form-check-label" for="dengueWcShell">Coconut Shells / Husk</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcDrums" value="Drums">
+                                                <label class="form-check-label" for="dengueWcDrums">Drums</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcLagoons" value="Lagoons">
+                                                <label class="form-check-label" for="dengueWcLagoons">Lagoons</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcBamboo" value="Bamboo Poles">
+                                                <label class="form-check-label" for="dengueWcBamboo">Bamboo Poles</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcWater" value="Water Jars">
+                                                <label class="form-check-label" for="dengueWcWater">Water Jars</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="dengueWaterContainers[]" id="dengueWcCanals" value="Canals">
+                                                <label class="form-check-label" for="dengueWcCanals">Canals</label>
+                                            </div>
+
+                                            <div class="column mb-3">
+                                                <label for="dengueWcOthers" class="col-sm-12 col-form-label">Others (Specify)</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control" id="dengueWcOthers" name="dengueWaterContainers[]" placeholder="Specify...">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset class="row mb-3">
+                                        <legend class="col-form-label col-sm-12 pt-0">Presence of Windows and Door Screen in the House:</legend>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="dengueDoor" id="dengueDoorYes" value="Yes">
+                                                <label class="form-check-label" for="dengueDoorYes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="dengueDoor" id="dengueDoorNo" value="No">
+                                                <label class="form-check-label" for="dengueDoorNo">No</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>  
+                        </div>
+
+                        <div class="inputGroupContainer" style="width:100%">
+                            <div class="titleCaseFinding">
+                                <span>Administrative Details</span>
+                            </div>
+
+                            <div class="inputArea">
+                                <div class="wrapGroup"> 
+
+                                    <div class="column mb-3 pName">
+                                        <label for="dengueByName" class="form-label">Name</label>
+                                        <select id="dengueByName" class="form-select pNames" name="dengueByName">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="1">John Doe</option>
+                                            <option value="2">Jane Smith</option>
+                                            <option value="3">Michael Johnson</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+
+                                    <div class="column mb-3">
+                                        <label for="dengueAdDate" class="col-sm-8 col-form-label">Date</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control" id="dengueAdDate" name="dengueAdDate">
+                                        </div>
+                                    </div>
+
+                                    <div class="column mb-3">
+                                        <label for="dengueAdBrgy" class="col-sm-8 col-form-label">Barangay</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="dengueAdBrgy" name="dengueAdBrgy">
+                                        </div>
+                                    </div>
+
+                                    <div class="column mb-3">
+                                        <label for="dengueAdSitio" class="col-sm-8 col-form-label">Sitio</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="dengueAdSitio" name="dengueAdSitio">
+                                        </div>
+                                    </div>
+
+                                    <div class="column mb-3">
+                                        <label for="dengueAdMunicipality" class="col-sm-8 col-form-label">Municipality</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="dengueAdMunicipality" name="dengueAdMunicipality">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>  
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </div>
+                        
                 </form><!-- End Horizontal Form -->
             </div>
         </div>
@@ -470,7 +971,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     //PATIENT SELECT
@@ -489,6 +990,47 @@
     });
 
 
+    //HOSPITALIZED OR NOT
+        document.addEventListener('DOMContentLoaded', function() {
+            const yesRadio = document.getElementById('dengueHospYes');
+            const noRadio = document.getElementById('dengueHospNo');
+            const ifYes = document.querySelector('.ifYes');
+            const ifNo = document.querySelector('.ifNo');
+
+            function toggleSections() {
+                if (yesRadio.checked) {
+                    ifYes.style.display = 'block';
+                    ifNo.style.display = 'none';
+                } else if (noRadio.checked) {
+                    ifYes.style.display = 'none';
+                    ifNo.style.display = 'block';
+                }
+            }
+
+            yesRadio.addEventListener('change', toggleSections);
+            noRadio.addEventListener('change', toggleSections);
+
+            // Initialize display based on current radio button state
+            toggleSections();
+        });
+
+    
+    //ADD MORE BTN
+    function addFields() 
+    {
+        // Get the container where the new fields will be added
+        const container = document.getElementById('fields-container');
+        
+        // Clone the first set of fields
+        const newFieldSet = container.querySelector('.field-set').cloneNode(true);
+
+        // Clear the values of the cloned fields
+        const inputs = newFieldSet.querySelectorAll('input');
+        inputs.forEach(input => input.value = '');
+
+        // Append the cloned field set to the container
+        container.appendChild(newFieldSet);
+    }
 </script>
 
   @include('layouts.footerHealthWorkers')

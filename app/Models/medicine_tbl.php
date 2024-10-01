@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class medicine_tbl extends Model
 {
-    use HasFactory;
+    protected $table = 'medicine_tbls';
+    protected $primaryKey = 'med_id';
+    public $incrementing = true; 
+    protected $keyType = 'int'; 
 }

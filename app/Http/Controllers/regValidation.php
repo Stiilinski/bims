@@ -15,6 +15,8 @@ use App\Models\transaction_tbl;
 use App\Models\blotter_tbl;
 use App\Models\revenue_tbl;
 use App\Models\brgyOfficials_tbl;
+use App\Models\medicine_tbl;
+use App\Models\opt_tbl;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -2967,15 +2969,17 @@ public function indiClientReport(Request $request)
     return view('dashboards/healthWorkerDb/individualClientReport', $data);
 }
 
+// FOR Medicine 
 public function medicineRecord(Request $request)
 {
     // Fetch the logged-in user's information
     $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-
+    $medicine = medicine_tbl::all();
 
     // Merge all the data into a single array
     $data = [
         'LoggedUserInfo' => $loggedUserInfo,
+        'medicine' => $medicine,
     ];
 
     // Set headers for no-cache
@@ -2987,16 +2991,122 @@ public function medicineRecord(Request $request)
     return view('dashboards/healthWorkerDb/medicine', $data);
 }
 
+public function inputMedicine(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'inputEmp' => 'required|string',
+        'inputNdc' => 'required|string',
+        'inputProd' => 'required|string',
+        'inputDesc' => 'required|string',
+        'inputBox' => 'required|numeric',
+        'inputCount' => 'required|numeric',
+        'inputTotalCount' => 'required|numeric',
+        'inputDatePurchase' => 'required|date',
+        'inputDateExpired' => 'required|date',
+        'inputRemarks' => 'required|string',
+    ], [
+        'inputNdc.required' => 'The NDC field is mandatory.',
+        'inputNdc.string' => 'The NDC must be a string.',
+        'inputProd.required' => 'The product name is required.',
+        'inputProd.string' => 'The product name must be a string.',
+        'inputDesc.required' => 'The description is required.',
+        'inputDesc.string' => 'The description must be a string.',
+        'inputBox.required' => 'The box count is required.',
+        'inputBox.numeric' => 'The box count must be a number.',
+        'inputCount.required' => 'The count is required.',
+        'inputCount.numeric' => 'The count must be a number.',
+        'inputTotalCount.required' => 'The total count is required.',
+        'inputTotalCount.numeric' => 'The total count must be a number.',
+        'inputDatePurchase.required' => 'The purchase date is required.',
+        'inputDatePurchase.date' => 'The purchase date must be a valid date.',
+        'inputDateExpired.required' => 'The expiration date is required.',
+        'inputDateExpired.date' => 'The expiration date must be a valid date.',
+        'inputRemarks.required' => 'Remarks are required.',
+        'inputRemarks.string' => 'Remarks must be a string.',
+    ]);
 
+    if ($validator->fails()) 
+    {
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+    } 
+    else 
+    {
+        $medicine = new medicine_tbl;
+        $medicine->em_id = $request->inputEmp;
+        $medicine->med_ndc = $request->inputNdc;
+        $medicine->med_prod = $request->inputProd;
+        $medicine->med_desc = $request->inputDesc;
+        $medicine->med_qtBox = $request->inputBox;
+        $medicine->med_count = $request->inputTotalCount;
+        $medicine->med_datePurchases = $request->inputDatePurchase;
+        $medicine->med_dateExpiration = $request->inputDateExpired;
+        $medicine->med_remarks = $request->inputRemarks;
+        $medicine->med_status = 'Available';
+   
+        if ($medicine->save()) 
+        {
+            return response()->json(['status' => 1, 'msg' => 'New Medicine Has Been Added']);
+        } 
+        else 
+        {
+            return response()->json(['status' => 0, 'msg' => 'Failed to add new Medicine'], 500);
+        }
+    }
+}
+
+public function updateMedicine(Request $request)
+{
+    $medicine = medicine_tbl::find($request->med_id);
+
+    if ($medicine) {
+        $medicine->med_ndc = $request->med_ndc;
+        $medicine->med_prod = $request->med_prod;
+        $medicine->med_desc = $request->med_desc;
+        $medicine->med_qtBox = $request->med_qtBox;
+        $medicine->med_count = $request->med_count;
+        $medicine->med_datePurchases = $request->med_datePurchases;
+        $medicine->med_dateExpiration = $request->med_dateExpiration;
+        $medicine->med_remarks = $request->med_remarks;
+        $medicine->med_status = $request->med_status;
+
+        if ($medicine->save()) {
+            return response()->json(['status' => 1, 'msg' => 'Medicine updated successfully.']);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Failed to update medicine.']);
+        }
+    }
+
+    return response()->json(['status' => 0, 'msg' => 'Medicine not found.']);
+}
+
+public function updateMedStatus(Request $request)
+{
+    $request->validate([
+        'id' => 'required|integer|exists:medicine_tbls,med_id', // Changed to 'id'
+        'status' => 'required|string' // Changed to 'status'
+    ]);
+
+    $medicine = medicine_tbl::find($request->id); // Changed to 'id'
+    $medicine->med_status = $request->status; // Ensure this is correctly set
+    $medicine->save();
+
+    return response()->json(['success' => true]);
+}
+
+
+// FOR OPT
 public function optDeworming(Request $request)
 {
     // Fetch the logged-in user's information
     $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-
+    $resident = resident_tbl::all();
+    $opt = opt_tbl::with('resident')->get();
 
     // Merge all the data into a single array
     $data = [
         'LoggedUserInfo' => $loggedUserInfo,
+        'residents' => $resident,
+        'opts' => $opt,
     ];
 
     // Set headers for no-cache
@@ -3007,6 +3117,187 @@ public function optDeworming(Request $request)
     // Pass the data to the view
     return view('dashboards/healthWorkerDb/optDeworming', $data);
 }
+
+public function inputFirstOpt(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'motherName' => 'required|exists:resident_tbls,res_id', // Check if the res_id exists
+        'inputChildName' => 'required|string',
+        'inputDate' => 'required|date',
+        'inputSex' => 'required|string',
+        'ageMonthFirst' => 'required|numeric|regex:/^\d+(\.\d+)?$/',
+        'weightFirst' => 'required|numeric|regex:/^\d+(\.\d+)?$/',
+        'heightFirst' => 'required|numeric|regex:/^\d+(\.\d+)?$/',
+        'muacFirst' => 'required|date',
+        'nsFirst' => 'required|date',
+        'vitaminFirst' => 'required|date',
+        'dewormingFirst' => 'required|date',
+        'rem' => 'required|string',
+    ], [
+        'motherName.required' => 'The Mother Name field is required.',
+        'motherName.exists' => 'The selected Mother does not exist in the system.',
+        'inputChildName.required' => 'The Child Name is required.',
+        'inputChildName.string' => 'The Child Name must be letters.',
+        'inputDate.required' => 'The Date of Birth is required.',
+        'inputDate.date' => 'The Date of Birth must be a valid date.',
+        'inputSex.required' => 'The Sex field is required.',
+        'inputSex.string' => 'The Sex field must be letters.',
+        'ageMonthFirst.required' => 'The Age field is required.',
+        'ageMonthFirst.numeric' => 'The Age field must be a number or decimal.',
+        'weightFirst.required' => 'The Weight field is required.',
+        'weightFirst.numeric' => 'The Weight field must be a number or decimal.',
+        'heightFirst.required' => 'The Height field is required.',
+        'heightFirst.numeric' => 'The Height field must be a number or decimal.',
+        'muacFirst.required' => 'The MUAC field is required.',
+        'muacFirst.date' => 'The MUAC field must be a valid date.',
+        'nsFirst.required' => 'The NS field is required.',
+        'nsFirst.date' => 'The NS field must be a valid date.',
+        'vitaminFirst.required' => 'The Vitamin field is required.',
+        'vitaminFirst.date' => 'The Vitamin field must be a valid date.',
+        'dewormingFirst.required' => 'The Deworming field is required.',
+        'dewormingFirst.date' => 'The Deworming field must be a valid date.',
+        'rem.required' => 'Remarks are required.',
+        'rem.string' => 'Remarks must be letters.',
+    ]);    
+
+    if ($validator->fails()) {
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+    } else {
+        $opt = new opt_tbl;
+        $opt->res_id = $request->motherName; // Store the res_id directly
+        $opt->opt_childName = $request->inputChildName;
+        $opt->opt_dob = $request->inputDate;
+        $opt->opt_sex = $request->inputSex;
+        $opt->opt_ageFirst = $request->ageMonthFirst;
+        $opt->opt_wtFirst = $request->weightFirst;
+        $opt->opt_htFirst = $request->heightFirst;
+        $opt->opt_muacFirst = $request->muacFirst;
+        $opt->opt_nsFirst = $request->nsFirst;
+        $opt->opt_vitFirst = $request->vitaminFirst;
+        $opt->opt_dewormtFirst = $request->dewormingFirst;
+        $opt->opt_remarks = $request->rem;
+        $opt->opt_status = 'Partially Completed';
+        $opt->em_id = $request->inputEmpId;
+
+        if ($opt->save()) {
+            return response()->json(['status' => 1, 'msg' => 'New Vaccination Recipient Has Been Added']);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Failed to add new Vaccination Recipient'], 500);
+        }
+    }
+}
+
+public function updateSecOpt(Request $request)
+{
+    $opt = opt_tbl::find($request->opt_id);
+
+    if ($opt) {
+        $opt->opt_ageSec = $request->ageMonthSec;
+        $opt->opt_wtSec = $request->weightSec;
+        $opt->opt_htSec = $request->heightSec;
+        $opt->opt_muacSec = $request->muacSec;
+        $opt->opt_nsSec = $request->nsSec;
+        $opt->opt_vitSec = $request->vitaminSec;
+        $opt->opt_dewormSec = $request->dewormingSec;
+        $opt->opt_remarks = $request->remarkSec;
+        $opt->opt_status = 'Completed';
+
+        if ($opt->save()) {
+            return response()->json(['status' => 1, 'msg' => 'OPT updated successfully.']);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Failed to update OPT.']);
+        }
+    }
+
+    return response()->json(['status' => 0, 'msg' => 'OPT not found.']);
+}
+
+public function updateOptForm(Request $request)
+{
+    $opt = opt_tbl::find($request->opt_id);
+
+    if ($opt) {
+        $opt->opt_id = $request->edit_inputOptId; // Assuming opt_id is being edited
+        // Check if edit_motherName is not empty or null
+        if (!empty($request->edit_motherName)) {
+            $opt->res_id = $request->edit_motherName; // Mother's name as resident id
+        }
+
+        $opt->opt_childName = $request->edit_inputChildName; // Child's Name
+        $opt->opt_dob = $request->edit_inputDate; // Child's Date of Birth
+        $opt->opt_sex = $request->edit_inputSex; // Child's Sex
+
+        $opt->opt_ageFirst = $request->edit_ageMonthFirst; // Age in months (1st)
+        $opt->opt_ageSec = $request->edit_ageMonthSec; // Age in months (2nd)
+
+        $opt->opt_wtFirst = $request->edit_weightFirst; // Weight (1st)
+        $opt->opt_wtSec = $request->edit_weightSec; // Weight (2nd)
+
+        $opt->opt_htFirst = $request->edit_heightFirst; // Height (1st)
+        $opt->opt_htSec = $request->edit_heightSec; // Height (2nd)
+
+        $opt->opt_muacFirst = $request->edit_muacFirst; // MUAC (1st)
+        $opt->opt_muacSec = $request->edit_muacSec; // MUAC (2nd)
+
+        $opt->opt_nsFirst = $request->edit_nsFirst; // N.S. (1st)
+        $opt->opt_nsSec = $request->edit_nsSec; // N.S. (2nd)
+
+        $opt->opt_vitFirst = $request->edit_vitaminFirst; // Vitamin A (1st)
+        $opt->opt_vitSec = $request->edit_vitaminSec; // Vitamin A (2nd)
+
+        $opt->opt_dewormtFirst = $request->edit_dewormingFirst; // Deworming (1st)
+        $opt->opt_dewormSec = $request->edit_dewormingSec; // Deworming (2nd)
+
+        $opt->opt_remarks = $request->edit_rem; // Remarks
+        $opt->opt_status = $request->edit_status; // Status (Completed / Partially Completed)
+
+        if ($opt->save()) {
+            return response()->json(['status' => 1, 'msg' => 'OPT updated successfully.']);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Failed to update OPT.']);
+        }
+    }
+
+    return response()->json(['status' => 0, 'msg' => 'OPT not found.']);
+}
+
+public function updateOptStatus(Request $request)
+{
+    $request->validate([
+        'id' => 'required|integer|exists:opt_tbls,opt_id', // Changed to 'id'
+        'status' => 'required|string' // Changed to 'status'
+    ]);
+
+    $opt = opt_tbl::find($request->id); // Changed to 'id'
+    $opt->opt_status = $request->status; // Ensure this is correctly set
+    $opt->save();
+
+    return response()->json(['success' => true]);
+}
+
+public function optFullRecord(Request $request)
+{
+    // Fetch the logged-in user's information
+    $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+    $resident = resident_tbl::all();
+    $opt = opt_tbl::with('resident')->get();
+
+    // Merge all the data into a single array
+    $data = [
+        'LoggedUserInfo' => $loggedUserInfo,
+        'residents' => $resident,
+        'opts' => $opt,
+    ];
+
+    // Set headers for no-cache
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // Pass the data to the view
+    return view('dashboards/healthWorkerDb/optFullRecord', $data);
+}
+
 
 public function riskAssessment(Request $request)
 {
@@ -3028,15 +3319,19 @@ public function riskAssessment(Request $request)
     return view('dashboards/healthWorkerDb/riskAssessment', $data);
 }
 
+// FOR DSTB
 public function dstb(Request $request)
 {
     // Fetch the logged-in user's information
     $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-
+    $resident = resident_tbl::all();
+    // $opt = opt_tbl::with('resident')->get();
 
     // Merge all the data into a single array
     $data = [
         'LoggedUserInfo' => $loggedUserInfo,
+        'residents' => $resident,
+        // 'opts' => $opt,
     ];
 
     // Set headers for no-cache
@@ -3108,6 +3403,122 @@ public function dengue(Request $request)
     return view('dashboards/healthWorkerDb/dengue', $data);
 }
 
+public function destrict(Request $request)
+{
+    // Fetch the logged-in user's information
+    $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
 
 
+    // Merge all the data into a single array
+    $data = [
+        'LoggedUserInfo' => $loggedUserInfo,
+    ];
+
+    // Set headers for no-cache
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // Pass the data to the view
+    return view('dashboards/healthWorkerDb/destrict', $data);
+}
+
+public function maternal(Request $request)
+{
+    // Fetch the logged-in user's information
+    $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+
+    // Merge all the data into a single array
+    $data = [
+        'LoggedUserInfo' => $loggedUserInfo,
+    ];
+
+    // Set headers for no-cache
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // Pass the data to the view
+    return view('dashboards/healthWorkerDb/maternal', $data);
+}
+
+public function immunization(Request $request)
+{
+    // Fetch the logged-in user's information
+    $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+
+    // Merge all the data into a single array
+    $data = [
+        'LoggedUserInfo' => $loggedUserInfo,
+    ];
+
+    // Set headers for no-cache
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // Pass the data to the view
+    return view('dashboards/healthWorkerDb/immunization', $data);
+}
+
+
+public function dessegragation(Request $request)
+{
+    // Fetch the logged-in user's information
+    $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+
+    // Merge all the data into a single array
+    $data = [
+        'LoggedUserInfo' => $loggedUserInfo,
+    ];
+
+    // Set headers for no-cache
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // Pass the data to the view
+    return view('dashboards/healthWorkerDb/dessegragation', $data);
+}
+
+public function fetchResidentsAge(Request $request)
+{
+    $purok = $request->query('purok');
+    
+    // Fetch all residents for the given purok
+    $residents = resident_tbl::where('res_purok', $purok)->get();
+    
+    // Initialize an array to hold the age and sex counts
+    $ageSexCounts = [];
+
+    // Loop through residents and count them based on age and sex
+    foreach ($residents as $resident) {
+        $age = \Carbon\Carbon::parse($resident->res_bdate)->age;
+        $sex = $resident->res_sex;
+
+        // Limit age from 1 to 100 (optional, based on your needs)
+        if ($age > 100) {
+            continue;
+        }
+
+        // Initialize array for each age if not already present
+        if (!isset($ageSexCounts[$age])) {
+            $ageSexCounts[$age] = ['Male' => 0, 'Female' => 0];
+        }
+
+        // Increment the count for male or female based on the resident's sex
+        if ($sex === 'Male') {
+            $ageSexCounts[$age]['Male']++;
+        } elseif ($sex === 'Female') {
+            $ageSexCounts[$age]['Female']++;
+        }
+    }
+
+    // Pass the ageSexCounts data to the view
+    return response()->json($ageSexCounts);
+}
+//END OF FOR HEALTH WORKERS
 }
