@@ -987,8 +987,6 @@
     //update status
     function updateOptStatus(optId, newStatus) 
     {
-        console.log("Boang!");
-        
         fetch('/update-opt-status', {
             method: 'POST',
             headers: {

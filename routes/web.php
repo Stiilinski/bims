@@ -116,8 +116,28 @@ Route::get('dashboards/healthWorkerDb/optFullRecord', [regValidation::class, 'op
 
 
 Route::get('dashboards/healthWorkerDb/riskAssessment', [regValidation::class, 'riskAssessment']);
+Route::post('riskInput', [regValidation::class, 'riskInput'])->name('regValidation.riskInput');
+Route::get('/riskDisp/{risk_id}', [regValidation::class, 'getRaData']);
+Route::post('/updateRisk/{risk_id}', [regValidation::class, 'updateRisk']);
+Route::get('/riskAssessmentForm/{risk_id}', [regValidation::class, 'showRaForm'])->name('riskAssessmentForm');
+
 Route::get('dashboards/healthWorkerDb/dstb', [regValidation::class, 'dstb']);
+Route::post('dstbInput', [regValidation::class, 'dstbInput'])->name('regValidation.dstbInput');
+Route::get('/dstb/{id}', [regValidation::class, 'getDstbData']);
+Route::post('/updateDstb/{dstb_id}', [regValidation::class, 'updateDstb']);
+Route::post('/update-dstb-status', [regValidation::class, 'updateDstbStatus']);
+Route::get('/dstbForm/{dstb_id}', [regValidation::class, 'showDstbForm'])->name('dstbForm');
+
 Route::get('dashboards/healthWorkerDb/familyPlanning', [regValidation::class, 'familyPlanning']);
+Route::post('fpInput', [regValidation::class, 'fpInput'])->name('regValidation.fpInput');
+Route::get('/fpEdit/{fp_id}', [regValidation::class, 'getFpData']);
+Route::post('/updateFp/{fp_id}', [regValidation::class, 'updateFp']);
+Route::post('fpSideB', [regValidation::class, 'fpSideB'])->name('regValidation.fpSideB');
+Route::get('/fpForm/{fp_id}', [regValidation::class, 'fpForm'])->name('fpForm');
+Route::post('/update-sideB/{sideB_id}', [regValidation::class, 'updateFpSideB']);
+Route::post('/update-fp-status', [regValidation::class, 'updateFpStatus']);
+
+
 Route::get('dashboards/healthWorkerDb/rhu', [regValidation::class, 'rhu']);
 Route::get('dashboards/healthWorkerDb/destrict', [regValidation::class, 'destrict']);
 Route::get('dashboards/healthWorkerDb/dengue', [regValidation::class, 'dengue']);
