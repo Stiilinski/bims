@@ -434,6 +434,10 @@ class regValidation extends Controller
         return response()->json(['status' => 200, 'resident' => $resident, 'msg' => 'Resident has been updated successfully']);
     }
 
+    public function dbBlogs()
+    {
+        return view('dashboards/dbBlogs');
+    }
 
     public function dbResidents()
     {

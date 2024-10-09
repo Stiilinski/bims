@@ -68,7 +68,7 @@ Route::post('/cancelBusiness', [regValidation::class, 'cancelBusiness'])->name('
 Route::get('/schedule', [regValidation::class, 'getSchedule']);
 Route::get('/officials', [regValidation::class, 'getOfficialData'])->name('official.data');
 Route::get('dashboards/resdidentsDb/blogs', [regValidation::class, 'blogs']);
-
+Route::get('dbBlogs', [regValidation::class, 'dbBlogs'])->name('dbBlogs');
 
 
 // for employees

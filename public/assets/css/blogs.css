@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+body {
+  font-family: "Inter", sans-serif !important;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.no-border-card {
+  border: none !important;
+}
+
+.custom-button {
+  color: black;
+  transition: background-color 1s ease; /* Smooth color transition */
+}
+
+.custom-button:hover {
+  color: darkgray;
+}
+
+#topContainer {
+  width: 100%;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0; /* Initial collapsed state */
+}
+
+.top-container-content {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* For WebKit browsers (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 8px; /* Height of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Round the edges */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color on hover */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+/* For Firefox */
+.scrollable {
+  scrollbar-width: thin; /* Makes scrollbar thin */
+  scrollbar-color: #888 #f1f1f1; /* Thumb color and track color */
+}
+
+/* Borderless input field style */
+input.form-control.borderless {
+  border: none; /* Remove the border */
+  box-shadow: none; /* Remove any shadow effect */
+  background: transparent; /* Make the background transparent */
+  font-size: 24px;
+  font-weight: 1000;
+}
+
+/* Optional: Change focus outline for a cleaner look */
+input.form-control.borderless:focus {
+  outline: none; /* Remove the default outline on focus */
+}
+
+a.top-container-link {
+  color: black !important;
+  text-decoration: none !important;
+}
+
+.border-bb {
+  border-bottom: 2px solid !important;
+}
+
+.border-b {
+  border-bottom: 1px solid darkgray !important;
+}
+
+.pagination .page-link {
+  color: #000; /* Text color */
+}
+
+.pagination .page-link:hover {
+  background-color: #5a6268; /* Darker shade for hover */
+  color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #5a6268; /* Active button background */
+  color: #fff; /* Active button text color */
+  border-color: #5a6268;
+}
+
+.pagination .page-link:focus {
+  outline: none; /* Remove focus outline */
+  box-shadow: none; /* Remove focus box-shadow */
+  color: #000;
+}
