@@ -1,0 +1,124 @@
+.header{
+    width: 100%;
+    height: 80px;
+    background-color: #0A50A3;
+    display: flex;
+    flex-direction: row;
+}
+
+.rightBar{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.logOut, .logIn {
+    color: #000;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    gap: 2px;
+    font-size: 20px;
+}
+
+.bx-log-out, .bx-log-in {
+    font-size: 20px;
+}
+
+.logout, .logIn, a {
+    text-decoration: none;
+}
+
+/* EDIT EMPLOYEE */
+.editEmployeeAccount {
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.editEmployeeAccountCon {
+    background-color: #F3FEFF;
+    width: 1200px;
+    height: 700px;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerEditTitle {
+    width: 100%;
+    border-bottom: solid 2px #000;
+    font-size: 30px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bx-x {
+    cursor: pointer;
+}
+
+.editEmployeeForms {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+}
+
+.emp_leftInput {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.emp_avatarcon {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.e_avatar {
+    width: 100%;
+    background-color: #ddd;
+    height: 250px;
+}
+
+.emp_rightInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 70%;
+}
+
+.buttonPart {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.changeProf {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+}
+
+.changeProf:hover {
+    background-color: #f1f1f1;
+}

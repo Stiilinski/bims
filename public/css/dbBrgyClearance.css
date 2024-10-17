@@ -1,0 +1,1151 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+body {
+    overflow-y: hidden;
+}
+
+.container {
+    min-width: 1536px;
+    padding: 0px;
+    margin: 0 auto;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.containerCon {
+    display: flex;
+    flex-direction: row;
+}
+
+.sideBar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #F3FEFF;
+    gap: 3px;
+    width: 310px;
+    height: 100%;
+    position: fixed;
+    z-index: 3;
+    overflow-y: auto;
+}
+
+.sLogo {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.systemName {
+    color: #fff;
+    font-size: 30px;
+}
+
+.brgy {
+    color: #fff;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.sLogoPic {
+    padding: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    background-color: #0A50A3;
+    gap: 10px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+.profNameCon {
+    display: flex;
+    padding: 10px;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    color: #0A50A3;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.profNameCon:hover {
+    background-color: #b1d1d5;
+}
+
+.profilePart {
+    width: 20%;
+}
+
+.namePart {
+    width: 70%;
+}
+
+.optionPartBtn {
+    width: 10%;
+}
+
+.profName {
+    color: #0A50A3;
+    font-size: 20px;
+}
+/* Dropdown container */
+.profNameCon {
+    position: relative;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: transparent;
+    color: black;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    right: 15px;
+    top: 40px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    height: 100%;
+    
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu when hovering over the dropdown container */
+.profNameCon:hover .dropdown-content {
+    display: block;
+}
+
+
+
+.profilePicEmp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.position {
+    color: #0A50A3;
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: -10px;
+}
+
+.btnNotif {
+    width: 100%;
+    height: 45px;
+}
+
+.bxs-bell {
+    color: #fff;
+    font-size: 20px;
+}
+
+.notif {
+    width: 100%;
+    height: 100%;
+    border-top: solid 2px #000;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.navBar {
+    background-color: #F3FEFF;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+}
+
+.navBar::-webkit-scrollbar {
+    width: 5px; /* Thin scrollbar */
+}
+
+.navBar::-webkit-scrollbar-track {
+    background: #F3FEFF; /* Track color same as background */
+}
+
+.navBar::-webkit-scrollbar-thumb {
+    background-color: #3b89e8; /* Thumb color */
+    border-radius: 10px; /* Round thumb */
+}
+
+.act {
+    width: 100%;
+    height: 100%;
+    background-color: #b1d1d5!important;
+}
+
+.barG, .clear {
+    padding-left: 15px;
+}
+
+.resRecord, .barangayCert, .purokList, .barangayClearance, .messages,
+.blotterRecords, .reqDocs, .indigency, .secDashboard, a{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.btnResRecord, .btnBarangayCert, .btnIndigency, .btnClearance,
+.btnBlotter, .btnreqDocs{
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding-left: 15px;
+    border: none;
+}
+
+.barangayCert, .barangayClearance {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+}
+
+.resR, .barG, .purok, .indi, .clear,
+.blot, .reqD {
+    display: flex;
+    align-items: center;
+    color: #000A40;
+    font-size: 20px;
+}
+
+.bx-group {
+    color: #000A40;
+    font-size: 28px;
+}
+
+.btnview {
+    width: 58.49px!important;
+    height: 37.6px!important;
+}
+
+.btnSecDashboard, .btnPur {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding-left: 15px;
+    border: none;
+}
+
+.dashB {
+    display: flex;
+    align-items: center;
+    color: #000A40;
+    font-size: 20px;
+}
+
+.bxs-home {
+    color: #000A40;
+    font-size: 28px;
+}
+
+.purokList {
+    display: flex;
+    align-items: center;
+}
+
+.bx-current-location {
+    font-size: 28px;
+}
+
+.puroks {
+    width: 220px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+
+.messages {
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.bx-envelope {
+    font-size: 28px;
+}
+
+.message {
+    width: 220px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+
+
+/**********************************************************************************************************/
+.contentCon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20%;
+}
+
+.contentHeader {
+    width: 100%;
+    height: 70px;
+    background-color: #0A50A3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-right: 30px;
+}
+
+.profNames {
+    color: #fff;
+}
+
+.mainContentCon {
+    background: linear-gradient(to bottom, #0A50A3 50%, white 50%);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    height: 100%;
+}
+
+.innerContent {
+    background-color: #F3FEFF;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    height: 750px;
+}
+
+/***********************************************dashboard************************************************/
+.navTitle {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    color: #000;
+    font-size: 35px;
+    font-family: "Inter";
+    font-weight: 700;
+    padding-left: 40px;
+}
+
+.cardBoard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+
+/*********************************************RESIDENT RECORD*********************************************/
+.overallRepCon {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: #000;
+    font-size: 35px;
+    margin-top: 10px;
+    font-family: "Inter";
+    font-weight: 700;
+}
+
+.resContentHeader {
+    display: flex;
+    align-items: center;
+    border-bottom: solid 2px #000;
+}
+
+.btnResRecord {
+    /* display: flex; */
+    gap: 10px;
+}
+
+.addResident, .printRes {
+    width: 180px;
+    height: 40px;
+    font-family: "Inter";
+    font-weight: 700;
+    font-size: 18px;
+}
+/* ADD FORM */
+.addresCon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    display: none;
+    justify-content: center;
+    z-index: 3;
+}
+
+.addresInput {
+    background-color: #F3FEFF;
+    border-radius: 5px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    overflow-y: auto;
+}
+
+
+.addResHeader {
+    width: 100%;
+    display: flex;
+    border-bottom: solid 2px #000
+}
+
+.titlePart {
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.closePart {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.addResForms {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.rightInput {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.fullNamePart, .picturePart, .birthPart,
+.personalPart1, .personalPart2 {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.avatarcon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.avatar {
+    height: 250px;
+}
+
+.fnameParts, .mnamePart, .lnamePart,
+.birthPlacePart, .bdatePart, .agePart,
+.civilStatusPart, .sexPart, .purokPart,
+.votersPart, .emailAddPart, .contactPart  {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 270px;
+}
+
+.citizenPart, .addressPart, .occupationPart {
+    width: 910px;
+}
+
+.buttonPart {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-right: 40px;
+}
+
+.btn-primary {
+    width: 150px;
+    height: 50px;
+}
+
+.bx-x {
+    cursor: pointer;
+    font-size: 30px;
+}
+
+.tablePart {
+    padding: 15px;
+    height: 100%;
+}
+
+#myTable_wrapper {
+    height: 100%;
+}
+
+th {
+    font-size: 15px;
+}
+#myTable th:nth-child(1),
+#myTable td:nth-child(1) {
+    width: 20px;
+}
+
+#myTable th:nth-child(2),
+#myTable td:nth-child(2) {
+    width: 150px;
+}
+
+#myTable th:nth-child(3),
+#myTable td:nth-child(3) {
+    width: 30px;
+}
+
+#myTable th:nth-child(4),
+#myTable td:nth-child(4) {
+    width: 50px;
+}
+
+#myTable th:nth-child(5),
+#myTable td:nth-child(5) {
+    width: 50px;
+}
+
+#myTable th:nth-child(6),
+#myTable td:nth-child(6) {
+    width: 300px;
+}
+
+
+.pagination {
+    display: flex;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.pagination > li {
+    display: inline-block; /* Change from inline to inline-block */
+    height: 40px; /* Set the height to match the pagination height */
+    line-height: 40px; /* Set line-height to vertically center text */
+}
+
+.pagination > li > a,
+.pagination > li > span {
+    display: block; /* Change from inline to block */
+    padding: 0 12px; /* Adjust padding as needed */
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    height: 100%; /* Ensure the anchor/span fills the entire height of the li */
+}
+
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+.dropdown {
+    height: 100%;
+}
+
+.btn-secondary {
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-item {
+    height: 100%;
+}
+
+/* VIEW SA RESIDENT NAKA DARREN! */
+/*********************************************EDIT FORM*********************************************/
+/* ADD FORM */
+.editresCon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    display: none;
+    justify-content: center;
+    z-index: 3;
+}
+
+.editresInput {
+    background-color: #F3FEFF;
+    border-radius: 5px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    overflow-y: auto;
+}
+
+
+.editResHeader {
+    width: 100%;
+    display: flex;
+    border-bottom: solid 2px #000
+}
+
+.e_titlePart {
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.e_closePart {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.editResForms {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.e_rightInput {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.e_fullNamePart, .e_picturePart, .e_birthPart,
+.e_personalPart1, .e_personalPart2 {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.e_avatarcon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.e_avatar {
+    height: 250px;
+
+}
+
+.e_fnameParts, .e_mnamePart, .e_lnamePart,
+.e_birthPlacePart, .e_bdatePart, .e_agePart,
+.e_civilStatusPart, .e_sexPart, .e_purokPart,
+.e_votersPart, .e_emaileditPart, .e_contactPart  {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 270px;
+}
+
+.e_citizenPart, .e_addressPart, .e_occupationPart {
+    width: 910px;
+}
+
+.buttonPart {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-right: 40px;
+}
+
+.btn-primary {
+    width: 150px;
+    height: 50px;
+}
+
+.bx-x {
+    cursor: pointer;
+    font-size: 30px;
+}
+/*********************************************END OF EDIT FORM*********************************************/
+
+.footer {
+    background-color: #0A50A3;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    margin-left: 20%;
+}
+
+
+
+.rejectReasonContainer {
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.rejectReasoncon {
+    background-color: #F3FEFF;
+    width: 800px;
+    height: 500px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.rejectReasonForm {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    height: 100%;
+}
+
+.reasonArea {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    width: 100%;
+}
+
+.textForms {
+    width: 100%;
+    height: 300px;
+    resize: none;   
+}
+
+.btnRejectArea {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+
+.viewResident {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    display: none;
+    justify-content: center;
+    z-index: 3;
+}
+
+.editresInput {
+    background-color: #F3FEFF;
+    border-radius: 5px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    overflow-y: auto;
+}
+
+
+.editResHeader {
+    width: 100%;
+    display: flex;
+    border-bottom: solid 2px #000
+}
+
+.e_titlePart {
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.e_closePart {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.editResForms {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.e_rightInput {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.e_fullNamePart, .e_picturePart, .e_birthPart,
+.e_personalPart1, .e_personalPart2 {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.e_avatarcon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.e_avatar {
+    height: 250px;
+
+}
+
+.e_fnameParts, .e_mnamePart, .e_lnamePart,
+.e_birthPlacePart, .e_bdatePart, .e_agePart,
+.e_civilStatusPart, .e_sexPart, .e_purokPart,
+.e_votersPart, .e_emaileditPart, .e_contactPart  {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 270px;
+}
+
+.e_citizenPart, .e_addressPart, .e_occupationPart {
+    width: 910px;
+}
+
+.buttonPart {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-right: 40px;
+}
+
+.btn-primary {
+    width: 150px;
+    height: 50px;
+}
+
+.bx-x {
+    cursor: pointer;
+    font-size: 30px;
+}
+
+/****************************************************BARANGAY CLEARANCE**************************************************************/
+.clearance {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.btnClear {
+    width: 1100px;
+    height: 650px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    gap: 50px;
+}
+
+.label {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    margin-top: 50px;
+    font-family: "Inter";
+    position: relative;
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.close{
+    width: 100%;
+    height: 40px;
+    color: #125DB5;
+    font-size: 60px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bx-x {
+    cursor: pointer;
+}
+
+.barangayClearanceContainer {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.barangayClearanceMultiContainer {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.brgyClearance {
+    width: 1100px;
+    height: 650px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 10px;
+    overflow: auto;
+}
+
+.grpFields1 {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+}
+
+.labelClearance {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-family: "Inter";
+    position: relative;
+}
+
+.closeClearance{
+    width: 100%;
+    height: 40px;
+    color: #125DB5;
+    font-size: 60px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mb-3 {
+    width: 500px;
+}
+
+.buttonClearance {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 500px;
+}
+
+.btn-primary {
+    width: 170px;
+}
+
+.namePart1, .purposePart1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* EDIT EMPLOYEE */
+.editEmployeeAccount {
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.editEmployeeAccountCon {
+    background-color: #F3FEFF;
+    width: 1200px;
+    height: 700px;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerEditTitle {
+    width: 100%;
+    border-bottom: solid 2px #000;
+    font-size: 30px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bx-x {
+    cursor: pointer;
+}
+
+.editEmployeeForms {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+}
+
+.emp_leftInput {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.emp_avatarcon {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.e_avatar {
+    width: 100%;
+    background-color: #ddd;
+    height: 250px;
+}
+
+.emp_rightInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 70%;
+}
+
+.buttonPart {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.changeProf {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+}
+
+.changeProf:hover {
+    background-color: #f1f1f1;
+}
+
+.picpic {
+    width: 309.51px!important;
+}

@@ -1,0 +1,805 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+body {
+    overflow-x: hidden;
+}
+
+.container {
+    min-width: 1520px;
+    padding: 0px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.containerCon {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.sideBar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #F3FEFF;
+    gap: 3px;
+    width: 310px;
+    height: 100%;
+    position: fixed;
+    z-index: 3;
+    overflow-y: auto;
+}
+.sLogo {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.systemName {
+    color: #fff;
+    font-size: 30px;
+}
+
+.brgy {
+    color: #fff;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.sLogoPic {
+    padding: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    background-color: #0A50A3;
+    gap: 10px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+.profNameCon {
+    display: flex;
+    padding: 10px;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    color: #0A50A3;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.profNameCon:hover {
+    background-color: #b1d1d5;
+}
+
+.profilePart {
+    width: 20%;
+}
+
+.namePart {
+    width: 70%;
+}
+
+.optionPartBtn {
+    width: 10%;
+}
+
+.profName {
+    color: #0A50A3;
+    font-size: 20px;
+}
+/* Dropdown container */
+.profNameCon {
+    position: relative;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: transparent;
+    color: black;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    right: 15px;
+    top: 40px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    height: 100%;
+    
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu when hovering over the dropdown container */
+.profNameCon:hover .dropdown-content {
+    display: block;
+}
+
+
+
+.profilePicEmp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.position {
+    color: #0A50A3;
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: -10px;
+}
+
+.btnNotif {
+    width: 100%;
+    height: 45px;
+}
+
+.bxs-bell {
+    color: #fff;
+    font-size: 20px;
+}
+
+.notif {
+    width: 100%;
+    height: 100%;
+    border-top: solid 2px #000;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.navBar {
+    background-color: #F3FEFF;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.navBar::-webkit-scrollbar {
+    width: 5px; /* Thin scrollbar */
+}
+
+.navBar::-webkit-scrollbar-track {
+    background: #F3FEFF; /* Track color same as background */
+}
+
+.navBar::-webkit-scrollbar-thumb {
+    background-color: #3b89e8; /* Thumb color */
+    border-radius: 10px; /* Round thumb */
+}
+
+.act {
+    width: 100%;
+    height: 100%;
+    background-color: #b1d1d5!important;
+}
+
+.resRecord, .barangayCert, .purokList, .barangayClearance, .messages,
+.blotterRecords, .reqDocs, .indigency, .secDashboard, a{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.btnResRecord, .btnBarangayCert, .btnIndigency, .btnClearance,
+.btnBlotter, .btnreqDocs{
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding-left: 15px;
+    border: none;
+}
+
+.resR, .barG, .purok, .indi, .clear,
+.blot, .reqD {
+    display: flex;
+    align-items: center;
+    color: #000A40;
+    font-size: 20px;
+}
+
+.bx-group {
+    color: #000A40;
+    font-size: 28px;
+}
+
+.barangayCert, .barangayClearance {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+}
+
+.btnSecDashboard, .btnPur {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding-left: 15px;
+    border: none;
+}
+
+.dashB {
+    display: flex;
+    align-items: center;
+    color: #000A40;
+    font-size: 20px;
+}
+
+.bxs-home {
+    color: #000A40;
+    font-size: 28px;
+}
+
+.purokList {
+    display: flex;
+    align-items: center;
+}
+
+.bx-current-location {
+    font-size: 28px;
+}
+
+.puroks {
+    width: 220px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+
+.messages {
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.bx-envelope {
+    font-size: 28px;
+}
+
+.message {
+    width: 220px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+
+
+/**********************************************************************************************************/
+.contentCon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20%;
+}
+
+.contentHeader {
+    width: 100%;
+    height: 70px;
+    background-color: #0A50A3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-right: 30px;
+}
+
+.profNames {
+    color: #fff;
+}
+
+.mainContentCon {
+    background: linear-gradient(to bottom, #0A50A3 50%, white 50%);
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+
+/***********************************************dashboard************************************************/
+.innerContent {
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin-top: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.navTitle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.navtitleCon{
+    color: #000;
+    font-size: 35px;
+    font-family: "Inter";
+    font-weight: 700;
+}
+
+.printBtn {
+    height: 50px;
+    width: 180px;
+    border-radius: 10px;
+}
+
+.primaryBorderColor {
+    height: 60px;
+    background-color: #5696e4;
+    clip-path: polygon(71% 0, 100% 0, 100% 20%, 88% 15%, 78% 18%, 48% 30%, 26% 50%, 0 100%, 0 0, 33% 0);
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.secondaryBorderColor {
+    height: 100px;
+    width: 100%;
+    background-color: #a30a0ae9;
+    clip-path: polygon(100% 0, 100% 25%, 65% 25%, 66% 25%, 51% 28%, 29% 40%, 13% 60%, 0 90%, 0 0, 48% 0);
+    position: absolute;
+}
+
+.brgyAddressTitle {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    border-bottom: solid 2px #000;
+}
+
+.brgyLogoCon {
+    width: 20%;
+    height: 100%;
+}
+
+.logo1 {
+    position: absolute;
+    height: 150px;
+    width: 150px;
+    top: 10px;
+    left: 40px;
+    z-index: 3;
+}
+
+.addressCon {
+    width: 40%;
+    padding-top: 50px;
+}
+
+.province, .brgyName {
+    font-size: 18px;
+    line-height: 0.9;
+}
+
+.brgyName {
+    font-weight: 700;
+    font-style: italic;
+}
+
+.titleCaptainCon {
+    width: 40%;
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.office{
+    font-size: 18px;
+    line-height: 0.9;
+    
+}
+
+.fbAccount {
+    font-size: 12px;
+}
+
+.paragraph1, .paragraph2, 
+.paragraph3, .paragraph4 {
+    text-align: justify;
+}
+
+.residentProf {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 75px;
+}
+.residentProf1 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.residentRes {
+    letter-spacing: 5px;
+    font-weight: 700;
+    font-size: 40px;
+    font-family: Algerian;
+}
+
+
+
+.contentsContainer {
+    display: flex;
+    padding: 10px;
+    gap: 20px;
+}
+
+.leftsContainer {
+    border: solid 2px #000;
+    border-style: double;
+    border-width: 4px;
+    width: 30%;
+    height: 900px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    font-size: 20px;
+}
+
+.signaturePart {
+    border-top: solid 2px #000;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 150px;
+}
+
+.leftInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.leftInfoFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 150px;
+    margin-top: 50px;
+}
+
+.infoTitle {
+    text-decoration: underline;
+}
+
+
+.rightsContainer {
+    width: 100%;
+    height: 900px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-size: 20px;
+}
+
+.headerLetter {
+    margin-top: 50px;
+}
+
+.bodyLetter {
+    display: flex;
+    flex-direction: column;
+    text-indent: 40px;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.footerLetter {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 50px;
+}
+
+.capitan1 {
+    display: flex;
+    justify-content: center;
+    width: 363.94px;
+}
+
+.dateFoot {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.semiFooter {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.primaryOutBorderColor {
+    height: 100px;
+    background-color: #5696e4;
+    clip-path: polygon(51% 68%, 73% 65%, 89% 55%, 100% 39%, 100% 100%, 50% 100%, 0 100%, 0 66%, 12% 69%, 30% 68%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.secondaryOutBorderColor {
+    height: 60px;
+    width: 100%;
+    clip-path: polygon(50% 80%, 80% 70%, 84% 60%, 100% 0%, 100% 100%, 50% 100%, 0 100%, 0 70%, 11% 78%, 31% 78%);
+    background-color: #a30a0ae9;
+   margin-bottom: 31px;
+}
+
+.rephraseBg {
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+}
+
+.rephraseMainBg {
+    background-color: #F3FEFF;
+    border-radius: 10px;
+    display: flex;
+    width: 1300px;
+    height: 700px;
+    padding: 10px;
+}
+
+.rephraseForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.orignalPurpose, .rephrasePurpose, .residenceCertificate, 
+.officialReceipt, .amountPaids, .updateDates{
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonArea {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.inputForm {
+    resize: none;
+    width: 100%;
+    height: 100px;
+}
+
+
+
+.footer {
+    background-color: #0A50A3;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    margin-left: 20%;
+}
+
+.updateInsertTranCertCon {
+    background-color: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+}
+
+.updateInsertFormCon {
+    background-color: #F3FEFF;
+    width: 1000px;
+    height: 600px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputForms {
+    width: 350px;
+    height: 40px;
+}
+
+.error-text {
+    color: #d33636;
+}
+
+.updateInsertForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.certNumArea, .orArea, .amountPaidArea, .dateArea
+{
+    display: flex;
+    flex-direction: column;
+}
+
+/* EDIT EMPLOYEE */
+.editEmployeeAccount {
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.editEmployeeAccountCon {
+    background-color: #F3FEFF;
+    width: 1200px;
+    height: 700px;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerEditTitle {
+    width: 100%;
+    border-bottom: solid 2px #000;
+    font-size: 30px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bx-x {
+    cursor: pointer;
+}
+
+.editEmployeeForms {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+}
+
+.emp_leftInput {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.emp_avatarcon {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.e_avatar {
+    width: 100%;
+    background-color: #ddd;
+    height: 250px;
+}
+
+.emp_rightInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 70%;
+}
+
+.buttonPart {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.changeProf {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+}
+
+.changeProf:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .innerContent {
+        visibility: visible !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .innerContent * {
+        visibility: visible;
+    }
+}

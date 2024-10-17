@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+html {
+  margin: 0 auto;
+  width: 100%!important;
+}
+body {
+  font-family: "Inter", sans-serif !important;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.no-border-card {
+  border: none !important;
+}
+
+.custom-button {
+  color: black;
+  transition: background-color 1s ease; /* Smooth color transition */
+}
+
+.custom-button:hover {
+  color: darkgray;
+}
+
+#topContainer {
+  width: 100%;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0; /* Initial collapsed state */
+}
+
+.top-container-content {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* For WebKit browsers (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 8px; /* Height of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Round the edges */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color on hover */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+/* For Firefox */
+.scrollable {
+  scrollbar-width: thin; /* Makes scrollbar thin */
+  scrollbar-color: #888 #f1f1f1; /* Thumb color and track color */
+}
+
+/* Borderless input field style */
+input.form-control.borderless {
+  border: none; /* Remove the border */
+  box-shadow: none; /* Remove any shadow effect */
+  background: transparent; /* Make the background transparent */
+  font-size: 24px;
+  font-weight: 1000;
+}
+
+/* Optional: Change focus outline for a cleaner look */
+input.form-control.borderless:focus {
+  outline: none; /* Remove the default outline on focus */
+}
+
+a.top-container-link {
+  color: black !important;
+  text-decoration: none !important;
+}
+
+.border-bb {
+  border-bottom: 2px solid !important;
+}
+
+.border-b {
+  border-bottom: 1px solid darkgray !important;
+}
+
+
+@media (min-width: 800px) {
+  html {
+    margin: 0 auto;
+    width: 100%;
+  }
+  body {
+    margin: 0 auto;
+  }
+  .card {
+    flex-direction: row !important;
+    border: none !important;
+    background-color: rgba(255, 255, 255, 0) !important;
+  }
+
+  .card-img-top {
+    width: 400px !important;
+    border-top-left-radius: var(--bs-card-inner-border-radius);
+    border-bottom-left-radius: var(--bs-card-inner-border-radius);
+    border-top-right-radius: var(--bs-card-inner-border-radius);
+    border-bottom-right-radius: var(--bs-card-inner-border-radius);
+    border: solid #000 1px !important;
+  }
+
+  .card-text-fixed {
+    width: 100%; /* Set a fixed width */
+    overflow: hidden; /* Prevent overflow */
+    word-wrap: break-word;
+    text-overflow: ellipsis; /* Add "..." if text overflows */
+  }
+
+  .rec-img {
+    height: 200px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  video {
+    display: none!important;
+  }
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-top: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.2;
+  z-index: -1; /* Ensure the video stays behind content if necessary */
+}
+
+.main-container {
+  width: 100% !important;
+}
+
+.rec-img {
+  height: 100%;
+  width: 100% !important;
+}
+
+.black-link {
+  color: #000;
+}
+
+.black-bar-top {
+  border-bottom: #000 solid 1px;
+}
+
+.larger-ic {
+  font-size: 3.0rem; 
+}
+
+.custom-ul {
+  padding-left: 50px !important;
+}
