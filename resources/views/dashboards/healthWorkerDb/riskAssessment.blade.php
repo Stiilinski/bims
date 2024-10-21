@@ -1366,7 +1366,7 @@
                                             <input type="text" class="form-control" id="edit_inputContact" name="edit_inputContact" readonly>
                                         </div>
                                     </div>
-{{-- 
+                                    {{-- 
                                     <div class="column mb-3">
                                         <label for="edit_inputEd" class="col-sm-5 col-form-label">Educational Attainment</label>
                                         <div class="col-sm-10">
@@ -2326,7 +2326,7 @@
         </div>
     </div><!-- End EDIT Large Modal-->
 
-</main><!-- End #main Family Planning Naka Darren-->
+</main><!-- End-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}

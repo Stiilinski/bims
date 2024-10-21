@@ -149,7 +149,6 @@
         <h1>Individual Client Treatment Report</h1>
         <div class="btnArea">
             <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">New Record</button>  
         </div>
     </div><!-- End Page Title -->
     
@@ -199,7 +198,7 @@
                 </div>
             </div>
             <!-- Table with stripped rows -->
-            <table class="table table-striped datatable">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -221,130 +220,6 @@
           <!-- End Table with stripped rows -->
         </div>
     </div>
-
-      <!-- Extra Large Modal -->
-      <div class="modal fade" id="ExtralargeModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Individual Client Report</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form> <!-- Horizontal Form -->
-            @csrf
-                <div class="modal-body">
-                    <div class="personalInfo">
-                        <div class="inputField1">
-                            
-                            <div class="column mb-3" style="display: flex; flex-direction: column;">
-                                <label for="inputPatient" class="form-label">Patient</label>
-                                <select id="inputPatient" class="form-select pNames" name="inputPatient">
-                                    <option selected disabled>Choose...</option>
-                                    <option value="1">John Doe</option>
-                                    <option value="2">Jane Smith</option>
-                                    <option value="3">Michael Johnson</option>
-                                    <!-- Add more options as needed -->
-                                </select>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputPurok" class="form-label">Purok</label>
-                                <select id="inputPurok" class="form-select" name="purok">
-                                <option selected disabled>Choose...</option>
-                                <option value="Tugas">Tugas</option>
-                                <option value="Tambis">Tambis</option>
-                                <option value="Mahogany">Mahogany</option>
-                                <option value="Guyabano">Guyabano</option>
-                                <option value="Mansinitas">Mansinitas</option>
-                                <option value="Ipil-ipil">Ipil-ipil</option>
-                                <option value="Lubi">Lubi</option>
-                                </select>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputBday" class="col-sm-5 col-form-label">Birthday</label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="inputBday" name="bday">
-                                </div>
-                            </div>
-                            
-                            <div class="column mb-3">
-                                <label for="inputNumber" class="col-sm-5 col-form-label">Age</label>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="inputNumber" name="number">
-                                </div>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputCivil" class="col-sm-5 col-form-label">Civil Status</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputCivil" name="cStatus">
-                                </div>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputAddress" class="col-sm-5 col-form-label">Address</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputAddress" name="address">
-                                </div>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputLname" class="col-sm-5 col-form-label">Contact Number</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputLname" name="lname">
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="inputField2"> 
-                            <div class="column mb-3">
-                                <label for="inputCdate" class="col-sm-5 col-form-label">Date</label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="inputCdate" name="cDate">
-                                </div>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputBdate" class="col-sm-5 col-form-label">BirthDate</label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="inputBdate" name="bDate">
-                                </div>
-                            </div>
-
-                            <div class="column mb-3">
-                                <label for="inputSex" class="form-label">Sex</label>
-                                <select id="inputSex" class="form-select" name="sex">
-                                <option selected value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <div class="column mb-3">
-                                <label for="inputPurok" class="form-label">Purok</label>
-                                <select id="inputPurok" class="form-select" name="purok">
-                                <option selected disabled>Choose...</option>
-                                <option value="Tugas">Tugas</option>
-                                <option value="Tambis">Tambis</option>
-                                <option value="Mahogany">Mahogany</option>
-                                <option value="Guyabano">Guyabano</option>
-                                <option value="Mansinitas">Mansinitas</option>
-                                <option value="Ipil-ipil">Ipil-ipil</option>
-                                <option value="Lubi">Lubi</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary">Save</button>
-            </div>
-        </form><!-- End Horizontal Form -->
-          </div>
-        </div>
-      </div><!-- End Extra Large Modal-->
-
 </main><!-- End #main -->
 
 
@@ -368,24 +243,6 @@
             });
         });
     });
-
-    //INPUT PATIENT SELECT
-    $(document).ready(function() {
-        $('#inputPatient').select2({
-            placeholder: "Choose...",
-            allowClear: false
-        });
-
-        // Initialize Select2 on modal show
-        $('#ExtralargeModal').on('shown.bs.modal', function () {
-            $('#inputPatient').select2({
-                dropdownParent: $('#ExtralargeModal')
-            });
-        });
-    });
-
-
-
 </script>
 
 

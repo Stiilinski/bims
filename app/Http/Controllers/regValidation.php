@@ -2946,7 +2946,7 @@ class regValidation extends Controller
         $totalDes = destrict_tbl::whereYear('created_at', $currentYear)->count();
         // $Pregnancy = businessBrgyClearance_tbl::count();
         $tb = dstb::count();
-        $dengue = dengue_tbl::count();
+        $dengue = dengue_tbl::where('dengue_status', 'Dengue Positive')->count();
 
         // Merge all the data into a single array
         $data = [
@@ -2997,6 +2997,150 @@ class regValidation extends Controller
 
         // Pass the data to the view
         return view('dashboards/healthWorkerDb/dailyServiceRecord', $data);
+    }
+
+    public function dailyForm(Request $request)
+    {
+        // Fetch the logged-in user's information
+        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+        $resident = resident_tbl::all();
+        $medicines = medicine_tbl::where('med_status', '!=', 'Expired')->where('med_count', '>', 0)->get();
+        $dsr = dailyServiceRec_tbl::with('resident', 'medicine')->get();
+
+        // Merge all the data into a single array
+        $data = [
+            'LoggedUserInfo' => $loggedUserInfo,
+            'residents' => $resident,
+            'dsr' => $dsr,
+            'medicines' => $medicines,
+        ];
+
+        // Set headers for no-cache
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Pass the data to the view
+        return view('dashboards/healthWorkerDb/dailyForm', $data);
+    }
+
+    public function inputDsr(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'inputDate' => 'required|date',
+            'inputPatientName' => 'required',
+            'inputBp' => 'required|numeric',
+            'inputTemp' => 'required|numeric',
+            'inputHeight' => 'required|numeric',
+            'inputWeight' => 'required|numeric',
+            'inputComplaints' => 'required|string',
+            'smoker' => 'required',
+            'alcohol' => 'required',
+            'inputMed' => 'required',
+            'inputQuantity' => 'required|numeric',
+            'signature_valid' => 'required|in:1',
+        ], [
+            'inputDate.required' => 'The Date field is required.',
+            'inputDate.date' => 'The Date must be DD/MM/YYYY.',
+            'inputPatientName.required' => 'The Patient name is required.',
+            'inputBp.required' => 'The BP field is required.',
+            'inputBp.numeric' => 'The input must be a number.',
+            'inputTemp.required' => 'The Temperature field is required.',
+            'inputTemp.numeric' => 'The Temperature must be a number.',
+            'inputHeight.required' => 'The Height is required.',
+            'inputHeight.numeric' => 'The Height must be a number.',
+            'inputWeight.required' => 'The Weight is required.',
+            'inputWeight.numeric' => 'The Weight must be a number.',
+            'inputComplaints.required' => 'Complaints are required.',
+            'inputComplaints.string' => 'Complaints must be in a form of sentence or words.',
+            'smoker.required' => 'The Smoker field is required.',
+            'alcohol.required' => 'The Alcohol field is required.',
+            'inputMed.required' => 'The Medication field is required.',
+            'inputQuantity.required' => 'The quantity is required.',
+            'inputQuantity.numeric' => 'The quantity must be a number.',
+            'signature_valid.required' => 'A valid signature is required.',
+            'signature_valid.in' => 'A valid signature is required.',
+        ]);
+
+        if ($validator->fails()) 
+        {
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } 
+        else 
+        {
+            $dsr = new dailyServiceRec_tbl;
+            $dsr->dsr_dateVisit = $request->inputDate;
+            $dsr->res_id = $request->inputPatientName;
+            $dsr->em_id = $request->inputEmId;
+            $dsr->dsr_bp = $request->inputBp;
+            $dsr->dsr_temp = $request->inputTemp;
+            $dsr->dsr_ht = $request->inputHeight;
+            $dsr->dsr_wt = $request->inputWeight;
+            $dsr->dsr_complaint = $request->inputComplaints;
+            $dsr->dsr_smoke = $request->smoker;
+            $dsr->dsr_alcohol = $request->alcohol;
+            $dsr->med_id = $request->inputMed;
+            $dsr->dsr_qt = $request->inputQuantity;
+            $dsr->dsr_status = 'Completed';
+
+        // Signature
+        // Signature Patient
+            if ($request->filled('signaturePad_1') && !empty($request->input('signaturePad_1'))) {
+                $signaturePatient = $request->input('signaturePad_1');
+                $signaturePath = $this->saveSignature($signaturePatient, 'signaturePad_1');
+                $dsr->dsr_signature = $signaturePath;
+            }
+
+            // Signature LGU (only if signature is provided)
+            if ($request->filled('signaturePad_2') && !empty($request->input('signaturePad_2'))) {
+                $signatureLgu = $request->input('signaturePad_2');
+                $signaturePath1 = $this->saveSignature($signatureLgu, 'signaturePad_2');
+                $dsr->dsr_signatureLgu = $signaturePath1;
+            } else {
+                $dsr->dsr_signatureLgu = null; // Ensure null is stored if no signature
+            }
+
+            // Signature BRGY (only if signature is provided)
+            if ($request->filled('signaturePad_3') && !empty($request->input('signaturePad_3'))) {
+                $signatureBrgy = $request->input('signaturePad_3');
+                $signaturePath2 = $this->saveSignature($signatureBrgy, 'signaturePad_3');
+                $dsr->dsr_signatureBrgy = $signaturePath2;
+            } else {
+                $dsr->dsr_signatureBrgy = null; // Ensure null is stored if no signature
+            }
+
+            
+        // Deduct quantity from medicine_tbl
+            $medicine = medicine_tbl::find($request->inputMed);
+            if ($medicine) 
+            {
+                $newCount = $medicine->med_count - $request->inputQuantity;
+                if ($newCount >= 0) {
+                    $medicine->med_count = $newCount;
+                    $medicine->save(); // Update the medicine count in the database
+                } else {
+                    return response()->json(['status' => 0, 'msg' => 'Not enough medicine stock'], 400);
+                }
+            } 
+            else {
+                return response()->json(['status' => 0, 'msg' => 'Medicine not found'], 404);
+            }
+        // end medicine
+            if ($dsr->save()) 
+            {
+                return response()->json(['status' => 1, 'msg' => 'New Record Has Been Added']);
+            } 
+            else 
+            {
+                return response()->json(['status' => 0, 'msg' => 'Failed to add new Record'], 500);
+            }
+        }
+    }
+
+    private function isEmptySignature($signatureData)
+    {
+        $emptySignatureBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA';
+        return str_starts_with($signatureData, $emptySignatureBase64);
     }
 
 // End of DSR
@@ -4948,7 +5092,7 @@ public function updateDengue(Request $request)
             $dengue->dengue_adminBrgy = $request->edit_dengueAdBrgy;
             $dengue->dengue_adminSitio = $request->edit_dengueAdSitio;
             $dengue->dengue_adminMunicipality = $request->edit_dengueAdMunicipality;
-
+            $dengue->dengue_status = $request->edit_dengueStatuss;
         // Checkbox
             $dengue->dengue_signSymp = json_decode($request->edit_dengueSignSymp, true);
             $dengue->dengue_tests = json_decode($request->edit_dengueTests, true);

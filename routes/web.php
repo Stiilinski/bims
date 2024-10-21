@@ -105,7 +105,11 @@ Route::post('/activate-employee', [regValidation::class, 'activateEmployee'])->n
 
 //FOR HEALTH WORKER
 Route::get('/dashboards/dbHealthWorker', [regValidation::class, 'dashboardHW']);
+
 Route::get('dashboards/healthWorkerDb/dailyServiceRecord', [regValidation::class, 'dailyServiceRecord']);
+Route::post('inputDsr', [regValidation::class, 'inputDsr'])->name('regValidation.inputDsr');
+Route::get('dashboards/healthWorkerDb/dailyForm', [regValidation::class, 'dailyForm']);
+
 Route::get('dashboards/healthWorkerDb/individualClientReport', [regValidation::class, 'indiClientReport']);
 
 Route::get('dashboards/healthWorkerDb/optDeworming', [regValidation::class, 'optDeworming']);
