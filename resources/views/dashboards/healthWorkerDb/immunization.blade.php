@@ -9,26 +9,6 @@
         justify-content: space-between;
     }
 
-    .averageField {
-        width: 450px;
-    }
-
-    .mediumField {
-        width: 300px;
-    }
-
-    .shortField {
-        width: 175px;
-    }
-
-    .briefField {
-        width: 100px;
-    }
-
-    .longField {
-        width: 1338px;
-    }
-
     .modal-body {
         display: flex;
         flex-direction: column;
@@ -189,7 +169,7 @@
     <div class="pagetitle">
         <h1>Immunization Records</h1>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-secondary"><i class="bi bi-printer-fill"></i> Print</button>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">New Record</button>  
         </div>
     </div><!-- End Page Title -->
@@ -218,9 +198,16 @@
                     <th>1/20/2001</th>
                     <th>Male</th>
                     <th>
-                        <button type="button" class="btn btn-primary">View</button>
-                        <button type="button" class="btn btn-primary">Edit</button>
-                        <button type="button" class="btn btn-primary">Archive</button>
+                        <button type="button" class="btn btn-primary">Vaccines</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><button class="dropdown-item" type="button" onclick="">View</button></li>
+                                <li><button class="dropdown-item" type="button" onclick="openEditModal()">Edit</button></li>
+                            </ul>
+                        </div>
                     </th>
                 </tbody>
             </table>
@@ -239,189 +226,219 @@
                 <form> <!-- Horizontal Form -->
                     @csrf
                     <div class="modal-body">
+
                         <div class="inputGroupContainer">
                             <div class="titleCaseFinding">
-                                <span>Patient Information</span>
+                                <span>Infant's Information</span>
                             </div>
                             <div class="inputArea">
-                                <div class="columnGroup"> 
-                                    <div class="columnCon">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <label for="immuLname" class="col-sm-8 col-form-label">Last Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="immuLname" name="immuLname">
+                                        </div>
+                                    </div>
 
-                                        <div class="columnCon">
-                                            <div class="column mb-3">
-                                                <label for="immuLname" class="col-sm-8 col-form-label">Last Name</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuLname" name="immuLname">
-                                                </div>
+                                    <div class="col-md-3">
+                                        <label for="immuFname" class="col-sm-8 col-form-label">First Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="immuFname" name="immuFname">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="immuMname" class="col-sm-8 col-form-label">Middle Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="immuMname" name="immuMname">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="immuSuffix" class="col-sm-8 col-form-label">Suffix</label>
+                                        <div class="col-sm-12">
+                                            <select id="immuSuffix" class="form-select" name="immuSuffix">
+                                                <option value="">Select a suffix</option>
+                                                <option value="Jr">Jr.</option>
+                                                <option value="Sr">Sr.</option>
+                                                <option value="II">II</option>
+                                                <option value="III">III</option>
+                                                <option value="IV">IV</option>
+                                                <option value="V">V</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    
+                                    <fieldset class="col-md-2">
+                                        <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">Sex</legend>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuSex" id="immuMale" value="Male">
+                                                <label class="form-check-label" for="immuMale">Male</label>
                                             </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuFname" class="col-sm-8 col-form-label">First Name</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuFname" name="immuFname">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuMname" class="col-sm-8 col-form-label">Middle Name</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuMname" name="immuMname">
-                                                </div>
-                                            </div>
-
-                                            
-                                            <fieldset class="row mb-3">
-                                                <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">Sex</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuSex" id="immuMale" value="Male">
-                                                        <label class="form-check-label" for="immuMale">Male</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuSex" id="immuFemale" value="Female">
-                                                        <label class="form-check-label" for="immuFemale">Female</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <fieldset class="row mb-3">
-                                                <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">NHTS</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuNhts" id="immuNhtsYes" value="Yes">
-                                                        <label class="form-check-label" for="immuNhtsYes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuNhts" id="immuNhtsNo" value="No">
-                                                        <label class="form-check-label" for="immuNhtsNo">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <div class="column mb-3">
-                                                <label for="immuBday" class="col-sm-12 col-form-label">Birthday</label>
-                                                <div class="col-sm-12">
-                                                    <input type="date" class="form-control averageField" id="immuBday" name="immuBday">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuAddress" class="col-sm-12 col-form-label">Address.</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuAddress" name="immuAddress">
-                                                </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuSex" id="immuFemale" value="Female">
+                                                <label class="form-check-label" for="immuFemale">Female</label>
                                             </div>
                                         </div>
+                                    </fieldset>
 
-                                        <div class="columnCon">   
-                                            <div class="column mb-3 pName">
-                                                <label for="inputImmuMother" class="form-label">Mother's Name</label>
-                                                <select id="inputImmuMother" class="form-control averageField" name="inputImmuMother" placeholder="Input Mother's Name...">
-                                                    <option value="">Select...</option>
-                                                    <option value="AL">Alabama</option>
-                                                    <option value="AK">Alaska</option>
-                                                    <option value="AZ">Arizona</option>
-                                                </select>
+                                    <fieldset class="col-md-2">
+                                        <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">NHTS</legend>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuNhts" id="immuNhtsYes" value="Yes">
+                                                <label class="form-check-label" for="immuNhtsYes">Yes</label>
                                             </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuBdate" class="col-sm-5 col-form-label">Birthdate</label>
-                                                <div class="col-sm-12">
-                                                    <input type="date" class="form-control shortField" id="immuBdate" name="immuBdate" readonly>
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuAge" class="col-sm-5 col-form-label">Age</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="immuAge" name="immuAge" readonly>
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuFp" class="col-sm-8 col-form-label">FP</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="immuFp" name="immuFp">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3 pName">
-                                                <label for="inputImmuFather" class="form-label">Father's Name</label>
-                                                <select id="inputImmuFather" class="form-control averageField" name="inputImmuFather" placeholder="Input Mother's Name...">
-                                                    <option value="">Select...</option>
-                                                    <option value="AL">Alabama</option>
-                                                    <option value="AK">Alaska</option>
-                                                    <option value="AZ">Arizona</option>
-                                                </select>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuNhts" id="immuNhtsNo" value="No">
+                                                <label class="form-check-label" for="immuNhtsNo">No</label>
                                             </div>
                                         </div>
+                                    </fieldset>
 
-                                        <div class="columnCon">   
-                                            <div class="column mb-3">
-                                                <label for="immuPlaceDel" class="col-sm-8 col-form-label">Place of Delivery</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuPlaceDel" name="immuPlaceDel">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuTtRec" class="col-sm-8 col-form-label">TT Received</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuTtRec" name="immuTtRec">
-                                                </div>
-                                            </div>
-
-                                            <fieldset class="row mb-3">
-                                                <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">Breastfeeding</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfYes" value="Yes">
-                                                        <label class="form-check-label" for="immuBfYes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfTime" value="Time">
-                                                        <label class="form-check-label" for="immuBfTime">Time</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfMix" value="Mix">
-                                                        <label class="form-check-label" for="immuBfMix">Mix</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfNo" value="No">
-                                                        <label class="form-check-label" for="immuBfNo">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
+                                    <div class="col-md-2">
+                                        <label for="immuBday" class="col-sm-12 col-form-label">Birthday</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control averageField" id="immuBday" name="immuBday">
                                         </div>
+                                    </div>
 
-                                        <div class="columnCon"> 
-                                            <fieldset class="row mb-3">
-                                                <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">New Born Screening</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuScreen" id="immuScreenYes" value="Yes">
-                                                        <label class="form-check-label" for="immuScreenYes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="immuScreen" id="immuScreenNo" value="No">
-                                                        <label class="form-check-label" for="immuScreenNo">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
+                                    <div class="col-md-2">
+                                        <label for="immuTime" class="col-sm-12 col-form-label">Time</label>
+                                        <div class="col-sm-12">
+                                            <input type="time" class="form-control averageField" id="immuTime" name="immuTime">
+                                        </div>
+                                    </div>
 
-                                            <div class="column mb-3">
-                                                <label for="immuDateNbs" class="col-sm-8 col-form-label">Date of NBS</label>
-                                                <div class="col-sm-12">
-                                                    <input type="date" class="form-control averageField" id="immuDateNbs" name="immuDateNbs">
-                                                </div>
+                                    <div class="col-md-3">
+                                        <label for="immuAddress" class="col-sm-12 col-form-label">Address</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control averageField" id="immuAddress" name="immuAddress">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="inputGroupContainer">
+                            <div class="titleCaseFinding">
+                                <span>Parent's Information</span>
+                            </div>
+                            <div class="inputArea">
+                                <div class="row g-3">
+                                    <div class="col-md-6 pt-2">
+                                        <label for="inputImmuMother" class="form-label">Mother's Name</label>
+                                        <select id="inputImmuMother" class="form-control averageField" name="inputImmuMother" placeholder="Input Mother's Name...">
+                                            <option value="">Select...</option>
+                                            <option value="AL">Alabama</option>
+                                            <option value="AK">Alaska</option>
+                                            <option value="AZ">Arizona</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="immuBdate" class="col-sm-5 col-form-label">Birthdate</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control shortField" id="immuBdate" name="immuBdate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="immuAge" class="col-sm-5 col-form-label">Age</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="immuAge" name="immuAge" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="immuFp" class="col-sm-8 col-form-label">FP</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="immuFp" name="immuFp">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="inputImmuFather" class="form-label">Father's Name</label>
+                                        <select id="inputImmuFather" class="form-control averageField" name="inputImmuFather" placeholder="Input Mother's Name...">
+                                            <option value="">Select...</option>
+                                            <option value="AL">Alabama</option>
+                                            <option value="AK">Alaska</option>
+                                            <option value="AZ">Arizona</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="inputGroupContainer">
+                            <div class="titleCaseFinding">
+                                <span>Infants's Follow Up Information</span>
+                            </div>
+                            <div class="inputArea">
+                                <div class="row g-3">   
+                                    <div class="col-md-3">
+                                        <label for="immuPlaceDel" class="col-sm-8 col-form-label">Place of Delivery</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control averageField" id="immuPlaceDel" name="immuPlaceDel">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="immuTtRec" class="col-sm-8 col-form-label">TT Received</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control averageField" id="immuTtRec" name="immuTtRec">
+                                        </div>
+                                    </div>
+
+                                    <fieldset class="col-md-4">
+                                        <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">Breastfeeding</legend>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfYes" value="Yes">
+                                                <label class="form-check-label" for="immuBfYes">Yes</label>
                                             </div>
-
-                                            <div class="column mb-3">
-                                                <label for="immuBirthOrder" class="col-sm-8 col-form-label">Birth Order</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="immuBirthOrder" name="immuBirthOrder">
-                                                </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfTime" value="Time">
+                                                <label class="form-check-label" for="immuBfTime">Time</label>
                                             </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfMix" value="Mix">
+                                                <label class="form-check-label" for="immuBfMix">Mix</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuBreastFeed" id="immuBfNo" value="No">
+                                                <label class="form-check-label" for="immuBfNo">No</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                
+                                    <fieldset class="col-md-2">
+                                        <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">New Born Screening</legend>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuScreen" id="immuScreenYes" value="Yes">
+                                                <label class="form-check-label" for="immuScreenYes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="immuScreen" id="immuScreenNo" value="No">
+                                                <label class="form-check-label" for="immuScreenNo">No</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <div class="col-md-3">
+                                        <label for="immuDateNbs" class="col-sm-8 col-form-label">Date of NBS</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control averageField" id="immuDateNbs" name="immuDateNbs">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="immuBirthOrder" class="col-sm-8 col-form-label">Birth Order</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control averageField" id="immuBirthOrder" name="immuBirthOrder">
                                         </div>
                                     </div>
                                 </div>

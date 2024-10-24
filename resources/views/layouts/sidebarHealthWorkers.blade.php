@@ -104,13 +104,29 @@
           <span>Dissagragation of Sex & Age</span>
         </a>
       </li>
-  
+
+      
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/medicine') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@medicineRecord') }}">
+        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/medicine*') ? '' : 'collapsed' }}" data-bs-target="#med-nav" data-bs-toggle="collapse" href="#">
           <i class="bx bx-plus-medical"></i>
           <span>Medicines</span>
+          <i class="bi bi-chevron-down ms-auto"></i>
         </a>
-      </li>
+        <ul id="med-nav" class="nav-content collapse {{ Request::is('dashboards/healthWorkerDb/medicine*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/medicine') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@medicineRecord') }}">
+                    <i class="bi bi-circle"></i>
+                    <span>Input Medecines</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/medRelease') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@medRelease') }}">
+                    <i class="bi bi-circle"></i>
+                    <span>Release Medicine Records</span>
+                </a>
+            </li>
+        </ul>
+    </li><!-- End Check Up Nav -->
   
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-blank.html">

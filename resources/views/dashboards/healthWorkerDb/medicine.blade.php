@@ -176,6 +176,9 @@
         }
 
     }
+    th {
+        font-size: 14px;
+    }
 </style>
 <body>
 
@@ -212,7 +215,9 @@
                         <th scope="col">Product/Service Name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Quantity</th>
-                        <th scope="col">Total Qt.</th>
+                        <th scope="col">Unit</th>
+                        <th scope="col">Count (Per Unit)</th>
+                        <th scope="col">Count</th>
                         <th scope="col">Date of Purchases</th>
                         <th scope="col">Expiration Date</th>
                         <th scope="col">Remarks</th>
@@ -229,6 +234,8 @@
                         <td>{{ $medicines->med_prod}}</td>
                         <td>{{ $medicines->med_desc }}</td>
                         <td>{{ $medicines->med_qtBox }}</td>
+                        <td>{{ $medicines->med_unit}}</td>
+                        <td>{{ $medicines->med_qtPerUnit}}</td>
                         <td>{{ $medicines->med_count}}</td>
                         <td>{{ $medicines->med_datePurchases}}</td>
                         <td>{{ $medicines->med_dateExpiration}}</td>
@@ -270,8 +277,8 @@
         @csrf
             <div class="modal-body">
                 <div class="personalInfo">
-                    <div class="inputField1"> 
-                        <div class="column mb-3">
+                    <div class="row g-3"> 
+                        <div class="col-md-6">
                             <label for="inputNdc" class="col-sm-5 col-form-label">NDC</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputNdc" name="inputNdc">
@@ -279,7 +286,7 @@
                             </div>
                         </div>
 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputProd" class="col-sm-5 col-form-label">Product/Service Name</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputProd" name="inputProd">
@@ -287,7 +294,7 @@
                             </div>
                         </div>
 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputDesc" class="col-sm-5 col-form-label">Description</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputDesc" name="inputDesc">
@@ -295,7 +302,19 @@
                             </div>
                         </div>
 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
+                            <label for="inputUnit" class="col-sm-5 col-form-label">Unit</label>
+                            <div class="col-sm-10">
+                                <select name="inputUnit" id="inputUnit" class="form-control" onchange="handleUnitChange()">
+                                    <option disabled selected>Choose...</option>
+                                    <option value="Tablet">Tablet</option>
+                                    <option value="Boxes">Boxes</option>
+                                </select>
+                                <span class="text-danger error-text inputUnit_error"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" id="qtPerBox">
                             <label for="inputBox" class="col-sm-5 col-form-label">Quantity (Per Boxes)</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputBox" name="inputBox" oninput="product()">
@@ -303,17 +322,15 @@
                             </div>
                         </div>
 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputCount" class="col-sm-5 col-form-label">Count (Per Tablet)</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputCount" name="inputCount" oninput="product()">
+                                <input type="text" class="form-control" id="inputCount" name="inputCount" oninput="handleCountInput();">
                                 <span class="text-danger error-text inputCount_error"></span>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="inputField2"> 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputTotalCount" class="col-sm-5 col-form-label">Total Count</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputTotalCount" name="inputTotalCount" readonly>
@@ -321,7 +338,7 @@
                             </div>
                         </div>
                         
-                        <div class="column mb-3" style="display: none;">
+                        <div class="col-md-6" style="display: none;">
                             <label for="inputEmp" class="col-sm-5 col-form-label">Employee</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputEmp" name="inputEmp" value="<?php echo $LoggedUserInfo['em_id']; ?>">
@@ -329,7 +346,7 @@
                             </div>
                         </div>
 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputDatePurchase" class="col-sm-5 col-form-label">Date Of Purchase</label>
                             <div class="col-sm-10">
                                 <input type="date" class="form-control" id="inputDatePurchase" name="inputDatePurchase">
@@ -337,7 +354,7 @@
                             </div>
                         </div>
 
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputDateExpired" class="col-sm-5 col-form-label">Expiration Date</label>
                             <div class="col-sm-10">
                                 <input type="date" class="form-control" id="inputDateExpired" name="inputDateExpired">
@@ -345,7 +362,7 @@
                             </div>
                         </div>
                         
-                        <div class="column mb-3">
+                        <div class="col-md-6">
                             <label for="inputRemarks" class="col-sm-5 col-form-label">Remarks</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputRemarks" name="inputRemarks">
@@ -377,7 +394,7 @@
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" id="med_id" name="med_id">
-        
+                        <input type="hidden" id="editEm_id" name="editEm_id" value="{{ $LoggedUserInfo['em_id']}}">
                         <div class="mb-3">
                             <label for="edit_med_ndc" class="form-label">NDC</label>
                             <input type="text" class="form-control" id="edit_med_ndc" name="med_ndc">
@@ -391,12 +408,24 @@
                             <input type="text" class="form-control" id="edit_med_desc" name="med_desc">
                         </div>
                         <div class="mb-3">
-                            <label for="edit_med_qtBox" class="form-label">Quantity Per Box</label>
-                            <input type="number" class="form-control" id="edit_med_qtBox" name="med_qtBox">
+                            <label for="edit_inputUnit" class="col-sm-5 col-form-label">Unit</label>
+                            <select name="edit_inputUnit" id="edit_inputUnit" class="form-control" onchange="edit_handleUnitChange()">
+                                <option disabled selected>Choose...</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Boxes">Boxes</option>
+                            </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" id="edit_qtPerBox" style="display: none">
+                            <label for="edit_med_qtBox" class="form-label">Quantity Per Box</label>
+                            <input type="text" class="form-control" id="edit_med_qtBox" name="med_qtBox" oninput="edit_product()">
+                        </div>
+                        <div class="mb-3" id="edit_ctPerBox" style="display: none">
+                            <label for="edit_med_ctPerTab" class="form-label">Count Per Unit</label>
+                            <input type="text" class="form-control" id="edit_med_ctPerTab" name="edit_med_ctPerTab"  oninput="edit_handleCountInput();">
+                        </div>
+                        <div class="mb-3" id="edit_tqPerBox" style="display: none">
                             <label for="edit_med_count" class="form-label">Total Quantity</label>
-                            <input type="number" class="form-control" id="edit_med_count" name="med_count">
+                            <input type="text" class="form-control" id="edit_med_count" name="med_count">
                         </div>
                         <div class="mb-3">
                             <label for="edit_med_datePurchases" class="form-label">Date of Purchases</label>
@@ -430,6 +459,37 @@
 
   @include('layouts.footerHealthWorkers')
   <script>
+// ****************************************
+    function handleCountInput() {
+        const unit = document.getElementById('inputUnit').value;
+        if (unit === 'Boxes') {
+            product(); // Call product() if "Boxes" is selected
+        } else if (unit === 'Tablet') {
+            updateTotalCount(); // Call updateTotalCount() if "Tablet" is selected
+        }
+    }
+
+    function handleUnitChange() 
+    {
+        const unit = document.getElementById('inputUnit').value;
+        const boxQuantityDiv = document.getElementById('qtPerBox');
+        const inputBox = document.getElementById('inputBox');
+
+        if (unit === 'Tablet') {
+            boxQuantityDiv.style.display = 'none';
+            updateTotalCount(); // Update total count when unit changes
+        } else {
+            boxQuantityDiv.style.display = 'block';
+        }
+    }
+
+    function updateTotalCount() 
+    {
+        const countValue = document.getElementById('inputCount').value;
+        document.getElementById('inputTotalCount').value = countValue;
+        document.getElementById('inputBox').value = countValue;
+    }
+
     function product() 
     {
         const qtBox = parseFloat(document.getElementById('inputBox').value) || 0;
@@ -437,6 +497,49 @@
         const totalCount = qtBox * qtCount;
 
         document.getElementById('inputTotalCount').value = totalCount;
+    }
+
+// *****************************************
+    function edit_handleCountInput() 
+    {
+        const unit = document.getElementById('edit_inputUnit').value;
+        if (unit === 'Boxes') {
+            edit_product(); // Call edit_product() if "Boxes" is selected
+        } else if (unit === 'Tablet') {
+            edit_updateTotalCount(); // Call edit_updateTotalCount() if "Tablet" is selected
+        }
+    }
+
+    function edit_handleUnitChange() {
+        const unit = document.getElementById('edit_inputUnit').value;
+        const boxQuantityDiv = document.getElementById('edit_qtPerBox');
+        const ctQuantityDiv = document.getElementById('edit_ctPerBox');
+        const tqQuantityDiv = document.getElementById('edit_tqPerBox');
+        const inputBox = document.getElementById('edit_med_qtBox');
+
+        if (unit === 'Tablet') {
+            boxQuantityDiv.style.display = 'none';
+            ctQuantityDiv.style.display = 'block'
+            edit_updateTotalCount();
+        } else {
+            boxQuantityDiv.style.display = 'block';
+            ctQuantityDiv.style.display = 'block';
+            tqQuantityDiv.style.display = 'block';
+        }
+    }
+
+    function edit_updateTotalCount() {
+        const countValue = document.getElementById('edit_med_ctPerTab').value; // Get the count per tablet
+        document.getElementById('edit_med_count').value = countValue; // Set the total quantity as the count per tablet
+        document.getElementById('edit_med_qtBox').value = countValue; // Sync the value in Quantity Per Box with count per tablet
+    }
+
+    function edit_product() {
+        const qtBox = parseFloat(document.getElementById('edit_med_qtBox').value) || 0; // Get the quantity per box
+        const qtCount = parseFloat(document.getElementById('edit_med_ctPerTab').value) || 0; // Get the count per tablet
+        const totalCount = qtBox * qtCount; // Calculate the total quantity
+
+        document.getElementById('edit_med_count').value = totalCount; // Set the total quantity
     }
 
     const printBtn = document.getElementById('print');
@@ -516,11 +619,13 @@
         var med_prod = row.find('td:eq(3)').text();
         var med_desc = row.find('td:eq(4)').text();
         var med_qtBox = row.find('td:eq(5)').text();
-        var med_count = row.find('td:eq(6)').text();
-        var med_datePurchases = row.find('td:eq(7)').text();
-        var med_dateExpiration = row.find('td:eq(8)').text();
-        var med_remarks = row.find('td:eq(9)').text();
-        var med_status = row.find('td:eq(10)').text();
+        var med_unit = row.find('td:eq(6)').text();
+        var med_qtPerUnit = row.find('td:eq(7)').text();
+        var med_count = row.find('td:eq(8)').text();
+        var med_datePurchases = row.find('td:eq(9)').text();
+        var med_dateExpiration = row.find('td:eq(10)').text();
+        var med_remarks = row.find('td:eq(11)').text();
+        var med_status = row.find('td:eq(12)').text();
 
         // Populate the modal fields with the selected data
         $('#med_id').val(med_id);
@@ -528,6 +633,8 @@
         $('#edit_med_prod').val(med_prod);
         $('#edit_med_desc').val(med_desc);
         $('#edit_med_qtBox').val(med_qtBox);
+        $('#edit_inputUnit').val(med_unit);
+        $('#edit_med_ctPerTab').val(med_qtPerUnit);
         $('#edit_med_count').val(med_count);
         $('#edit_med_datePurchases').val(med_datePurchases);
         $('#edit_med_dateExpiration').val(med_dateExpiration);
@@ -551,6 +658,8 @@
         formData.append('med_prod', $('#edit_med_prod').val());
         formData.append('med_desc', $('#edit_med_desc').val());
         formData.append('med_qtBox', $('#edit_med_qtBox').val());
+        formData.append('edit_inputUnit', $('#edit_inputUnit').val());
+        formData.append('edit_med_ctPerTab', $('#edit_med_ctPerTab').val());
         formData.append('med_count', $('#edit_med_count').val());
         formData.append('med_datePurchases', $('#edit_med_datePurchases').val());
         formData.append('med_dateExpiration', $('#edit_med_dateExpiration').val());

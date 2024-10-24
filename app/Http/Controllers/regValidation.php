@@ -25,7 +25,7 @@ use App\Models\dengue_tbl;
 use App\Models\rhu_tbl;
 use App\Models\destrict_tbl;
 use App\Models\dailyServiceRec_tbl;
-
+use App\Models\releaseMed_tbl;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -2976,11 +2976,12 @@ class regValidation extends Controller
 // DSR
     public function dailyServiceRecord(Request $request)
     {
+        $currentYear = Carbon::now()->year;
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
         $resident = resident_tbl::all();
         $medicines = medicine_tbl::where('med_status', '!=', 'Expired')->where('med_count', '>', 0)->get();
-        $dsr = dailyServiceRec_tbl::with('resident', 'medicine')->get();
+        $dsr = dailyServiceRec_tbl::with('resident', 'medicine') ->whereYear('dsr_dateVisit', $currentYear)->where('dsr_status', 'Completed')->orderBy('created_at', 'DESC')->get();
 
         // Merge all the data into a single array
         $data = [
@@ -3026,6 +3027,7 @@ class regValidation extends Controller
 
     public function inputDsr(Request $request)
     {
+        // Validation
         $validator = Validator::make($request->all(), [
             'inputDate' => 'required|date',
             'inputPatientName' => 'required',
@@ -3061,99 +3063,244 @@ class regValidation extends Controller
             'signature_valid.required' => 'A valid signature is required.',
             'signature_valid.in' => 'A valid signature is required.',
         ]);
-
-        if ($validator->fails()) 
-        {
+    
+        if ($validator->fails()) {
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
-        } 
-        else 
-        {
-            $dsr = new dailyServiceRec_tbl;
-            $dsr->dsr_dateVisit = $request->inputDate;
-            $dsr->res_id = $request->inputPatientName;
-            $dsr->em_id = $request->inputEmId;
-            $dsr->dsr_bp = $request->inputBp;
-            $dsr->dsr_temp = $request->inputTemp;
-            $dsr->dsr_ht = $request->inputHeight;
-            $dsr->dsr_wt = $request->inputWeight;
-            $dsr->dsr_complaint = $request->inputComplaints;
-            $dsr->dsr_smoke = $request->smoker;
-            $dsr->dsr_alcohol = $request->alcohol;
-            $dsr->med_id = $request->inputMed;
-            $dsr->dsr_qt = $request->inputQuantity;
-            $dsr->dsr_status = 'Completed';
+        } else {
+            // Start a transaction
+            DB::beginTransaction();
+            try {
+                // Insert into daily_service_rec_tbl
+                $dsr = new dailyServiceRec_tbl;
+                $dsr->dsr_dateVisit = $request->inputDate;
+                $dsr->res_id = $request->inputPatientName;
+                $dsr->em_id = $request->inputEmId;
+                $dsr->dsr_bp = $request->inputBp;
+                $dsr->dsr_temp = $request->inputTemp;
+                $dsr->dsr_ht = $request->inputHeight;
+                $dsr->dsr_wt = $request->inputWeight;
+                $dsr->dsr_complaint = $request->inputComplaints;
+                $dsr->dsr_smoke = $request->smoker;
+                $dsr->dsr_alcohol = $request->alcohol;
+                $dsr->med_id = $request->inputMed;
+                $dsr->dsr_qt = $request->inputQuantity;
+                $dsr->dsr_status = 'Completed';
+    
+                // Signature
+                    // Signature Patient
+                    if ($request->filled('signaturePad_1') && !empty($request->input('signaturePad_1'))) {
+                        $signaturePatient = $request->input('signaturePad_1');
+                        $signaturePath = $this->saveSignature($signaturePatient, 'signaturePad_1');
+                        $dsr->dsr_signature = $signaturePath;
+                    }
 
-        // Signature
-        // Signature Patient
-            if ($request->filled('signaturePad_1') && !empty($request->input('signaturePad_1'))) {
-                $signaturePatient = $request->input('signaturePad_1');
-                $signaturePath = $this->saveSignature($signaturePatient, 'signaturePad_1');
-                $dsr->dsr_signature = $signaturePath;
-            }
+                    // Signature LGU (only if signature is provided)
+                    if ($request->filled('signaturePad_2') && !empty($request->input('signaturePad_2'))) {
+                        $signatureLgu = $request->input('signaturePad_2');
+                        $signaturePath1 = $this->saveSignature($signatureLgu, 'signaturePad_2');
+                        $dsr->dsr_signatureLgu = $signaturePath1;
+                    } else {
+                        $dsr->dsr_signatureLgu = null; // Ensure null is stored if no signature
+                    }
 
-            // Signature LGU (only if signature is provided)
-            if ($request->filled('signaturePad_2') && !empty($request->input('signaturePad_2'))) {
-                $signatureLgu = $request->input('signaturePad_2');
-                $signaturePath1 = $this->saveSignature($signatureLgu, 'signaturePad_2');
-                $dsr->dsr_signatureLgu = $signaturePath1;
-            } else {
-                $dsr->dsr_signatureLgu = null; // Ensure null is stored if no signature
-            }
+                    // Signature BRGY (only if signature is provided)
+                    if ($request->filled('signaturePad_3') && !empty($request->input('signaturePad_3'))) {
+                        $signatureBrgy = $request->input('signaturePad_3');
+                        $signaturePath2 = $this->saveSignature($signatureBrgy, 'signaturePad_3');
+                        $dsr->dsr_signatureBrgy = $signaturePath2;
+                    } else {
+                        $dsr->dsr_signatureBrgy = null; // Ensure null is stored if no signature
+                    }
 
-            // Signature BRGY (only if signature is provided)
-            if ($request->filled('signaturePad_3') && !empty($request->input('signaturePad_3'))) {
-                $signatureBrgy = $request->input('signaturePad_3');
-                $signaturePath2 = $this->saveSignature($signatureBrgy, 'signaturePad_3');
-                $dsr->dsr_signatureBrgy = $signaturePath2;
-            } else {
-                $dsr->dsr_signatureBrgy = null; // Ensure null is stored if no signature
-            }
-
-            
-        // Deduct quantity from medicine_tbl
-            $medicine = medicine_tbl::find($request->inputMed);
-            if ($medicine) 
-            {
-                $newCount = $medicine->med_count - $request->inputQuantity;
-                if ($newCount >= 0) {
-                    $medicine->med_count = $newCount;
-                    $medicine->save(); // Update the medicine count in the database
-                } else {
-                    return response()->json(['status' => 0, 'msg' => 'Not enough medicine stock'], 400);
-                }
-            } 
-            else {
-                return response()->json(['status' => 0, 'msg' => 'Medicine not found'], 404);
-            }
-        // end medicine
-            if ($dsr->save()) 
-            {
+    
+                // Save the DSR (daily service record) and capture the dsr_id
+                $dsr->save();
+                $dsr_id = $dsr->dsr_id;
+    
+                // Insert into release_med_tbl
+                $releaseMed = new releaseMed_tbl;
+                $releaseMed->med_id = $request->inputMed;
+                $releaseMed->dsr_id = $dsr_id; // Reference the DSR record
+                $releaseMed->rmed_qtRelease = $request->inputQuantity;
+                $releaseMed->rmed_Date = now();
+                $releaseMed->save();
+    
+                // Commit the transaction
+                DB::commit();
+    
                 return response()->json(['status' => 1, 'msg' => 'New Record Has Been Added']);
-            } 
-            else 
-            {
-                return response()->json(['status' => 0, 'msg' => 'Failed to add new Record'], 500);
+            } catch (\Exception $e) {
+                // Rollback the transaction in case of failure
+                DB::rollBack();
+                return response()->json(['status' => 0, 'msg' => 'Failed to add new Record: ' . $e->getMessage()], 500);
             }
         }
     }
-
+    
     private function isEmptySignature($signatureData)
     {
         $emptySignatureBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA';
         return str_starts_with($signatureData, $emptySignatureBase64);
     }
 
+    public function getDsrData($dsr_id)
+    {
+        $currentYear = now()->year;
+
+        $dsr = dailyServiceRec_tbl::with('resident', 'medicine')
+            ->where('dsr_id', $dsr_id)
+            ->whereYear('created_at', $currentYear)
+            ->orderBy('created_at', 'desc')
+            ->first(); 
+
+        if (!$dsr) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+
+        return response()->json(['status' => 1, 'data' => $dsr]);
+    }
+
+    public function updateDsr(Request $request)
+    {
+        $dsr = dailyServiceRec_tbl::find($request->dsr_id);
+
+        if ($dsr) {
+            $dsr->dsr_id = $request->dsr_id;
+
+            // TextBox
+                $dsr->dsr_id = $request->edit_dsrId;
+                $dsr->dsr_dateVisit = $request->edit_inputDate;
+                $dsr->res_id = $request->edit_inputPatientName;
+                $dsr->em_id = $request->edit_inputEmId;
+                $dsr->dsr_bp = $request->edit_inputBp;
+                $dsr->dsr_temp = $request->edit_inputTemp;
+                $dsr->dsr_ht = $request->edit_inputHeight;
+                $dsr->dsr_wt = $request->edit_inputWeight;
+                $dsr->dsr_complaint = $request->edit_inputComplaints;
+                $dsr->med_id  = $request->edit_inputMed;
+                $dsr->dsr_qt = $request->edit_inputQuantity;
+
+            // Radio
+                if ($request->filled('edit_smoker')) {
+                    $dsr->dsr_smoke = $request->edit_smoker;
+                }
+                if ($request->filled('edit_alcohol')) {
+                    $dsr->dsr_alcohol = $request->edit_alcohol;
+                }
+              
+            // Signature
+                if ($request->has('edit_signaturePad_1')) 
+                {
+                    // Get the base64 encoded data from the request
+                    $signature1 = $request->input('edit_signaturePad_1');
+                
+                    // Decode the data URL
+                    $signature1 = str_replace('data:image/png;base64,', '', $signature1);
+                    $signature1 = str_replace(' ', '+', $signature1);
+                    $signature1Data = base64_decode($signature1);
+                
+                    // Generate a unique file name
+                    $signature1FileName = 'signatureUp_' . time() . '.png';
+                
+                    // Save the signature to the public/images/Signature directory directly
+                    $filePath = public_path('images/Signature/' . $signature1FileName);
+                    file_put_contents($filePath, $signature1Data);
+                
+                    // Save the file path to the dsr model
+                    $dsr->dsr_signature = 'images/Signature/' . $signature1FileName; // Updated attribute name
+                }
+                
+                if ($request->has('edit_signaturePad_2')) 
+                {
+                    // Get the base64 encoded data from the request
+                    $signature2 = $request->input('edit_signaturePad_2');
+                
+                    // Decode the data URL
+                    $signature2 = str_replace('data:image/png;base64,', '', $signature2);
+                    $signature2 = str_replace(' ', '+', $signature2);
+                    $signature2Data = base64_decode($signature2);
+                
+                    // Generate a unique file name
+                    $signature2FileName = 'signatureUl_' . time() . '.png';
+                
+                    // Save the signature to the public/images/Signature directory directly
+                    $filePath = public_path('images/Signature/' . $signature2FileName);
+                    file_put_contents($filePath, $signature2Data);
+                
+                    // Save the file path to the dsr model
+                    $dsr->dsr_signatureLgu = 'images/Signature/' . $signature2FileName; // Updated attribute name
+                }
+
+                if ($request->has('edit_signaturePad_3')) 
+                {
+                    // Get the base64 encoded data from the request
+                    $signature2 = $request->input('edit_signaturePad_3');
+                
+                    // Decode the data URL
+                    $signature2 = str_replace('data:image/png;base64,', '', $signature2);
+                    $signature2 = str_replace(' ', '+', $signature2);
+                    $signature2Data = base64_decode($signature2);
+                
+                    // Generate a unique file name
+                    $signature2FileName = 'signatureUb_' . time() . '.png';
+                
+                    // Save the signature to the public/images/Signature directory directly
+                    $filePath = public_path('images/Signature/' . $signature2FileName);
+                    file_put_contents($filePath, $signature2Data);
+                
+                    // Save the file path to the dsr model
+                    $dsr->dsr_signatureBrgy = 'images/Signature/' . $signature2FileName; // Updated attribute name
+                }
+            
+            if ($dsr->save()) {
+                    // Find the related release_med_tbl record using dsr_id
+                    $releaseMed = releaseMed_tbl::where('dsr_id', $dsr->dsr_id)->first();
+
+                    if ($releaseMed) {
+                        // Check if med_id or dsr_qt were updated
+                        $updated = false;
+                        if ($dsr->med_id != $releaseMed->med_id) {
+                            $releaseMed->med_id = $dsr->med_id;
+                            $updated = true;
+                        }
+                        if ($dsr->dsr_qt != $releaseMed->rmed_qtRelease) {
+                            $releaseMed->rmed_qtRelease = $dsr->dsr_qt;
+                            $updated = true;
+                        }
+
+                        // Update the release_med_tbl if needed
+                        if ($updated) {
+                            // $releaseMed->rmed_Date = now(); // Optionally update the release date
+                            $releaseMed->save();
+                        }
+                    }
+                return response()->json(['status' => 1, 'msg' => 'Record updated successfully.']);
+            } else {
+                return response()->json(['status' => 0, 'msg' => 'Failed to update Record.']);
+            }
+        }
+
+        return response()->json(['status' => 0, 'msg' => 'Record not found.']);
+    }
 // End of DSR
 
+// FOR INDIVIDUAL CLIENT REPORT
     public function indiClientReport(Request $request)
     {
+        $currentYear = Carbon::now()->year;
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-
-
+        $resident = resident_tbl::all();
+        $medicines = medicine_tbl::where('med_status', '!=', 'Expired')->where('med_count', '>', 0)->get();
+        $dsr = dailyServiceRec_tbl::with('resident', 'medicine') ->whereYear('dsr_dateVisit', $currentYear)->where('dsr_status', 'Completed')->orderBy('created_at', 'DESC')->get();
+        $release = releaseMed_tbl::all();
         // Merge all the data into a single array
         $data = [
             'LoggedUserInfo' => $loggedUserInfo,
+            'residents' => $resident,
+            'dsr' => $dsr,
+            'medicines' => $medicines,
+            'release' => $release,
         ];
 
         // Set headers for no-cache
@@ -3164,6 +3311,30 @@ class regValidation extends Controller
         // Pass the data to the view
         return view('dashboards/healthWorkerDb/individualClientReport', $data);
     }
+
+    public function getItrData($residentId)
+    {
+        $currentYear = now()->year;
+    
+        // Access `release_med_tbl` and join `daily_service_rec_tbl` to filter by `res_id`
+        $serviceRecords = releaseMed_tbl::with(['dsr' => function($query) use ($currentYear) {
+            // Filter daily_service_rec_tbl by the current year
+            $query->whereYear('created_at', $currentYear);
+        }, 'medicine']) // Load medicine relationship
+        ->whereHas('dsr', function($query) use ($residentId) {
+            // Join with daily_service_rec_tbl to filter by residentId
+            $query->where('res_id', $residentId);
+        })
+        ->orderBy('created_at', 'desc')
+        ->get(); // Use get() to return all matching records
+    
+        if ($serviceRecords->isEmpty()) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+    
+        return response()->json(['status' => 1, 'data' => $serviceRecords]);
+    }
+// END OF INDIVIDUAL CLIENT REPORT
 
 // FOR Medicine 
     public function medicineRecord(Request $request)
@@ -3194,9 +3365,10 @@ class regValidation extends Controller
             'inputNdc' => 'required|string',
             'inputProd' => 'required|string',
             'inputDesc' => 'required|string',
-            'inputBox' => 'required|numeric',
-            'inputCount' => 'required|numeric',
-            'inputTotalCount' => 'required|numeric',
+            'inputUnit' => 'required|string',
+            'inputBox' => 'numeric',
+            'inputCount' => 'numeric',
+            'inputTotalCount' => 'numeric',
             'inputDatePurchase' => 'required|date',
             'inputDateExpired' => 'required|date',
             'inputRemarks' => 'required|string',
@@ -3207,11 +3379,9 @@ class regValidation extends Controller
             'inputProd.string' => 'The product name must be a string.',
             'inputDesc.required' => 'The description is required.',
             'inputDesc.string' => 'The description must be a string.',
-            'inputBox.required' => 'The box count is required.',
+            'inputUnit.required' => 'The unit field is required.',
             'inputBox.numeric' => 'The box count must be a number.',
-            'inputCount.required' => 'The count is required.',
             'inputCount.numeric' => 'The count must be a number.',
-            'inputTotalCount.required' => 'The total count is required.',
             'inputTotalCount.numeric' => 'The total count must be a number.',
             'inputDatePurchase.required' => 'The purchase date is required.',
             'inputDatePurchase.date' => 'The purchase date must be a valid date.',
@@ -3232,7 +3402,9 @@ class regValidation extends Controller
             $medicine->med_ndc = $request->inputNdc;
             $medicine->med_prod = $request->inputProd;
             $medicine->med_desc = $request->inputDesc;
+            $medicine->med_unit = $request->inputUnit;
             $medicine->med_qtBox = $request->inputBox;
+            $medicine->med_qtPerUnit = $request->inputCount;
             $medicine->med_count = $request->inputTotalCount;
             $medicine->med_datePurchases = $request->inputDatePurchase;
             $medicine->med_dateExpiration = $request->inputDateExpired;
@@ -3259,6 +3431,8 @@ class regValidation extends Controller
             $medicine->med_prod = $request->med_prod;
             $medicine->med_desc = $request->med_desc;
             $medicine->med_qtBox = $request->med_qtBox;
+            $medicine->med_unit = $request->edit_inputUnit;
+            $medicine->med_qtPerUnit = $request->edit_med_ctPerTab;
             $medicine->med_count = $request->med_count;
             $medicine->med_datePurchases = $request->med_datePurchases;
             $medicine->med_dateExpiration = $request->med_dateExpiration;
@@ -3287,6 +3461,26 @@ class regValidation extends Controller
         $medicine->save();
 
         return response()->json(['success' => true]);
+    }
+
+    public function medRelease(Request $request)
+    {
+        // Fetch the logged-in user's information
+        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+        $medicine = releaseMed_tbl::with('medicine')->get();
+        // Merge all the data into a single array
+        $data = [
+            'LoggedUserInfo' => $loggedUserInfo,
+            'medicine' => $medicine,
+        ];
+
+        // Set headers for no-cache
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Pass the data to the view
+        return view('dashboards/healthWorkerDb/medRelease', $data);
     }
 // END OF MEDICINE
 

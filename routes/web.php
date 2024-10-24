@@ -109,8 +109,12 @@ Route::get('/dashboards/dbHealthWorker', [regValidation::class, 'dashboardHW']);
 Route::get('dashboards/healthWorkerDb/dailyServiceRecord', [regValidation::class, 'dailyServiceRecord']);
 Route::post('inputDsr', [regValidation::class, 'inputDsr'])->name('regValidation.inputDsr');
 Route::get('dashboards/healthWorkerDb/dailyForm', [regValidation::class, 'dailyForm']);
+Route::get('/dsrDisp/{dsr_id}', [regValidation::class, 'getDsrData']);
+Route::post('/updateDsr/{dsr_id}', [regValidation::class, 'updateDsr']);
 
 Route::get('dashboards/healthWorkerDb/individualClientReport', [regValidation::class, 'indiClientReport']);
+Route::get('/service-records/{residentId}', [regValidation::class, 'getItrData']);
+
 
 Route::get('dashboards/healthWorkerDb/optDeworming', [regValidation::class, 'optDeworming']);
 Route::post('inputFirstOpt', [regValidation::class, 'inputFirstOpt'])->name('regValidation.inputFirstOpt');
@@ -174,6 +178,7 @@ Route::post('inputMedicine', [regValidation::class, 'inputMedicine'])->name('reg
 Route::post('/update-medicine/{med_id}', [regValidation::class, 'updateMedicine']);
 Route::post('/update-med-status', [regValidation::class, 'updateMedStatus']);
 Route::post('/update-medOut-status', [regValidation::class, 'updateMedStatus']);
+Route::get('dashboards/healthWorkerDb/medRelease', [regValidation::class, 'medRelease']);
 
 
 //FOR CAPTAIN
