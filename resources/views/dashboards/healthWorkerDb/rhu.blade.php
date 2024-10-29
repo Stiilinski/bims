@@ -205,7 +205,7 @@
                         <td>{{ $rhus->resident->res_purok }}</td>
                         <td>{{ $rhus->rhu_status }}</td>
                         <td>
-                            <a href="{{-- route('rhuForm', ['rhu_id' => $rhus->rhu_id]) --}}" class="btn btn-primary">View</a>
+                            <a href="{{ route('rhuForm', ['rhu_id' => $rhus->rhu_id]) }}" class="btn btn-primary">View</a>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions

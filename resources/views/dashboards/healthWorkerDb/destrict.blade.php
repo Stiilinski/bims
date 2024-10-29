@@ -306,7 +306,7 @@
                         <td>{{ $destricts->resident->res_purok }}</td>
                         <td>{{ $destricts->des_status }}</td>
                         <td>
-                            <a href="{{-- route('desForm', ['des_id' => $destricts->des_id]) --}}" class="btn btn-primary">View</a>
+                            <a href="{{ route('destForm', ['des_id' => $destricts->des_id]) }}" class="btn btn-primary">View</a>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions

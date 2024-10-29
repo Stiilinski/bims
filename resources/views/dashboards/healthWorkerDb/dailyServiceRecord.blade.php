@@ -340,8 +340,7 @@
 
                         <div class="row g-3">
 
-                            <div class="col-md-8 pt-2">
-                                {{-- <input type="hidden" name="edit_dengueId" id="edit_dengueId"> --}}
+                            <div class="col-md-6 pt-2">
                                 <label for="inputMed" class="form-label">Medicine Given</label>
                                 <select id="inputMed" class="form-control" name="inputMed">
                                     <option value="">Select...</option>
@@ -353,8 +352,15 @@
                                 </select>
                                 <span class="text-danger error-text inputMed_error"></span>
                             </div>
+                            
+                            <div class="col-md-3">
+                                <label for="inputCurQt" class="col-sm-8 col-form-label">Medicine Current Qt</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="inputCurQt" name="inputCurQt" readonly>
+                                </div>
+                            </div>                            
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" id="inputQuantity" name="inputQuantity">
@@ -589,19 +595,25 @@
 
                         <div class="row g-3">
 
-                            <div class="col-md-8 pt-2">
-                                {{-- <input type="hidden" name="edit_dengueId" id="edit_dengueId"> --}}
+                            <div class="col-md-6 pt-2">
                                 <label for="edit_inputMed" class="form-label">Medicine Given</label>
                                 <select id="edit_inputMed" class="form-control" name="edit_inputMed">
                                     <option value="">Select...</option>
-                                    @foreach($medicines as $medicine)
-                                        <option value="{{ $medicine->med_id }}">
-                                            {{ $medicine->med_id }} - {{ $medicine->med_prod }}
+                                    @foreach($editmedicines as $med)
+                                        <option value="{{ $med->med_id }}">
+                                            {{ $med->med_id }} - {{ $med->med_prod }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger error-text edit_inputMed_error"></span>
                             </div>
+                            
+                            <div class="col-md-3">
+                                <label for="edit_inputCurQt" class="col-sm-8 col-form-label">Medicine Current Qt</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="edit_inputCurQt" name="edit_inputCurQt" readonly>
+                                </div>
+                            </div>  
 
                             <div class="col-md-4">
                                 <label for="edit_inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
@@ -682,6 +694,97 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>
+// FOR INSERT*********************************
+    const releaseMed = {!! json_encode($releaseMed) !!}; // Array of release data
+    const medicines = {!! json_encode($medicines) !!}; // Array of medicines data with med_id and med_count
+    
+    const medData = {};
+
+    // Loop through `releaseMed` to calculate total release
+    releaseMed.forEach(function(release) {
+        const releaseQuantity = Number(release.total_release);
+        if (!isNaN(releaseQuantity)) {
+            if (!medData[release.med_id]) {
+                medData[release.med_id] = { totalRelease: 0 };
+            }
+            medData[release.med_id].totalRelease += releaseQuantity;
+        }
+    });
+
+    // Include `med_count` from `medicines` data
+    medicines.forEach(function(medicine) {
+        if (!medData[medicine.med_id]) {
+            medData[medicine.med_id] = { totalRelease: 0 }; // Initialize if no release record
+        }
+        medData[medicine.med_id].med_count = Number(medicine.med_count); // Add med_count
+    });
+
+    console.log('Complete medData:', medData); // Check structure in console
+
+    $(document).ready(function() {
+        $('#inputMed').selectize({
+            onChange: function(value) {
+                if (value && medData[value]) {
+                    const medInfo = medData[value];
+                    const medCount = medInfo.med_count || 0; // Default to 0 if undefined
+                    const totalRelease = medInfo.totalRelease || 0;
+                    const remainingQuantity = medCount - totalRelease; // Calculate remaining
+
+                    console.log('Remaining Quantity:', remainingQuantity);
+                    document.getElementById('inputCurQt').value = remainingQuantity >= 0 ? remainingQuantity : 0; // Avoid negative values
+                } else {
+                    document.getElementById('inputCurQt').value = '';
+                }
+            }
+        });
+    });
+// FOR EDIT********************************************
+    const edit_releaseMed = {!! json_encode($releaseMed) !!}; // Array of release data
+    const edit_medicines = {!! json_encode($medicines) !!}; // Array of medicines data with med_id and med_count
+
+    const edit_medData = {};
+
+    // Loop through `edit_releaseMed` to calculate total release
+    edit_releaseMed.forEach(function(release) {
+        const releaseQuantity = Number(release.total_release);
+        if (!isNaN(releaseQuantity)) {
+            if (!edit_medData[release.med_id]) {
+                edit_medData[release.med_id] = { totalRelease: 0 };
+            }
+            edit_medData[release.med_id].totalRelease += releaseQuantity;
+        }
+    });
+
+    // Include `med_count` from `edit_medicines` data
+    edit_medicines.forEach(function(medicine) {
+        if (!edit_medData[medicine.med_id]) {
+            edit_medData[medicine.med_id] = { totalRelease: 0 }; // Initialize if no release record
+        }
+        edit_medData[medicine.med_id].med_count = Number(medicine.med_count); // Add med_count
+    });
+
+    console.log('Complete edit_medData:', edit_medData); // Check structure in console
+
+    $(document).ready(function() {
+        $('#edit_inputMed').selectize({
+            onChange: function(value) {
+                if (value && edit_medData[value]) {
+                    const medInfo = edit_medData[value];
+                    const medCount = medInfo.med_count || 0; // Default to 0 if undefined
+                    const totalRelease = medInfo.totalRelease || 0;
+                    const remainingQuantity = medCount - totalRelease; // Calculate remaining
+
+                    console.log('Remaining Quantity (Edit):', remainingQuantity);
+                    document.getElementById('edit_inputCurQt').value = remainingQuantity >= 0 ? remainingQuantity : 0; // Avoid negative values
+                } else {
+                    document.getElementById('edit_inputCurQt').value = '';
+                }
+            }
+        });
+    });
+
+</script>
+<script>
 // ***********************************************************
     const residentData = {
         @foreach($residents as $resident)
@@ -704,6 +807,8 @@
             sortField: 'text'
         });
     });
+
+
 
     function updateResidentDetails(selectElement) {
         const selectedId = selectElement.value;
@@ -1020,7 +1125,11 @@
                             $('#edit_inputWeight').val(response.data.dsr_wt);
                             $('#edit_inputComplaints').val(response.data.dsr_complaint);
                             let medName = `${response.data.medicine.med_prod}`;
-                            $('#edit_inputMed').val(response.data.med_id);
+
+                            // Set the value of the selectize dropdown
+                            const selectizeEditInputMed = $('#edit_inputMed')[0].selectize;
+                            selectizeEditInputMed.setValue(response.data.med_id);
+                            
                             $('#edit_inputQuantity').val(response.data.dsr_qt);
                         // Radio
                             let smoker = response.data.dsr_smoke;

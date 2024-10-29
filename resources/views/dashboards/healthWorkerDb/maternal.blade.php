@@ -9,26 +9,6 @@
         justify-content: space-between;
     }
 
-    .averageField {
-        width: 450px;
-    }
-
-    .mediumField {
-        width: 300px;
-    }
-
-    .shortField {
-        width: 175px;
-    }
-
-    .briefField {
-        width: 100px;
-    }
-
-    .longField {
-        width: 1338px;
-    }
-
     .modal-body {
         display: flex;
         flex-direction: column;
@@ -172,6 +152,10 @@
         display: flex;
         flex-direction: column;
     }
+    
+    .row {
+        padding: 10px;
+    }
 
 </style>
 <body>
@@ -202,12 +186,9 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Family Name</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Middle Name</th>
+                    <th scope="col">Full Name</th>
                     <th scope="col">BirthDate</th>
                     <th scope="col">Age</th>
-                    <th scope="col">Sex</th>
                     <th scope="col">Purok</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -215,11 +196,8 @@
                 <tbody>
                     <th>1</th>
                     <th>Stilinski</th>
-                    <th>Stiles</th>
-                    <th>Scott</th>
                     <th>1/20/2001</th>
                     <th>22</th>
-                    <th>Male</th>
                     <th>Ipil-Ipil</th>
                     <th>
                         <button type="button" class="btn btn-primary">View</button>
@@ -247,414 +225,396 @@
                             <div class="titleCaseFinding">
                                 <span>Patient Information I.</span>
                             </div>
-                            <div class="inputArea">
-                                <div class="columnGroup"> 
-                                    <div class="columnCon">
-
-                                        <div class="columnCon">
-                                            <div class="column mb-3">
-                                                <label for="maternalClinic" class="col-sm-8 col-form-label">Name of Clinic</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control averageField" id="maternalClinic" name="maternalClinic">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalBloodType" class="col-sm-12 col-form-label">Blood Type</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalBloodType" name="maternalBloodType">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalFamNum" class="col-sm-12 col-form-label">Family No.</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalFamNum" name="maternalFamNum">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="columnCon">   
-                                            <div class="column mb-3 pName">
-                                                <label for="inputMaternalPName" class="form-label">Patient Full Name</label>
-                                                <select id="inputMaternalPName" class="form-select pNames" name="inputMaternalPName">
-                                                    <option selected disabled>Choose...</option>
-                                                    <option value="1">John Doe</option>
-                                                    <option value="2">Jane Smith</option>
-                                                    <option value="3">Michael Johnson</option>
-                                                    <!-- Add more options as needed -->
-                                                </select>
-                                            </div>
-
-                                            
-                                            <div class="column mb-3">
-                                                <label for="maternalMaiden" class="col-sm-12 col-form-label">Maiden Name (For Married Women)</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control mediumField" id="maternalMaiden" name="maternalMaiden" placeholder="Family, First Middle">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalBdate" class="col-sm-5 col-form-label">Birthdate</label>
-                                                <div class="col-sm-12">
-                                                    <input type="date" class="form-control shortField" id="maternalBdate" name="maternalBdate" readonly>
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalAge" class="col-sm-5 col-form-label">Age</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalAge" name="maternalAge" readonly>
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalOccupation" class="col-sm-8 col-form-label">Occupation</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalOccupation" name="maternalOccupation" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="columnCon">   
-                                            <div class="column mb-3 pName">
-                                                <label for="inputMaternalHname" class="form-label">Husband's Name</label>
-                                                <select id="inputMaternalHname" class="form-select pNames" name="inputMaternalHname">
-                                                    <option selected disabled>Choose...</option>
-                                                    <option value="1">John Doe</option>
-                                                    <option value="2">Jane Smith</option>
-                                                    <option value="3">Michael Johnson</option>
-                                                    <!-- Add more options as needed -->
-                                                </select>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalAddress" class="col-sm-8 col-form-label">Address</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control mediumField" id="maternalAddress" name="maternalAddress" readonly>
-                                                </div>
-                                            </div>
-
-                                            <fieldset class="row mb-3">
-                                                <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">Risk?</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalRisk" id="maternalRiskYes" value="Yes">
-                                                        <label class="form-check-label" for="maternalRiskYes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalRisk" id="maternalRiskNo" value="No">
-                                                        <label class="form-check-label" for="maternalRiskNo">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-
-                                        <div class="columnCon">   
-                                            <div class="column mb-3">
-                                                <label for="maternalLmp" class="col-sm-8 col-form-label">LMP</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control mediumField" id="maternalLmp" name="maternalLmp">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalEdc" class="col-sm-8 col-form-label">EDC</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control mediumField" id="maternalEdc" name="maternalEdc">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalG" class="col-sm-8 col-form-label">G</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalG" name="maternalG">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalT" class="col-sm-8 col-form-label">T</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalT" name="maternalT">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalP" class="col-sm-8 col-form-label">P</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalP" name="maternalP">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalA" class="col-sm-8 col-form-label">A</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalA" name="maternalA">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalL" class="col-sm-8 col-form-label">L</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control briefField" id="maternalL" name="maternalL">
-                                                </div>
-                                            </div>
+                            <div class="row g-3">
+                                {{-- No.1 --}}
+                                    <div class="col-md-6">
+                                        <label for="maternalClinic" class="col-sm-8 col-form-label">Name of Clinic</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control averageField" id="maternalClinic" name="maternalClinic">
                                         </div>
                                     </div>
-                                </div>
+
+                                    <div class="col-md-3">
+                                        <label for="maternalBloodType" class="col-sm-12 col-form-label">Blood Type</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalBloodType" name="maternalBloodType">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="maternalFamNum" class="col-sm-12 col-form-label">Family No.</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalFamNum" name="maternalFamNum">
+                                        </div>
+                                    </div>
+                               {{-- No.2 --}} 
+                                    <div class="col-md-3 pt-2">
+                                        <label for="inputMaternalPName" class="form-label">Patient Full Name</label>
+                                        <select id="inputMaternalPName" class="form-control" name="inputMaternalPName">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="1">John Doe</option>
+                                            <option value="2">Jane Smith</option>
+                                            <option value="3">Michael Johnson</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                   
+                                    <div class="col-md-3">
+                                        <label for="maternalMaiden" class="col-sm-12 col-form-label">Maiden Name (For Married Women)</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control mediumField" id="maternalMaiden" name="maternalMaiden" placeholder="Family, First Middle">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="maternalBdate" class="col-sm-5 col-form-label">Birthdate</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control shortField" id="maternalBdate" name="maternalBdate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="maternalAge" class="col-sm-5 col-form-label">Age</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalAge" name="maternalAge" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="maternalOccupation" class="col-sm-8 col-form-label">Occupation</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control shortField" id="maternalOccupation" name="maternalOccupation" readonly>
+                                        </div>
+                                    </div>
+                                {{-- No.3 --}}   
+                                    <div class="col-md-4">
+                                        <label for="inputMaternalHname" class="form-label">Husband's Name</label>
+                                        <select id="inputMaternalHname" class="form-control" name="inputMaternalHname">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="1">John Doe</option>
+                                            <option value="2">Jane Smith</option>
+                                            <option value="3">Michael Johnson</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="maternalAddress" class="col-sm-8 col-form-label">Address</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control mediumField" id="maternalAddress" name="maternalAddress" readonly>
+                                        </div>
+                                    </div>
+
+                                    <fieldset class="col-md-4">
+                                        <legend class="col-form-label col-sm-10" style="padding-top: 16px!important; font-size: 17px;">Risk?</legend>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="maternalRisk" id="maternalRiskYes" value="Yes">
+                                                <label class="form-check-label" for="maternalRiskYes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="maternalRisk" id="maternalRiskNo" value="No">
+                                                <label class="form-check-label" for="maternalRiskNo">No</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                {{-- No.4 --}}  
+                                    <div class="col-md-1">
+                                        <label for="maternalLmp" class="col-sm-8 col-form-label">LMP</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control mediumField" id="maternalLmp" name="maternalLmp">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <label for="maternalEdc" class="col-sm-8 col-form-label">EDC</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control mediumField" id="maternalEdc" name="maternalEdc">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <label for="maternalG" class="col-sm-8 col-form-label">G</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalG" name="maternalG">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <label for="maternalT" class="col-sm-8 col-form-label">T</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalT" name="maternalT">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <label for="maternalP" class="col-sm-8 col-form-label">P</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalP" name="maternalP">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <label for="maternalA" class="col-sm-8 col-form-label">A</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalA" name="maternalA">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <label for="maternalL" class="col-sm-8 col-form-label">L</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control briefField" id="maternalL" name="maternalL">
+                                        </div>
+                                    </div>
                             </div>   
                         </div>
 
 
-                        <div class="rowConWhole">
-                            <div class="inputGroupContainer" style="width: 32.5%;">
-                                <div class="titleCaseFinding">
-                                    <span>OBSTETRICAL HISTORY</span>
-                                </div>
-                                <div class="inputArea">
-                                    <div class="columnGroup"> 
-                                        <div class="rowCon">
-                                            <div class="column mb-3">
-                                                <label for="maternalChildAl" class="col-sm-8 col-form-label">Number of Children Alive</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalChildAl" name="maternalChildAl">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalLivChild" class="col-sm-8 col-form-label">Number of Living Children Alive</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalLivChild" name="maternalLivChild">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalAbort" class="col-sm-8 col-form-label">Number of Abortion</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalAbort" name="maternalAbort">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalStillBirth" class="col-sm-8 col-form-label">Number of Still Births/Fetal Deaths</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalStillBirth" name="maternalStillBirth">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalCaesarian" class="col-sm-8 col-form-label">Previous Caesarian Section</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalCaesarian" name="maternalCaesarian">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalHemorr" class="col-sm-8 col-form-label">Postpartum Hemorrhage</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalHemorr" name="maternalHemorr">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalAbruptio" class="col-sm-8 col-form-label">Placental Previa / Abruptio</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalAbruptio" name="maternalAbruptio">
-                                                </div>
-                                            </div>
-
-                                            <div class="column mb-3">
-                                                <label for="maternalOthers" class="col-sm-8 col-form-label">Others / Specify</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="maternalOthers" name="maternalOthers">
-                                                </div>
+                        <div class="row g-3" style="">
+                            <div class="col-md-4">
+                                <div class="inputGroupContainer">
+                                    <div class="titleCaseFinding">
+                                        <span>OBSTETRICAL HISTORY</span>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label for="maternalChildAl" class="col-sm-8 col-form-label">Number of Children Alive</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalChildAl" name="maternalChildAl">
                                             </div>
                                         </div>
-                                    </div>
-                                </div>   
+
+                                        <div class="col-md-12">
+                                            <label for="maternalLivChild" class="col-sm-8 col-form-label">Number of Living Children Alive</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalLivChild" name="maternalLivChild">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="maternalAbort" class="col-sm-8 col-form-label">Number of Abortion</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalAbort" name="maternalAbort">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="maternalStillBirth" class="col-sm-8 col-form-label">Number of Still Births/Fetal Deaths</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalStillBirth" name="maternalStillBirth">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="maternalCaesarian" class="col-sm-8 col-form-label">Previous Caesarian Section</label>
+                                            <div class="col-sm-12">
+                                                <input type="date" class="form-control" id="maternalCaesarian" name="maternalCaesarian">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="maternalHemorr" class="col-sm-8 col-form-label">Postpartum Hemorrhage</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalHemorr" name="maternalHemorr">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="maternalAbruptio" class="col-sm-8 col-form-label">Placental Previa / Abruptio</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalAbruptio" name="maternalAbruptio">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="maternalOthers" class="col-sm-8 col-form-label">Others / Specify</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="maternalOthers" name="maternalOthers">
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
                             </div>
 
-                            <div class="inputGroupContainer" style="width: 32.5%;">
-                                <div class="titleCaseFinding">
-                                    <span>PRESENT HEALTH PROBLEMS</span>
-                                </div>
-                                <div class="inputArea">
-                                    <div class="columnGroup"> 
-                                        <div class="columnCon">
-                                            <fieldset class="row mb-3" style="width:100%;">
-                                                <legend class="col-form-label col-sm-5 pt-0">TB:</legend>
-                                                <div class="col-sm-7">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalTb" id="maternalTb_yes" value="Yes">
-                                                        <label class="form-check-label" for="maternalTb_yes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalTb" id="maternalTb_no" value="No">
-                                                        <label class="form-check-label" for="maternalTb_no">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <fieldset class="row mb-3" style="width:100%;">
-                                                <legend class="col-form-label col-sm-5 pt-0">Heart Disease:</legend>
-                                                <div class="col-sm-7">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalHeart" id="maternalHeart_yes" value="Yes">
-                                                        <label class="form-check-label" for="maternalHeart_yes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalHeart" id="maternalHeart_no" value="No">
-                                                        <label class="form-check-label" for="maternalHeart_no">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <fieldset class="row mb-3" style="width:100%;">
-                                                <legend class="col-form-label col-sm-5 pt-0">Diabetes:</legend>
-                                                <div class="col-sm-7">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalDiabetes" id="maternalDiabetes_yes" value="Yes">
-                                                        <label class="form-check-label" for="maternalDiabetes_yes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalDiabetes" id="maternalDiabetes_no" value="No">
-                                                        <label class="form-check-label" for="maternalDiabetes_no">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <fieldset class="row mb-3" style="width:100%;">
-                                                <legend class="col-form-label col-sm-5 pt-0">Brochial Asthma:</legend>
-                                                <div class="col-sm-7">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalAsthma" id="maternalAsthma_yes" value="Yes">
-                                                        <label class="form-check-label" for="maternalAsthma_yes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalAsthma" id="maternalAsthma_no" value="No">
-                                                        <label class="form-check-label" for="maternalAsthma_no">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <fieldset class="row mb-3" style="width:100%;">
-                                                <legend class="col-form-label col-sm-5 pt-0">Goiter:</legend>
-                                                <div class="col-sm-7">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalGoiter" id="maternalGoiter_yes" value="Yes">
-                                                        <label class="form-check-label" for="maternalGoiter_yes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalGoiter" id="maternalGoiter_no" value="No">
-                                                        <label class="form-check-label" for="maternalGoiter_no">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <fieldset class="row mb-3" style="width:100%;">
-                                                <legend class="col-form-label col-sm-5 pt-0">Date Tetanus Toxoid:</legend>
-                                                <div class="col-sm-7">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalTetanus" id="maternalTetanus_yes" value="Yes">
-                                                        <label class="form-check-label" for="maternalTetanus_yes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="maternalTetanus" id="maternalTetanus_no" value="No">
-                                                        <label class="form-check-label" for="maternalTetanus_no">No</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-
-                                        <div class="columnCon givenSection" style="display: none;">                                        
-                                            <label for="maternalGiven" class="col-sm-8 col-form-label" style="font-size:20px;">Given</label>
-                                            <div class="column mb-3">
-                                                <label for="maternalGiven1" class="col-sm-8 col-form-label">1</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalGiven1" name="maternalGiven1">
-                                                </div>
-                                            </div>
-                                            <div class="column mb-3">
-                                                <label for="maternalGiven2" class="col-sm-8 col-form-label">2</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalGiven2" name="maternalGiven2">
-                                                </div>
-                                            </div>
-                                            <div class="column mb-3">
-                                                <label for="maternalGiven3" class="col-sm-8 col-form-label">3</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalGiven3" name="maternalGiven3">
-                                                </div>
-                                            </div>
-                                            <div class="column mb-3">
-                                                <label for="maternalGiven4" class="col-sm-8 col-form-label">4</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalGiven4" name="maternalGiven4">
-                                                </div>
-                                            </div>
-                                            <div class="column mb-3">
-                                                <label for="maternalGiven5" class="col-sm-8 col-form-label">5</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalGiven5" name="maternalGiven5">
-                                                </div>
-                                            </div>
-                                            <div class="column mb-3">
-                                                <label for="maternalGivenTtl" class="col-sm-8 col-form-label">TTL</label>
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control shortField" id="maternalGivenTtl" name="maternalGivenTtl">
-                                                </div>
-                                            </div>
-                                        </div>
-
+                            <div class="col-md-4">
+                                <div class="inputGroupContainer">
+                                    <div class="titleCaseFinding">
+                                        <span>PRESENT HEALTH PROBLEMS</span>
                                     </div>
-                                </div>   
+                                    <div class="row g-3">
+                                        <div class="columnGroup"> 
+                                            <div class="columnCon">
+                                                <fieldset class="row mb-3" style="width:100%;">
+                                                    <legend class="col-form-label col-sm-5 pt-0">TB:</legend>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalTb" id="maternalTb_yes" value="Yes">
+                                                            <label class="form-check-label" for="maternalTb_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalTb" id="maternalTb_no" value="No">
+                                                            <label class="form-check-label" for="maternalTb_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <fieldset class="row mb-3" style="width:100%;">
+                                                    <legend class="col-form-label col-sm-5 pt-0">Heart Disease:</legend>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalHeart" id="maternalHeart_yes" value="Yes">
+                                                            <label class="form-check-label" for="maternalHeart_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalHeart" id="maternalHeart_no" value="No">
+                                                            <label class="form-check-label" for="maternalHeart_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <fieldset class="row mb-3" style="width:100%;">
+                                                    <legend class="col-form-label col-sm-5 pt-0">Diabetes:</legend>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalDiabetes" id="maternalDiabetes_yes" value="Yes">
+                                                            <label class="form-check-label" for="maternalDiabetes_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalDiabetes" id="maternalDiabetes_no" value="No">
+                                                            <label class="form-check-label" for="maternalDiabetes_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <fieldset class="row mb-3" style="width:100%;">
+                                                    <legend class="col-form-label col-sm-5 pt-0">Brochial Asthma:</legend>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalAsthma" id="maternalAsthma_yes" value="Yes">
+                                                            <label class="form-check-label" for="maternalAsthma_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalAsthma" id="maternalAsthma_no" value="No">
+                                                            <label class="form-check-label" for="maternalAsthma_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <fieldset class="row mb-3" style="width:100%;">
+                                                    <legend class="col-form-label col-sm-5 pt-0">Goiter:</legend>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalGoiter" id="maternalGoiter_yes" value="Yes">
+                                                            <label class="form-check-label" for="maternalGoiter_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalGoiter" id="maternalGoiter_no" value="No">
+                                                            <label class="form-check-label" for="maternalGoiter_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <fieldset class="row mb-3" style="width:100%;">
+                                                    <legend class="col-form-label col-sm-5 pt-0">Date Tetanus Toxoid:</legend>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalTetanus" id="maternalTetanus_yes" value="Yes">
+                                                            <label class="form-check-label" for="maternalTetanus_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="maternalTetanus" id="maternalTetanus_no" value="No">
+                                                            <label class="form-check-label" for="maternalTetanus_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                            <div class="columnCon givenSection" style="display: none;">                                        
+                                                <label for="maternalGiven" class="col-sm-8 col-form-label" style="font-size:20px;">Given</label>
+                                                <div class="column mb-3">
+                                                    <label for="maternalGiven1" class="col-sm-8 col-form-label">1</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control shortField" id="maternalGiven1" name="maternalGiven1">
+                                                    </div>
+                                                </div>
+                                                <div class="column mb-3">
+                                                    <label for="maternalGiven2" class="col-sm-8 col-form-label">2</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control shortField" id="maternalGiven2" name="maternalGiven2">
+                                                    </div>
+                                                </div>
+                                                <div class="column mb-3">
+                                                    <label for="maternalGiven3" class="col-sm-8 col-form-label">3</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control shortField" id="maternalGiven3" name="maternalGiven3">
+                                                    </div>
+                                                </div>
+                                                <div class="column mb-3">
+                                                    <label for="maternalGiven4" class="col-sm-8 col-form-label">4</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control shortField" id="maternalGiven4" name="maternalGiven4">
+                                                    </div>
+                                                </div>
+                                                <div class="column mb-3">
+                                                    <label for="maternalGiven5" class="col-sm-8 col-form-label">5</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control shortField" id="maternalGiven5" name="maternalGiven5">
+                                                    </div>
+                                                </div>
+                                                <div class="column mb-3">
+                                                    <label for="maternalGivenTtl" class="col-sm-8 col-form-label">TTL</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control shortField" id="maternalGivenTtl" name="maternalGivenTtl">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="columnCon" style="width: 32.5%;">
+                            <div class="col-md-4" style="gap:10px; display:flex; flex-direction:column;">
                                 <div class="inputGroupContainer" style="height: 300px;">
                                     <div class="titleCaseFinding">
                                         <span>FAMILY PLANNING</span>
                                     </div>
-                                    <div class="inputArea">
-                                        <div class="columnGroup"> 
-                                            <div class="columnCon">
-                                                <fieldset class="row mb-3" style="width:100%;">
-                                                    <legend class="col-form-label col-sm-8 pt-0">Has FP Been Practice:</legend>
-                                                    <div class="col-sm-7">
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="maternalFp" id="maternalFp_yes" value="Yes">
-                                                            <label class="form-check-label" for="maternalFp_yes">Yes</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="maternalFp" id="maternalFp_no" value="No">
-                                                            <label class="form-check-label" for="maternalFp_no">No</label>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-
-                                                <div id="fpMethodSection" class="column mb-3" style="display:none;">
-                                                    <label for="maternalFpMethod" class="col-sm-12 col-form-label">If YES, what method?</label>
-                                                    <div class="col-sm-12">
-                                                        <input type="text" class="form-control mediumField" id="maternalFpMethod" name="maternalFpMethod">
-                                                    </div>
+                                    <div class="row g-3">
+                                        <fieldset class="col-md-12">
+                                            <legend class="col-form-label col-sm-8 pt-0">Has FP Been Practice:</legend>
+                                            <div class="col-sm-7">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="maternalFp" id="maternalFp_yes" value="Yes">
+                                                    <label class="form-check-label" for="maternalFp_yes">Yes</label>
                                                 </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="maternalFp" id="maternalFp_no" value="No">
+                                                    <label class="form-check-label" for="maternalFp_no">No</label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
 
-                                                <fieldset id="fpPracSection" class="row mb-3" style="display:none; width:100%;">
-                                                    <legend class="col-form-label col-sm-8 pt-0">If NO, Willing to Practice:</legend>
-                                                    <div class="col-sm-7">
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="maternalFpPrac" id="maternalFpPrac_yes" value="Yes">
-                                                            <label class="form-check-label" for="maternalFpPrac_yes">Yes</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="maternalFpPrac" id="maternalFpPrac_no" value="No">
-                                                            <label class="form-check-label" for="maternalFpPrac_no">No</label>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-
+                                        <div id="fpMethodSection" class="col-md-12" style="display:none;">
+                                            <label for="maternalFpMethod" class="col-sm-12 col-form-label">If YES, what method?</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control mediumField" id="maternalFpMethod" name="maternalFpMethod">
                                             </div>
                                         </div>
+
+                                        <fieldset id="fpPracSection" class="col-md-12" style="display:none; width:100%;">
+                                            <legend class="col-form-label col-sm-8 pt-0">If NO, Willing to Practice:</legend>
+                                            <div class="col-sm-7">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="maternalFpPrac" id="maternalFpPrac_yes" value="Yes">
+                                                    <label class="form-check-label" for="maternalFpPrac_yes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="maternalFpPrac" id="maternalFpPrac_no" value="No">
+                                                    <label class="form-check-label" for="maternalFpPrac_no">No</label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
                                     </div>   
                                 </div>
 
@@ -662,57 +622,51 @@
                                     <div class="titleCaseFinding">
                                         <span>RISK FACTORS FOR PREGNANT WOMEN</span>
                                     </div>
-                                    <div class="inputArea">
-                                        <div class="columnGroup"> 
-                                            <div class="columnCon">
-
-                                                <fieldset class="row mb-3 diagnosisArea">
-                                                    
-                                                    <div class="col-sm-12" style="gap: 10px">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskAge" value="Age Less Than or Greater Than 35">
-                                                            <label class="form-check-label" for="maternalRiskAge">Age Less Than or Greater Than 35</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskHt" value="Less Than 145 cm (4'9) Tall">
-                                                            <label class="form-check-label" for="maternalRiskHt">Less Than 145 cm (4'9) Tall</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskMoreBaby" value="Having A Fourth (or more) Baby">
-                                                            <label class="form-check-label" for="maternalRiskMoreBaby">Having A Fourth (or more) Baby</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskCeasarian" value="Previous Ceasarian Section">
-                                                            <label class="form-check-label" for="maternalRiskCeasarian">Previous Ceasarian Section</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskHemorrhage" value="Post Partum Hemorrhage">
-                                                            <label class="form-check-label" for="maternalRiskHemorrhage">Post Partum Hemorrhage</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskMiscarriage" value="3 Consecutive Miscarriage / Still Born">
-                                                            <label class="form-check-label" for="maternalRiskMiscarriage">3 Consecutive Miscarriage / Still Born</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskTB" value="TB">
-                                                            <label class="form-check-label" for="maternalRiskTB">TB</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskHeart" value="Heart Disease">
-                                                            <label class="form-check-label" for="maternalRiskHeart">Heart Disease</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskDiabetes" value="Diabetes">
-                                                            <label class="form-check-label" for="maternalRiskDiabetes">Diabetes</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskAsthma" value="Bronchial Asthma">
-                                                            <label class="form-check-label" for="maternalRiskAsthma">Bronchial Asthma</label>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
+                                    <div class="row g-3">
+                                        <fieldset class="col-md-12 diagnosisArea">
+                                            <div class="col-sm-12" style="gap: 10px">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskAge" value="Age Less Than or Greater Than 35">
+                                                    <label class="form-check-label" for="maternalRiskAge">Age Less Than or Greater Than 35</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskHt" value="Less Than 145 cm (4'9) Tall">
+                                                    <label class="form-check-label" for="maternalRiskHt">Less Than 145 cm (4'9) Tall</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskMoreBaby" value="Having A Fourth (or more) Baby">
+                                                    <label class="form-check-label" for="maternalRiskMoreBaby">Having A Fourth (or more) Baby</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskCeasarian" value="Previous Ceasarian Section">
+                                                    <label class="form-check-label" for="maternalRiskCeasarian">Previous Ceasarian Section</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskHemorrhage" value="Post Partum Hemorrhage">
+                                                    <label class="form-check-label" for="maternalRiskHemorrhage">Post Partum Hemorrhage</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskMiscarriage" value="3 Consecutive Miscarriage / Still Born">
+                                                    <label class="form-check-label" for="maternalRiskMiscarriage">3 Consecutive Miscarriage / Still Born</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskTB" value="TB">
+                                                    <label class="form-check-label" for="maternalRiskTB">TB</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskHeart" value="Heart Disease">
+                                                    <label class="form-check-label" for="maternalRiskHeart">Heart Disease</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskDiabetes" value="Diabetes">
+                                                    <label class="form-check-label" for="maternalRiskDiabetes">Diabetes</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="maternalRiskFactors[]" id="maternalRiskAsthma" value="Bronchial Asthma">
+                                                    <label class="form-check-label" for="maternalRiskAsthma">Bronchial Asthma</label>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </fieldset>
                                     </div>   
                                 </div>
                             </div>

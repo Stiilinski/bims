@@ -105,80 +105,84 @@ Route::post('/activate-employee', [regValidation::class, 'activateEmployee'])->n
 
 //FOR HEALTH WORKER
 Route::get('/dashboards/dbHealthWorker', [regValidation::class, 'dashboardHW']);
+// DAILY SERVICE RECORD
+    Route::get('dashboards/healthWorkerDb/dailyServiceRecord', [regValidation::class, 'dailyServiceRecord']);
+    Route::post('inputDsr', [regValidation::class, 'inputDsr'])->name('regValidation.inputDsr');
+    Route::get('dashboards/healthWorkerDb/dailyForm', [regValidation::class, 'dailyForm']);
+    Route::get('/dsrDisp/{dsr_id}', [regValidation::class, 'getDsrData']);
+    Route::post('/updateDsr/{dsr_id}', [regValidation::class, 'updateDsr']);
+// INDIVIDUAL CLIENT REPORT
+    Route::get('dashboards/healthWorkerDb/individualClientReport', [regValidation::class, 'indiClientReport']);
+    Route::get('/service-records/{residentId}', [regValidation::class, 'getItrData']);
+// OPT
+    Route::get('dashboards/healthWorkerDb/optDeworming', [regValidation::class, 'optDeworming']);
+    Route::post('inputFirstOpt', [regValidation::class, 'inputFirstOpt'])->name('regValidation.inputFirstOpt');
+    Route::post('/update-optSec/{opt_id}', [regValidation::class, 'updateSecOpt']);
+    Route::post('/edit-optForm/{opt_id}', [regValidation::class, 'updateOptForm']);
+    Route::post('/update-opt-status', [regValidation::class, 'updateOptStatus']);
+    Route::get('dashboards/healthWorkerDb/optFullRecord', [regValidation::class, 'optFullRecord']);
+// RISK ASSESSMENT
+    Route::get('dashboards/healthWorkerDb/riskAssessment', [regValidation::class, 'riskAssessment']);
+    Route::post('riskInput', [regValidation::class, 'riskInput'])->name('regValidation.riskInput');
+    Route::get('/riskDisp/{risk_id}', [regValidation::class, 'getRaData']);
+    Route::post('/updateRisk/{risk_id}', [regValidation::class, 'updateRisk']);
+    Route::get('/riskAssessmentForm/{risk_id}', [regValidation::class, 'showRaForm'])->name('riskAssessmentForm');
+// DSTB
+    Route::get('dashboards/healthWorkerDb/dstb', [regValidation::class, 'dstb']);
+    Route::post('dstbInput', [regValidation::class, 'dstbInput'])->name('regValidation.dstbInput');
+    Route::get('/dstb/{id}', [regValidation::class, 'getDstbData']);
+    Route::post('/updateDstb/{dstb_id}', [regValidation::class, 'updateDstb']);
+    Route::post('/update-dstb-status', [regValidation::class, 'updateDstbStatus']);
+    Route::get('/dstbForm/{dstb_id}', [regValidation::class, 'showDstbForm'])->name('dstbForm');
+//FAMILY PLANNING
+    Route::get('dashboards/healthWorkerDb/familyPlanning', [regValidation::class, 'familyPlanning']);
+    Route::post('fpInput', [regValidation::class, 'fpInput'])->name('regValidation.fpInput');
+    Route::get('/fpEdit/{fp_id}', [regValidation::class, 'getFpData']);
+    Route::post('/updateFp/{fp_id}', [regValidation::class, 'updateFp']);
+    Route::post('fpSideB', [regValidation::class, 'fpSideB'])->name('regValidation.fpSideB');
+    Route::get('/fpForm/{fp_id}', [regValidation::class, 'fpForm'])->name('fpForm');
+    Route::post('/update-sideB/{sideB_id}', [regValidation::class, 'updateFpSideB']);
+    Route::post('/update-fp-status', [regValidation::class, 'updateFpStatus']);
+//RHU
+    Route::get('dashboards/healthWorkerDb/rhu', [regValidation::class, 'rhu']);
+    Route::post('rhuInput', [regValidation::class, 'rhuInput'])->name('regValidation.rhuInput');
+    Route::get('/rhu/{rhu_id}', [regValidation::class, 'getRhuData']);
+    Route::post('/updateRhu/{rhu_id}', [regValidation::class, 'updateRhu']);
+    Route::get('/rhuForm/{rhu_id}', [regValidation::class, 'rhuForm'])->name('rhuForm');
+//DESTRICT
+    Route::get('dashboards/healthWorkerDb/destrict', [regValidation::class, 'destrict']);
+    Route::post('desInput', [regValidation::class, 'desInput'])->name('regValidation.desInput');
+    Route::get('/destrict/{des_id}', [regValidation::class, 'getDesData']);
+    Route::post('/updateDes/{des_id}', [regValidation::class, 'updateDes']);
+    Route::get('/destForm/{des_id}', [regValidation::class, 'destForm'])->name('destForm');
+//DENGUE
+    Route::get('dashboards/healthWorkerDb/dengue', [regValidation::class, 'dengue']);
+    Route::post('dengueInput', [regValidation::class, 'dengueInput'])->name('regValidation.dengueInput');
+    Route::get('/dengueDisp/{dengue_id}', [regValidation::class, 'getDengueData']);
+    Route::post('/updateDengue/{dengue_id}', [regValidation::class, 'updateDengue']);
+    Route::get('/dengueForm/{dengue_id}', [regValidation::class, 'showDengueForm'])->name('dengueForm');
+//IMMUNIZATION
+    Route::get('dashboards/healthWorkerDb/immunization', [regValidation::class, 'immunization']);
+    Route::post('inputImmu', [regValidation::class, 'inputImmu'])->name('regValidation.inputImmu');
+    Route::get('/immuDisp/{immu_id}', [regValidation::class, 'getEpiData']);
+    Route::post('/updateImmu/{immu_id}', [regValidation::class, 'updateEpi']);
+    Route::get('/epiForm/{epi_id}', [regValidation::class, 'epiForm'])->name('epiForm');
+    Route::post('inputVac', [regValidation::class, 'inputVac'])->name('regValidation.inputVac');
+    Route::get('/vacDisp/{immu_id}', [regValidation::class, 'getVacData']);
+    Route::post('/update-vaccine/{vtId}', [regValidation::class, 'updateVac']);
+//MATERNAL
+    Route::get('dashboards/healthWorkerDb/maternal', [regValidation::class, 'maternal']);
 
-Route::get('dashboards/healthWorkerDb/dailyServiceRecord', [regValidation::class, 'dailyServiceRecord']);
-Route::post('inputDsr', [regValidation::class, 'inputDsr'])->name('regValidation.inputDsr');
-Route::get('dashboards/healthWorkerDb/dailyForm', [regValidation::class, 'dailyForm']);
-Route::get('/dsrDisp/{dsr_id}', [regValidation::class, 'getDsrData']);
-Route::post('/updateDsr/{dsr_id}', [regValidation::class, 'updateDsr']);
-
-Route::get('dashboards/healthWorkerDb/individualClientReport', [regValidation::class, 'indiClientReport']);
-Route::get('/service-records/{residentId}', [regValidation::class, 'getItrData']);
-
-
-Route::get('dashboards/healthWorkerDb/optDeworming', [regValidation::class, 'optDeworming']);
-Route::post('inputFirstOpt', [regValidation::class, 'inputFirstOpt'])->name('regValidation.inputFirstOpt');
-Route::post('/update-optSec/{opt_id}', [regValidation::class, 'updateSecOpt']);
-Route::post('/edit-optForm/{opt_id}', [regValidation::class, 'updateOptForm']);
-Route::post('/update-opt-status', [regValidation::class, 'updateOptStatus']);
-Route::get('dashboards/healthWorkerDb/optFullRecord', [regValidation::class, 'optFullRecord']);
-
-
-Route::get('dashboards/healthWorkerDb/riskAssessment', [regValidation::class, 'riskAssessment']);
-Route::post('riskInput', [regValidation::class, 'riskInput'])->name('regValidation.riskInput');
-Route::get('/riskDisp/{risk_id}', [regValidation::class, 'getRaData']);
-Route::post('/updateRisk/{risk_id}', [regValidation::class, 'updateRisk']);
-Route::get('/riskAssessmentForm/{risk_id}', [regValidation::class, 'showRaForm'])->name('riskAssessmentForm');
-
-Route::get('dashboards/healthWorkerDb/dstb', [regValidation::class, 'dstb']);
-Route::post('dstbInput', [regValidation::class, 'dstbInput'])->name('regValidation.dstbInput');
-Route::get('/dstb/{id}', [regValidation::class, 'getDstbData']);
-Route::post('/updateDstb/{dstb_id}', [regValidation::class, 'updateDstb']);
-Route::post('/update-dstb-status', [regValidation::class, 'updateDstbStatus']);
-Route::get('/dstbForm/{dstb_id}', [regValidation::class, 'showDstbForm'])->name('dstbForm');
-
-Route::get('dashboards/healthWorkerDb/familyPlanning', [regValidation::class, 'familyPlanning']);
-Route::post('fpInput', [regValidation::class, 'fpInput'])->name('regValidation.fpInput');
-Route::get('/fpEdit/{fp_id}', [regValidation::class, 'getFpData']);
-Route::post('/updateFp/{fp_id}', [regValidation::class, 'updateFp']);
-Route::post('fpSideB', [regValidation::class, 'fpSideB'])->name('regValidation.fpSideB');
-Route::get('/fpForm/{fp_id}', [regValidation::class, 'fpForm'])->name('fpForm');
-Route::post('/update-sideB/{sideB_id}', [regValidation::class, 'updateFpSideB']);
-Route::post('/update-fp-status', [regValidation::class, 'updateFpStatus']);
-
-
-Route::get('dashboards/healthWorkerDb/rhu', [regValidation::class, 'rhu']);
-Route::post('rhuInput', [regValidation::class, 'rhuInput'])->name('regValidation.rhuInput');
-Route::get('/rhu/{rhu_id}', [regValidation::class, 'getRhuData']);
-Route::post('/updateRhu/{rhu_id}', [regValidation::class, 'updateRhu']);
-
-
-
-Route::get('dashboards/healthWorkerDb/destrict', [regValidation::class, 'destrict']);
-Route::post('desInput', [regValidation::class, 'desInput'])->name('regValidation.desInput');
-Route::get('/destrict/{des_id}', [regValidation::class, 'getDesData']);
-Route::post('/updateDes/{des_id}', [regValidation::class, 'updateDes']);
-
-Route::get('dashboards/healthWorkerDb/dengue', [regValidation::class, 'dengue']);
-Route::post('dengueInput', [regValidation::class, 'dengueInput'])->name('regValidation.dengueInput');
-Route::get('/dengueDisp/{dengue_id}', [regValidation::class, 'getDengueData']);
-Route::post('/updateDengue/{dengue_id}', [regValidation::class, 'updateDengue']);
-Route::get('/dengueForm/{dengue_id}', [regValidation::class, 'showDengueForm'])->name('dengueForm');
-
-
-
-Route::get('dashboards/healthWorkerDb/maternal', [regValidation::class, 'maternal']);
-Route::get('dashboards/healthWorkerDb/immunization', [regValidation::class, 'immunization']);
-
-Route::get('dashboards/healthWorkerDb/dessegragation', [regValidation::class, 'dessegragation']);
-Route::get('/api/residents-by-purok', [regValidation::class, 'fetchResidentsAge']);
-
-Route::get('dashboards/healthWorkerDb/medicine', [regValidation::class, 'medicineRecord']);
-Route::post('inputMedicine', [regValidation::class, 'inputMedicine'])->name('regValidation.inputMedicine');
-Route::post('/update-medicine/{med_id}', [regValidation::class, 'updateMedicine']);
-Route::post('/update-med-status', [regValidation::class, 'updateMedStatus']);
-Route::post('/update-medOut-status', [regValidation::class, 'updateMedStatus']);
-Route::get('dashboards/healthWorkerDb/medRelease', [regValidation::class, 'medRelease']);
+// DESSAGREGATION
+    Route::get('dashboards/healthWorkerDb/dessegragation', [regValidation::class, 'dessegragation']);
+    Route::get('/api/residents-by-purok', [regValidation::class, 'fetchResidentsAge']);
+// MEDICINE
+    Route::get('dashboards/healthWorkerDb/medicine', [regValidation::class, 'medicineRecord']);
+    Route::post('inputMedicine', [regValidation::class, 'inputMedicine'])->name('regValidation.inputMedicine');
+    Route::post('/update-medicine/{med_id}', [regValidation::class, 'updateMedicine']);
+    Route::post('/update-med-status', [regValidation::class, 'updateMedStatus']);
+    Route::post('/update-medOut-status', [regValidation::class, 'updateMedStatus']);
+    Route::get('dashboards/healthWorkerDb/medRelease', [regValidation::class, 'medRelease']);
 
 
 //FOR CAPTAIN
