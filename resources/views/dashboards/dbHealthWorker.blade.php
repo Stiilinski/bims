@@ -104,7 +104,7 @@
               </ul>
   
               <div class="tab-content pt-2" id="borderedTabContent">
-                {{-- POPULATION --}}
+              {{-- POPULATION --}}
                 <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="row">
                       <!-- Population Card -->
@@ -250,213 +250,383 @@
                       </div>
 
                 </div>
-                {{-- DISEASES --}}
+              {{-- DISEASES --}}
                 <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
                   <div class="row">
-                    <!-- Cancer Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title"> Service <span>Total</span></h5>
+                    {{-- CARDS --}}
+                      <!-- Service Card -->
+                        <div class="col-xxl-4 col-md-6 mt-4 mb-4">
+                          <div class="card info-card sales-card" onclick="showDsrGraphModal()">
+                            <div class="card-body">
+                              <h5 class="card-title"> Service <span>Total</span></h5>
 
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="ri-health-book-fill"></i>
+                              <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                  <i class="ri-health-book-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                  <h6>{{ $totalDsr }}</h6>
+
+                                  @if ($dsrChange >= 0)
+                                      <span class="text-success small pt-1 fw-bold">{{ $dsrChange }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                  @else
+                                      <span class="text-danger small pt-1 fw-bold">{{ abs($dsrChange) }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                  @endif
+                              </div>
+                              </div>
                             </div>
-                            <div class="ps-3">
-                              {{-- <h6>{{ $totalVoters }}</h6> --}}
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
+                          </div>
+                        </div>
+                      <!-- End Service Card -->
+
+                      {{-- Service Graph --}}
+                        <div class="modal fade" id="dsrModal" tabindex="-1" aria-labelledby="dsrModal" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="dsrModal">Daily Service Record Details (Monthly Comparison)</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <canvas id="populationDsrChart"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      {{-- End of Service Graph --}}
+
+                      <!-- Diabetes Card -->
+                        <div class="col-xxl-4 col-md-6 mt-4 mb-4">
+                          <div class="card info-card sales-card" onclick="showDiabetesGraphModal()">
+                            <div class="card-body">
+                              <h5 class="card-title">Diabetes <span>Total</span></h5>
+
+                              <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                  <i class="ri-heart-2-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                  <h6>{{ $totalDiabetes }}</h6>
+
+                                  @if ($dsrChange >= 0)
+                                      <span class="text-success small pt-1 fw-bold">{{ $diabetesChange }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                  @else
+                                      <span class="text-danger small pt-1 fw-bold">{{ abs($diabetesChange) }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                  @endif
+                              </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      <!-- End Diabetes Card -->
+                      
+                      {{-- Diabetes Graph --}}
+                        <div class="modal fade" id="diabetesModal" tabindex="-1" aria-labelledby="diabetesModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="diabetesModalLabel">Diabetes Details (Monthly Comparison)</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <canvas id="populationDiabetesChart"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      {{-- End of Diabetes Graph --}}
+
+                      <!-- Family Planning Card -->
+                        <div class="col-xxl-4 col-md-6 mt-4 mb-4">
+                          <div class="card info-card sales-card" onclick="showFpGraphModal()">
+                            <div class="card-body">
+                              <h5 class="card-title">Family Planning <span>Total</span></h5>
+                              <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                  <i class="ri-heart-add-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                  <h6>{{ $totalFamilyPlanning}}</h6>
+
+                                  @if ($dsrChange >= 0)
+                                      <span class="text-success small pt-1 fw-bold">{{ $fpChange }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                  @else
+                                      <span class="text-danger small pt-1 fw-bold">{{ abs($fpChange) }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                  @endif
+                              </div>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      <!-- End Family Planning Card -->
 
-                      </div>
-                    </div><!-- End Cancer Card -->
-
-                    <!-- Diabetes Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title">Diabetes <span>Total</span></h5>
-
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="ri-heart-2-fill"></i>
-                            </div>
-                            <div class="ps-3">
-                              <h6>{{ $totalDiabetes }}</h6>
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-                            </div>
+                      {{-- Family Planning Graph --}}
+                        <div class="modal fade" id="fpModal" tabindex="-1" aria-labelledby="fpModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="fpModalLabel">Family Planning Details (Monthly Comparison)</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <canvas id="populationFpChart"></canvas>
+                                  </div>
+                              </div>
                           </div>
                         </div>
+                      {{-- End of Family Planning Graph --}}
 
-                      </div>
-                    </div><!-- End Diabetes Card -->
-                    
-                    <!-- Family Planning Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title">Family Planning <span>Total</span></h5>
+                      <!-- Pregnancy Card -->
+                        <div class="col-xxl-4 col-md-6 mt-4 mb-4">
+                          <div class="card info-card sales-card">
+                            <div class="card-body">
+                              <h5 class="card-title">Pregnancy Cases <span>Total</span></h5>
 
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="ri-heart-add-fill"></i>
+                              <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                  <i class="ri-hearts-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                  {{-- <h6>{{ $totalClearances }}</h6> --}}
+                                  <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+
+                                </div>
+                              </div>
                             </div>
-                            <div class="ps-3">
-                              <h6>{{ $totalFamilyPlanning }}</h6>
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-                            </div>
+
                           </div>
                         </div>
+                      <!-- End Pregnancy Card -->
 
-                      </div>
-                    </div><!-- End Family Planning Card -->
+                      <!-- TB Card -->
+                        <div class="col-xxl-4 col-md-6 mt-4 mb-4">
+                          <div class="card info-card sales-card" onclick="showTbGraphModal()">
+                            <div class="card-body">
+                              <h5 class="card-title">TB Cases <span>Total</span></h5>
 
-                    <!-- Pregnancy Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title">Pregnancy Cases <span>Total</span></h5>
+                              <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                  <i class="ri-lungs-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                  <h6>{{ $tb}}</h6>
 
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="ri-hearts-fill"></i>
+                                  @if ($dsrChange >= 0)
+                                      <span class="text-success small pt-1 fw-bold">{{ $tbChange }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                  @else
+                                      <span class="text-danger small pt-1 fw-bold">{{ abs($tbChange) }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                  @endif
+                              </div>
+                              </div>
                             </div>
-                            <div class="ps-3">
-                              {{-- <h6>{{ $totalClearances }}</h6> --}}
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
-                            </div>
                           </div>
                         </div>
+                      <!-- End TB Card -->
 
-                      </div>
-                    </div><!-- End Pregnancy Card -->
-
-                    <!-- TB Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title">TB Cases <span>Total</span></h5>
-
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="ri-lungs-fill"></i>
-                            </div>
-                            <div class="ps-3">
-                              <h6>{{ $tb }}</h6>
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
-                            </div>
+                      {{-- TB Graph --}}
+                        <div class="modal fade" id="tbModal" tabindex="-1" aria-labelledby="tbModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="tbModalLabel">TB Details (Monthly Comparison)</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <canvas id="populationTbChart"></canvas>
+                                  </div>
+                              </div>
                           </div>
                         </div>
+                      {{-- End of TB Graph --}}
 
-                      </div>
-                    </div><!-- End TB Card -->
+                      <!-- Dengue Card -->
+                        <div class="col-xxl-4 col-md-6 mt-4 mb-4">
+                          <div class="card info-card sales-card" onclick="showDengueGraphModal()">
+                            <div class="card-body">
+                              <h5 class="card-title">Dengue Cases <span>Total</span></h5>
 
-                    <!-- Dengue Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title">Dengue Cases <span>Total</span></h5>
+                              <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                  <i class="ri-heart-pulse-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                  <h6>{{ $dengue }}</h6>
 
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="ri-heart-pulse-fill"></i>
+                                  @if ($dengueChange >= 0)
+                                      <span class="text-success small pt-1 fw-bold">{{ $dengueChange }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                  @else
+                                      <span class="text-danger small pt-1 fw-bold">{{ abs($dengueChange) }}%</span> 
+                                      <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                  @endif
+                              </div>
+                              </div>
                             </div>
-                            <div class="ps-3">
-                              <h6>{{ $dengue }}</h6>
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
-                            </div>
                           </div>
                         </div>
+                      <!-- End Dengue Card -->
 
+                      {{-- Dengue Graph --}}
+                        <div class="modal fade" id="dengueModal" tabindex="-1" aria-labelledby="dengueModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="dengueModalLabel">Dengue Details (Monthly Comparison)</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <canvas id="populationDengueChart"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      {{-- End of Dengue Graph --}}
+                    {{-- END OF CARDS --}}
+
+                    {{-- GRAPH --}}
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="titleCard">
+                            <h4>Service Recipients as of {{ date('Y') }}</h4>
+                          </div>
+                          <!-- Line Chart -->
+                          <div class="dropdown">
+                            <button class="dots-icon" onclick="toggleDropdownService()">⋮</button>
+                            <div class="dropdown-content" id="dataDropdownService">
+                                <a href="#" onclick="loadYearlyServiceData()">Yearly Data</a>
+                                <a href="#" onclick="loadMonthlyServiceData()">Monthly Data</a>
+                            </div>
+                          </div>
+                          <canvas id="wholeServiceChart"></canvas>
+                          <!-- End Line Chart -->
+                        </div>
                       </div>
-                    </div><!-- End Dengue Card -->
-
-                     <!-- Line Chart -->
-                      <div id="lineChart"></div>
-
-                      <script>
-                        document.addEventListener("DOMContentLoaded", () => {
-                          new ApexCharts(document.querySelector("#lineChart"), {
-                            series: [{
-                              name: "Desktops",
-                              data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-                            }],
-                            chart: {
-                              height: 350,
-                              type: 'line',
-                              zoom: {
-                                enabled: false
-                              }
-                            },
-                            dataLabels: {
-                              enabled: false
-                            },
-                            stroke: {
-                              curve: 'straight'
-                            },
-                            grid: {
-                              row: {
-                                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                                opacity: 0.5
-                              },
-                            },
-                            xaxis: {
-                              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                            }
-                          }).render();
-                        });
-                      </script>
-                      <!-- End Line Chart -->
+                    {{-- END OF GRAPH --}}
                   </div>
                 </div>
-                {{-- REFERRAL --}}
+              {{-- REFERRAL --}}
                 <div class="tab-pane fade" id="bordered-referred" role="tabpanel" aria-labelledby="referred-tab">
                   <div class="row">
                     <!-- RHU Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title"> RHU <span>Total</span></h5>
+                      <div class="col-xxl-6 col-md-6 mt-4 mb-4">
+                        <div class="card info-card sales-card" onclick="showRhuGraphModal()">
+                          <div class="card-body">
+                            <h5 class="card-title"> RHU <span>Total</span></h5>
+                            <div class="d-flex align-items-center">
+                              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bx bx-health"></i>
+                              </div>
+                              <div class="ps-3">
+                                <h6>{{ $totalRhu }}</h6>
 
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class="bx bx-health"></i>
+                                @if ($rhuChange >= 0)
+                                    <span class="text-success small pt-1 fw-bold">{{ $rhuChange }}%</span> 
+                                    <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                @else
+                                    <span class="text-danger small pt-1 fw-bold">{{ abs($rhuChange) }}%</span> 
+                                    <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                @endif
                             </div>
-                            <div class="ps-3">
-                              <h6>{{ $totalRhu }}</h6>
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                             </div>
                           </div>
                         </div>
-
                       </div>
-                    </div><!-- End RHU Card -->
+                    <!-- End RHU Card -->
+
+                    {{-- RHU Graph --}}
+                      <div class="modal fade" id="rhuModal" tabindex="-1" aria-labelledby="rhuModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="rhuModalLabel">RHU Details (Monthly Comparison)</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <canvas id="populationRhuChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    {{-- End of RHU Graph --}}
 
                     <!-- Destrict Card -->
-                    <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                      <div class="card info-card sales-card">
-                        <div class="card-body">
-                          <h5 class="card-title">Destrict <span>Total</span></h5>
+                      <div class="col-xxl-6 col-md-6 mt-4 mb-4">
+                        <div class="card info-card sales-card" onclick="showDestrictGraphModal()">
+                          <div class="card-body">
+                            <h5 class="card-title">Destrict <span>Total</span></h5>
 
-                          <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                              <i class=" ri-hospital-fill"></i>
+                            <div class="d-flex align-items-center">
+                              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class=" ri-hospital-fill"></i>
+                              </div>
+                              <div class="ps-3">
+                                <h6>{{ $totalDes}}</h6>
+
+                                @if ($rhuChange >= 0)
+                                    <span class="text-success small pt-1 fw-bold">{{ $destrictChange }}%</span> 
+                                    <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                @else
+                                    <span class="text-danger small pt-1 fw-bold">{{ abs($destrictChange) }}%</span> 
+                                    <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                @endif
                             </div>
-                            <div class="ps-3">
-                              <h6>{{ $totalDes }}</h6>
-                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                             </div>
                           </div>
-                        </div>
 
+                        </div>
                       </div>
-                    </div><!-- End Destrict Card -->
+                    <!-- End Destrict Card -->
+
+                    {{-- Destrict Graph --}}
+                      <div class="modal fade" id="desModal" tabindex="-1" aria-labelledby="desModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="desModalLabel">Destrict Details (Monthly Comparison)</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <canvas id="populationDesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    {{-- End of Destrict Graph --}}
+
+                    {{-- RHU and Destrict Comparison Graph --}}
+                      <div class="card mt-4 mb-4">
+                        <div class="card-body">
+                            <div class="titleCard">
+                                <h4>RHU and Destrict Monthly Comparison as of {{ date('Y') }}</h4>
+                            </div>
+                            
+                            <!-- Dropdown for Data Selection -->
+                            <div class="dropdown">
+                                <button class="dots-icon" onclick="toggleDropdownRef()">⋮</button>
+                                <div class="dropdown-content" id="dataDropdownRef">
+                                    <a href="#" onclick="loadYearlyDataRef()">Yearly Data</a>
+                                    <a href="#" onclick="loadMonthlyDataRef()">Monthly Data</a>
+                                </div>
+                            </div>
+                            
+                            <!-- Line Chart -->
+                            <canvas id="rhuDestrictChart"></canvas>
+                        </div>
+                      </div>
+                    {{-- End of RHU and Destrict Comparison Graph --}}
+
                   </div>
                 </div>
               </div>
@@ -503,78 +673,79 @@
   @include('layouts.footerHealthWorkers')
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+// POPULATION DASHBOARD
     // population
-      function showPopulationModal() {
-          // Initialize Bootstrap modal
-          const modal = new bootstrap.Modal(document.getElementById('populationModal'));
-          modal.show();
+    function showPopulationModal() {
+        // Initialize Bootstrap modal
+        const modal = new bootstrap.Modal(document.getElementById('populationModal'));
+        modal.show();
 
-          // Destroy the existing chart instance if it exists
-          if (window.populationChart && typeof window.populationChart.destroy === 'function') {
-              window.populationChart.destroy();
-          }
+        // Destroy the existing chart instance if it exists
+        if (window.populationChart && typeof window.populationChart.destroy === 'function') {
+            window.populationChart.destroy();
+        }
 
-          // Fetch current and previous year data
-          const currentYearData = @json($currentYearData);
-          const previousYearData = @json($previousYearData);
+        // Fetch current and previous year data
+        const currentYearData = @json($currentYearData);
+        const previousYearData = @json($previousYearData);
 
-          // Get the canvas context
-          const ctx = document.getElementById('populationChart').getContext('2d');
+        // Get the canvas context
+        const ctx = document.getElementById('populationChart').getContext('2d');
 
-          // Create a new Chart instance
-          window.populationChart = new Chart(ctx, {
-              type: 'line',
-              data: {
-                  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                  datasets: [
-                      {
-                          label: '{{ $currentYear }} Population',
-                          data: currentYearData,
-                          borderColor: 'blue',
-                          backgroundColor: 'rgba(0, 0, 255, 0.1)',
-                          fill: true
-                      },
-                      {
-                          label: '{{ $previousYear }} Population',
-                          data: previousYearData,
-                          borderColor: 'red',
-                          backgroundColor: 'rgba(255, 0, 0, 0.1)',
-                          fill: true
-                      }
-                  ]
-              },
-              options: {
-                  responsive: true,
-                  plugins: {
-                      tooltip: {
-                          callbacks: {
-                              label: function(context) {
-                                  return `Registrations: ${context.raw}`;
-                              }
-                          }
-                      },
-                      legend: {
-                          position: 'top'
-                      }
-                  },
-                  scales: {
-                      y: {
-                          beginAtZero: true,
-                          title: {
-                              display: true,
-                              text: 'Population Count'
-                          }
-                      },
-                      x: {
-                          title: {
-                              display: true,
-                              text: 'Months'
-                          }
-                      }
-                  }
-              }
-          });
-      }
+        // Create a new Chart instance
+        window.populationChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [
+                    {
+                        label: '{{ $currentYear }} Population',
+                        data: currentYearData,
+                        borderColor: 'blue',
+                        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                        fill: true
+                    },
+                    {
+                        label: '{{ $previousYear }} Population',
+                        data: previousYearData,
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Registrations: ${context.raw}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Population Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    }
+                }
+            }
+        });
+    }
     // Male population modal and chart
     function showPopMaleModal() {
         const maleModal = new bootstrap.Modal(document.getElementById('popMaleModal'));
@@ -630,9 +801,6 @@
             }
         });
     }
-
-
-
 
     let wholePopulationChart;
 
@@ -740,6 +908,770 @@
     // Load yearly data by default
     loadYearlyData();
 
+// MEDICAL DASHBOARD
+  function showDsrGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('dsrModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationDsrChart && typeof window.populationDsrChart.destroy === 'function') {
+        window.populationDsrChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearDsrData = @json($currentYearDsrData);
+    const previousYearDsrData = @json($previousYearDsrData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationDsrChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationDsrChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Visits',
+                    data: currentYearDsrData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Visits',
+                    data: previousYearDsrData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Served: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Patients Served'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+  function showDiabetesGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('diabetesModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationDiabetesChart && typeof window.populationDiabetesChart.destroy === 'function') {
+        window.populationDiabetesChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearDiabetesData = @json($currentYearDiabetesData);
+    const previousYearDiabetesData = @json($previousYearDiabetesData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationDiabetesChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationDiabetesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Visits',
+                    data: currentYearDiabetesData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Visits',
+                    data: previousYearDiabetesData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Diagnosed: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Patients Diagnosed'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+  function showFpGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('fpModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationFpChart && typeof window.populationFpChart.destroy === 'function') {
+        window.populationFpChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearFpData = @json($currentYearFpData);
+    const previousYearFpData = @json($previousYearFpData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationFpChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationFpChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Visits',
+                    data: currentYearFpData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Visits',
+                    data: previousYearFpData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Diagnosed: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Visits'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+  function showTbGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('tbModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationTbChart && typeof window.populationTbChart.destroy === 'function') {
+        window.populationTbChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearTbData = @json($currentYearTbData);
+    const previousYearTbData = @json($previousYearTbData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationTbChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationTbChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Visits',
+                    data: currentYearTbData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Visits',
+                    data: previousYearTbData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Diagnosed: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Visits'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+  function showDengueGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('dengueModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationDengueChart && typeof window.populationDengueChart.destroy === 'function') {
+        window.populationDengueChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearDengueData = @json($currentYearDengueData);
+    const previousYearDengueData = @json($previousYearDengueData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationDengueChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationTbChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Visits',
+                    data: currentYearDengueData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Visits',
+                    data: previousYearDengueData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Diagnosed: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Visits'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+  let wholeServiceChart;
+
+  function loadYearlyServiceData() {
+      const ctx = document.getElementById('wholeServiceChart').getContext('2d');
+      const yearsService = @json($yearsService);
+      const yearlyServiceData = @json($yearlyServiceData);
+
+      if (wholeServiceChart) {
+          wholeServiceChart.destroy();
+      }
+
+      wholeServiceChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: yearsService,
+              datasets: [{
+                  label: 'Service Recipients (Yearly)',
+                  data: yearlyServiceData,
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 2,
+                  fill: false,
+              }]
+          },
+          options: {
+              scales: {
+                  x: {
+                      title: {
+                          display: true,
+                          text: 'Year'
+                      }
+                  },
+                  y: {
+                      beginAtZero: true,
+                      title: {
+                          display: true,
+                          text: 'Number of Service Recipients'
+                      }
+                  }
+              },
+              plugins: {
+                  legend: {
+                      display: true,
+                      position: 'top'
+                  }
+              }
+          }
+      });
+  }
+
+  function loadMonthlyServiceData() {
+      const ctx = document.getElementById('wholeServiceChart').getContext('2d');
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthlyDataService = @json($currentYearDsrData);  // Adjust if data is in currentYearDataService
+
+      if (wholeServiceChart) {
+          wholeServiceChart.destroy();
+      }
+
+      wholeServiceChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: months,
+              datasets: [{
+                  label: 'Service Recipients (Monthly)',
+                  data: monthlyDataService,
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 2,
+                  fill: false,
+              }]
+          },
+          options: {
+              scales: {
+                  x: {
+                      title: {
+                          display: true,
+                          text: 'Month'
+                      }
+                  },
+                  y: {
+                      beginAtZero: true,
+                      title: {
+                          display: true,
+                          text: 'Number of Service Recipients'
+                      }
+                  }
+              },
+              plugins: {
+                  legend: {
+                      display: true,
+                      position: 'top'
+                  }
+              }
+          }
+      });
+  }
+
+  function toggleDropdownService() {
+      document.getElementById("dataDropdownService").classList.toggle("show");
+  }
+
+  window.onclick = function(event) {
+      if (!event.target.matches('.dots-icon')) {
+          const dropdowns = document.getElementsByClassName("dropdown-content");
+          for (let i = 0; i < dropdowns.length; i++) {
+              const openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                  openDropdown.classList.remove('show');
+              }
+          }
+      }
+  }
+
+  // Load yearly data by default
+  loadYearlyServiceData();
+// REFERRAL
+  function showRhuGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('rhuModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationRhuChart && typeof window.populationRhuChart.destroy === 'function') {
+        window.populationRhuChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearRhuData = @json($currentYearRhuData);
+    const previousYearRhuData = @json($previousYearRhuData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationRhuChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationRhuChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Referred',
+                    data: currentYearRhuData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Referred',
+                    data: previousYearRhuData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Referred: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Patients Referred'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+  function showDestrictGraphModal() 
+  {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('desModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationDesChart && typeof window.populationDesChart.destroy === 'function') {
+        window.populationDesChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearDesData = @json($currentYearDestrictData);
+    const previousYearDesData = @json($previousYearDestrictData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationDesChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationDesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Referred',
+                    data: currentYearDesData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Referred',
+                    data: previousYearDesData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Referred: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Patients Referred'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+  }
+
+
+  let rhuDestrictChart;
+
+  function loadYearlyDataRef() {
+    const ctx = document.getElementById('rhuDestrictChart').getContext('2d');
+    const yearlyDes = @json($yearlyDesData);
+    const yearsRef = @json($yearsRef);
+    const yearlyRef = @json($yearlyRefData);
+    const yearsDes = @json($yearsRef);
+
+    if (rhuDestrictChart) {
+        rhuDestrictChart.destroy();
+    }
+
+    rhuDestrictChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: yearsRef,
+            datasets: [
+                {
+                    label: 'RHU Referral (Yearly)',
+                    data: yearlyRef,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    label: 'District Referral (Yearly)', // Add a label for the new dataset
+                    data: yearlyDes, // Add the yearlyDes data
+                    borderColor: 'rgba(255, 99, 132, 1)', // Choose a different color for distinction
+                    borderWidth: 2,
+                    fill: false,
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Year'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Service Recipients'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+}
+
+function loadMonthlyDataRef() {
+    const ctx = document.getElementById('rhuDestrictChart').getContext('2d');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthlyDataRef = @json($currentYearRhuData); 
+    const monthlyDataDis = @json($currentYearDestrictData); 
+
+    if (rhuDestrictChart) {
+        rhuDestrictChart.destroy();
+    }
+
+    rhuDestrictChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [
+                {
+                    label: 'RHU Referral (Monthly)',
+                    data: monthlyDataRef, // Use monthlyDataRef for the first dataset
+                    borderColor: ' rgba(75, 192, 192, 1)', // Color for the first dataset
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    label: 'District Referral (Monthly)', // Add a label for the district data
+                    data: monthlyDataDis, // Use monthlyDataDis for the second dataset
+                    borderColor: 'rgba(255, 99, 132, 1)', 
+                    borderWidth: 2,
+                    fill: false,
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Service Recipients'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+}
+
+  function toggleDropdownRef() {
+      document.getElementById("dataDropdownRef").classList.toggle("show");
+  }
+
+  window.onclick = function(event) {
+      if (!event.target.matches('.dots-icon')) {
+          const dropdowns = document.getElementsByClassName("dropdown-content");
+          for (let i = 0; i < dropdowns.length; i++) {
+              const openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                  openDropdown.classList.remove('show');
+              }
+          }
+      }
+  }
+
+  // Load yearly data by default
+  loadYearlyDataRef();
+ 
 </script>
 
   

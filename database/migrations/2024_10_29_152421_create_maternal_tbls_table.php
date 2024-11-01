@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('mat_clinic', 80)->nullable();
             $table->enum('mat_bType', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'])->nullable();
             $table->string('mat_fNum', 20)->nullable();
-            $table->unsignedBigInteger('maiden_id')->nullable(); 
 
+            $table->unsignedBigInteger('maiden_id')->nullable(); 
             $table->foreign('maiden_id')->references('res_id')->on('resident_tbls')->onDelete('cascade');
+            
             $table->string('mat_urMaiden', 80)->nullable();
             $table->date('mat_urBdate')->nullable();
             $table->string('mat_urOcc', 30)->nullable();

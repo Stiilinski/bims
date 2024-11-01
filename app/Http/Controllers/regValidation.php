@@ -2942,74 +2942,202 @@ class regValidation extends Controller
         $totalPopulation = resident_tbl::count();
 
         // Initialize arrays for monthly registration counts by gender for current and previous years
-        $currentYearData = [];
-        $previousYearData = [];
-        $currentYearMaleData = [];
-        $currentYearFemaleData = [];
-        $previousYearMaleData = [];
-        $previousYearFemaleData = [];
-        $years = [];
-        $yearlyData = [];
+        // POPULATION
+            $currentYearData = [];
+            $previousYearData = [];
+            $currentYearMaleData = [];
+            $currentYearFemaleData = [];
+            $previousYearMaleData = [];
+            $previousYearFemaleData = [];
+            $years = [];
+            $yearlyData = [];
+        
+        // MEDICAL
+            $currentYearDsrData = [];
+            $previousYearDsrData = [];
+            $currentYearDiabetesData = [];
+            $previousYearDiabetesData = [];
+            $currentYearFpData = [];
+            $previousYearFpData = [];
+            $currentYearTbData = [];
+            $previousYearTbData = [];
+            $currentYearDengueData = [];
+            $previousYearDengueData = [];
+            $yearsService = [];
+            $yearlyServiceData = [];
+        // REFERRAL
+            $currentYearRhuData = [];
+            $previousYearRhuData = [];
+            $currentYearDestrictData = [];
+            $previousYearDestrictData = [];
+            $yearsRef = [];
+            $yearlyRefData = [];
+            $yearsDes = [];
+            $yearlyDesData = [];
 
         for ($month = 1; $month <= 12; $month++) {
-            // Monthly count for all residents
-            $currentYearData[] = resident_tbl::whereYear('res_dateReg', $currentYear)
-                                            ->whereMonth('res_dateReg', $month)
-                                            ->count();
-            $previousYearData[] = resident_tbl::whereYear('res_dateReg', $previousYear)
-                                            ->whereMonth('res_dateReg', $month)
-                                            ->count();
-
-            // Monthly count for male residents
-            $currentYearMaleData[] = resident_tbl::whereYear('res_dateReg', $currentYear)
+            // POPULATION
+                // Monthly count for all residents
+                $currentYearData[] = resident_tbl::whereYear('res_dateReg', $currentYear)
                                                 ->whereMonth('res_dateReg', $month)
-                                                ->where('res_sex', 'Male')
-                                                ->count();
-            $previousYearMaleData[] = resident_tbl::whereYear('res_dateReg', $previousYear)
-                                                ->whereMonth('res_dateReg', $month)
-                                                ->where('res_sex', 'Male')
                                                 ->count();
 
-            // Monthly count for female residents
-            $currentYearFemaleData[] = resident_tbl::whereYear('res_dateReg', $currentYear)
+                $previousYearData[] = resident_tbl::whereYear('res_dateReg', $previousYear)
                                                 ->whereMonth('res_dateReg', $month)
-                                                ->where('res_sex', 'Female')
                                                 ->count();
-            $previousYearFemaleData[] = resident_tbl::whereYear('res_dateReg', $previousYear)
+
+                // Monthly count for male residents
+                $currentYearMaleData[] = resident_tbl::whereYear('res_dateReg', $currentYear)
+                                                    ->whereMonth('res_dateReg', $month)
+                                                    ->where('res_sex', 'Male')
+                                                    ->count();
+                $previousYearMaleData[] = resident_tbl::whereYear('res_dateReg', $previousYear)
+                                                    ->whereMonth('res_dateReg', $month)
+                                                    ->where('res_sex', 'Male')
+                                                    ->count();
+
+                // Monthly count for female residents
+                $currentYearFemaleData[] = resident_tbl::whereYear('res_dateReg', $currentYear)
                                                     ->whereMonth('res_dateReg', $month)
                                                     ->where('res_sex', 'Female')
                                                     ->count();
+                $previousYearFemaleData[] = resident_tbl::whereYear('res_dateReg', $previousYear)
+                                                        ->whereMonth('res_dateReg', $month)
+                                                        ->where('res_sex', 'Female')
+                                                        ->count();
+
+            // MEDICAL
+                $currentYearDsrData[] = dailyServiceRec_tbl::whereYear('dsr_dateVisit', $currentYear)
+                    ->whereMonth('dsr_dateVisit', $month)
+                    ->count();
+                $previousYearDsrData[] = dailyServiceRec_tbl::whereYear('dsr_dateVisit', $previousYear)
+                    ->whereMonth('dsr_dateVisit', $month)
+                    ->count();
+
+                $currentYearDiabetesData[] = risk_tbl::whereYear('risk_dateAss', $currentYear)
+                    ->whereMonth('risk_dateAss', $month)
+                    ->whereJsonContains('risk_Diabetes', 'Yes')
+                    ->count();
+                
+                $previousYearDiabetesData[] = risk_tbl::whereYear('risk_dateAss', $previousYear)
+                    ->whereMonth('risk_dateAss', $month)
+                    ->whereJsonContains('risk_Diabetes', 'Yes')
+                    ->count();
+
+                $currentYearFpData[] = fp_tbl::whereYear('created_at', $currentYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+                
+                $previousYearFpData[] = fp_tbl::whereYear('created_at', $previousYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+
+
+                $currentYearTbData[] = dstb::whereYear('created_at', $currentYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+                
+                $previousYearTbData[] = dstb::whereYear('created_at', $previousYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+                
+                $currentYearDengueData[] = dengue_tbl::whereYear('dengue_date', $currentYear)
+                    ->whereMonth('dengue_date', $month)
+                    ->where('dengue_status', 'Dengue Positive')
+                    ->count();
+                
+                $previousYearDengueData[] = dengue_tbl::whereYear('dengue_date', $previousYear)
+                    ->whereMonth('dengue_date', $month)
+                    ->where('dengue_status', 'Dengue Positive')
+                    ->count();
+            // REFERRAL
+                $currentYearRhuData[] = rhu_tbl::whereYear('created_at', $currentYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+                $previousYearRhuData[] = rhu_tbl::whereYear('created_at', $previousYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+
+                $currentYearDestrictData[] = destrict_tbl::whereYear('des_dateConsult', $currentYear)
+                    ->whereMonth('des_dateConsult', $month)
+                    ->count();
+                $previousYearDestrictData[] = destrict_tbl::whereYear('des_dateConsult', $previousYear)
+                    ->whereMonth('des_dateConsult', $month)
+                    ->count();
         }
 
         // Prepare yearly data for the last 10 years
-        for ($year = $currentYear - 10; $year <= $currentYear; $year++) {
-            $years[] = $year;
-            $yearlyData[] = resident_tbl::whereYear('res_dateReg', $year)->count();
-        }
+            // Population 
+                for ($year = $currentYear - 10; $year <= $currentYear; $year++) {
+                    $years[] = $year;
+                    $yearlyData[] = resident_tbl::whereYear('res_dateReg', $year)->count();
+                }
+            // Medical
+                for ($yearService = $currentYear - 10; $yearService <= $currentYear; $yearService++) {
+                    $yearsService[] = $yearService;
+                    $yearlyServiceData[] = dailyServiceRec_tbl::whereYear('dsr_dateVisit', $yearService)->count();
+                }
+            // REFERRAL
+                for ($yearRef = $currentYear - 10; $yearRef <= $currentYear; $yearRef++) {
+                    $yearsRef[] = $yearRef;
+                    $yearlyRefData[] = rhu_tbl::whereYear('created_at', $yearRef)->count();
+                }
+
+                for ($yearDes = $currentYear - 10; $yearDes <= $currentYear; $yearDes++) {
+                    $yearsDes[] = $yearDes;
+                    $yearlyDesData[] = destrict_tbl::whereYear('des_dateConsult', $yearDes)->count();
+                }
 
         // Calculate the total registrations for the current and previous years
-        $populationCurrentYear = array_sum($currentYearData);
-        $populationPreviousYear = array_sum($previousYearData);
-        $populationMaleCurrentYear = array_sum($currentYearMaleData);
-        $populationMalePreviousYear = array_sum($previousYearMaleData);
-        $populationFemaleCurrentYear = array_sum($currentYearFemaleData);
-        $populationFemalePreviousYear = array_sum($previousYearFemaleData);
-
+        // POPULATION
+            $populationCurrentYear = array_sum($currentYearData);
+            $populationPreviousYear = array_sum($previousYearData);
+            $populationMaleCurrentYear = array_sum($currentYearMaleData);
+            $populationMalePreviousYear = array_sum($previousYearMaleData);
+            $populationFemaleCurrentYear = array_sum($currentYearFemaleData);
+            $populationFemalePreviousYear = array_sum($previousYearFemaleData);
+        // MEDICAL
+            $currentDsrYear = array_sum($currentYearDsrData);
+            $previousDsrYear = array_sum($previousYearDsrData);
+            $currentDiabetesYear = array_sum($currentYearDiabetesData);
+            $previousDiabetesYear = array_sum($previousYearDiabetesData);
+            $currentFpYear = array_sum($currentYearFpData);
+            $previousFpYear = array_sum($previousYearFpData);
+            $currentTbYear = array_sum($currentYearTbData);
+            $previousTbYear = array_sum($previousYearTbData);
+            $currentDengueYear = array_sum($currentYearDengueData);
+            $previousDengueYear = array_sum($previousYearDengueData);
+        // REFERRAL
+            $currentRhuYear = array_sum($currentYearRhuData);
+            $previousRhuYear = array_sum($previousYearRhuData);
+            $currentDestrictYear = array_sum($currentYearDestrictData);
+            $previousDestrictYear = array_sum($previousYearDestrictData);
         // Calculate the percentage change in population from the previous year
-        $populationChange = $this->calculatePercentageChange($populationCurrentYear, $populationPreviousYear);
-        $populationMaleChange = $this->calculatePercentageChange($populationMaleCurrentYear, $populationMalePreviousYear);
-        $populationFemaleChange = $this->calculatePercentageChange($populationFemaleCurrentYear, $populationFemalePreviousYear);
-
+        // POPULATION
+            $populationChange = $this->calculatePercentageChange($populationCurrentYear, $populationPreviousYear);
+            $populationMaleChange = $this->calculatePercentageChange($populationMaleCurrentYear, $populationMalePreviousYear);
+            $populationFemaleChange = $this->calculatePercentageChange($populationFemaleCurrentYear, $populationFemalePreviousYear);
+        // MEDICAL
+            $dsrChange = $this->calculatePercentageChange($currentDsrYear, $previousDsrYear);
+            $diabetesChange = $this->calculatePercentageChange($currentDiabetesYear, $previousDiabetesYear);
+            $fpChange = $this->calculatePercentageChange($currentFpYear, $previousFpYear);
+            $tbChange = $this->calculatePercentageChange($currentTbYear, $previousTbYear);
+            $dengueChange = $this->calculatePercentageChange($currentDengueYear, $previousDengueYear);
+        // REFERRAL
+            $rhuChange = $this->calculatePercentageChange($currentRhuYear, $previousRhuYear);
+            $destrictChange = $this->calculatePercentageChange($currentDestrictYear, $previousDestrictYear);
         // Fetch any additional data you need
         $loggedUserInfo = employee_tbl::find(session('LoggedUser'));
         $totalMale = resident_tbl::where('res_sex', 'Male')->count();
         $totalFemale = resident_tbl::where('res_sex', 'Female')->count();
-        $totalDiabetes = risk_tbl::whereJsonContains('risk_Diabetes', 'Yes')->count();
-        $totalFamilyPlanning = fp_tbl::count();
+        $totalDiabetes = risk_tbl::whereJsonContains('risk_Diabetes', 'Yes')->whereYear('risk_dateAss', $currentYear)->count();
+        $totalFamilyPlanning = fp_tbl::whereYear('created_at', $currentYear)->count();
         $totalRhu = rhu_tbl::whereYear('created_at', $currentYear)->count();
-        $totalDes = destrict_tbl::whereYear('created_at', $currentYear)->count();
-        $tb = dstb::count();
-        $dengue = dengue_tbl::where('dengue_status', 'Dengue Positive')->count();
+        $totalDsr = dailyServiceRec_tbl::whereYear('dsr_dateVisit', $currentYear)->count();
+        $totalDes = destrict_tbl::whereYear('des_dateConsult', $currentYear)->count();
+        $tb = dstb::whereYear('created_at', now()->year)->count();
+
+        $dengue = dengue_tbl::whereYear('dengue_date', $currentYear)->where('dengue_status', 'Dengue Positive')->count();
 
         // Prepare data array for the view
         $data = [
@@ -3028,14 +3156,43 @@ class regValidation extends Controller
             'previousYear' => $previousYear,
             'totalMale' => $totalMale,
             'totalFemale' => $totalFemale,
+            'totalDsr' => $totalDsr,
+            'yearsService' => $yearsService,
+            'yearlyServiceData' => $yearlyServiceData,
+            'currentYearDsrData' => $currentYearDsrData,
+            'previousYearDsrData' => $previousYearDsrData,
             'totalDiabetes' => $totalDiabetes,
+            'currentYearDiabetesData' => $currentYearDiabetesData,
+            'previousYearDiabetesData' => $previousYearDiabetesData,
             'totalFamilyPlanning' => $totalFamilyPlanning,
+            'currentYearFpData' => $currentYearFpData,
+            'previousYearFpData' => $previousYearFpData,
             'tb' => $tb,
+            'currentYearTbData' => $currentYearTbData,
+            'previousYearTbData' => $previousYearTbData,
             'dengue' => $dengue,
+            'currentYearDengueData' => $currentYearDengueData,
+            'previousYearDengueData' => $previousYearDengueData,
             'totalRhu' => $totalRhu,
+            'currentYearRhuData' => $currentYearRhuData,
+            'previousYearRhuData' => $previousYearRhuData,
+            'yearsRef' => $yearsRef,
+            'yearlyRefData' => $yearlyRefData,
             'totalDes' => $totalDes,
+            'currentYearDestrictData' => $currentYearDestrictData,
+            'previousYearDestrictData' => $previousYearDestrictData,
+            'yearsDes' => $yearsDes,
+            'yearlyDesData' => $yearlyDesData,
             'years' => $years,
-            'yearlyData' => $yearlyData
+            'yearlyData' => $yearlyData,
+
+            'dsrChange' => $dsrChange,
+            'diabetesChange' => $diabetesChange,
+            'fpChange' => $fpChange,
+            'tbChange' => $tbChange,
+            'dengueChange' => $dengueChange,
+            'rhuChange' => $rhuChange,
+            'destrictChange' => $destrictChange
         ];
 
         // Set headers to prevent caching
@@ -3994,7 +4151,6 @@ class regValidation extends Controller
 
         $risk = risk_tbl::with('resident')
             ->where('risk_id', $risk_id)
-            ->whereYear('created_at', $currentYear)
             ->orderBy('created_at', 'desc')
             ->first(); 
 
