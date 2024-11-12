@@ -164,7 +164,7 @@ $(document).ready(function() {
   });
 
 //FOR SIGNATURE
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         var canvas = document.getElementById('signaturePad');
         var signaturePad = new SignaturePad(canvas);
 

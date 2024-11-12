@@ -78,9 +78,9 @@
     
 
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/dbBrgyCap') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dashboardCap') }}">
-          <i class="bi bi-grid"></i>
-          <span>Residents Medical Record</span>
+        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/calendar') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@calendar') }}">
+          <i class="bi bi-calendar"></i>
+          <span>Schedule</span>
         </a>
       </li>
   
@@ -127,13 +127,6 @@
             </li>
         </ul>
     </li><!-- End Check Up Nav -->
-  
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-archive"></i>
-          <span>Archive</span>
-        </a>
-      </li>
     </ul>
   </aside><!-- End Sidebar-->
   

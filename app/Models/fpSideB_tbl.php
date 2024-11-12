@@ -12,9 +12,9 @@ class fpSideB_tbl extends Model
     public $incrementing = true; 
     protected $keyType = 'int';
 
-    public function resident()
+    public function fp()
     {
-        return $this->belongsTo(resident_tbl::class, 'res_id', 'res_id'); // Assuming 'res_id' is the foreign key in `opt_tbl`
+        return $this->belongsTo(fp_tbl::class, 'fp_id', 'fp_id'); // Assuming 'res_id' is the foreign key in `opt_tbl`
     }
     public function employee()
     {

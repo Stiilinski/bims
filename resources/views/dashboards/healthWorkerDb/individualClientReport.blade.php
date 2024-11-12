@@ -139,6 +139,111 @@
         font-weight: 500;
         font-size: 16px;
     }
+
+
+@media print {
+    /* Set the page orientation to portrait */
+    @page {
+        size: portrait; /* Set page to portrait orientation */
+        margin: 15mm; /* Set margins */
+    }
+
+    * {
+        font-size: 12px; /* Set font size for the entire page */
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        height: 100%; /* Set height to 100% to ensure it uses the full page */
+    }
+
+    /* Ensure main content is visible during print */
+    .main {
+        visibility: visible !important; /* Make sure main is visible during print */
+        display: block !important; /* Force display as block (it might be hidden otherwise) */
+        margin: 0; /* Remove any margins */
+        padding: 0; /* Remove any padding */
+        height: auto; /* Allow the main content to expand based on its content */
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle, .btnArea, .row, .sidebar {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 100%;
+        position: absolute; /* Use relative positioning */
+        top: 0; /* Align to the top of the page */
+        left: 0; /* Align to the left */
+        visibility: visible !important; /* Ensure it's visible */
+        background-color: #fff;
+        box-shadow: none;
+        display: block; /* Ensure it's displayed as a block */
+        padding: 0; /* Remove padding */
+        margin: 0; /* Remove any default margin */
+    }
+
+    .card-body {
+        width: 100%;
+        padding: 0; /* Remove internal padding */
+        background-color: #fff;
+    }
+
+    /* Style for the table */
+    table {
+        width: 100%; /* Ensure table takes up full width */
+        table-layout: fixed; /* Ensure column widths don't overflow */
+        border-collapse: collapse; /* Collapse table borders */
+    }
+
+    th, td {
+        font-size: 12px;
+        padding: 8px 12px; /* Padding for table cells */
+        text-align: left;
+        border: 1px solid #000; /* Border around the table */
+        word-wrap: break-word; /* Prevent words from overflowing */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Light background for table headers */
+    }
+
+    /* Ensure striped rows are maintained */
+    tr:nth-child(odd) {
+        background-color: #f9f9f9; /* Light gray background for odd rows */
+    }
+
+    /* Avoid page breaks within the table */
+    table, tr, td {
+        page-break-inside: avoid;
+    }
+
+    /* Ensure the table fits within the page */
+    .table-responsive {
+        width: 100%;
+        overflow: auto;
+    }
+
+    /* Make sure the title is displayed at the top */
+    .cardTitle {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px; /* Optional: Add space below title */
+    }
+}
+
+
+
+
 </style>
 <body>
 
@@ -155,7 +260,7 @@
     <div class="pagetitle">
         <h1>Individual Client Treatment Report</h1>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
         </div>
     </div><!-- End Page Title -->
 
@@ -374,7 +479,10 @@
     }
 
 
-
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    });
 </script>
 
 

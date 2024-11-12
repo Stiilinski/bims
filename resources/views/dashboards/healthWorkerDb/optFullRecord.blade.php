@@ -1,12 +1,22 @@
 @include('layouts.headHealthWorkers')
 <style>
-    .card-body {
-        overflow: auto;
+        .container {
+        max-width: 100%!important;
+        margin-top: 80px; 
+        padding-bottom:10px; 
     }
-    
+
+    .toggle-sidebar-btn {
+        display: none;
+    }
+
     .pagetitle {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between
+    }
+
+    .card-body {
+        overflow: auto;
     }
 
     .form-control {
@@ -128,6 +138,108 @@
         font-size: 12px!important;
     }
 
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: landscape;
+        margin: 15mm; /* Set margins */
+    }
+
+    * {
+        font-size: 12px; /* Set font size for the entire page */
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Ensure main content is visible during print */
+    .main {
+        visibility: visible !important;
+        display: block !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle, .btnArea, .row, .sidebar {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 100%; /* Ensure the card takes full width of the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block;
+        padding: 10mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .card-body {
+        width: 100%;
+        padding: 0;
+        background-color: #fff;
+    }
+
+    /* Styling for the table */
+    table {
+        width: 100%; /* Ensure table takes full width */
+        table-layout: fixed; /* Prevent column overflow */
+        border-collapse: collapse; /* Collapse borders to prevent double lines */
+    }
+
+    th, td {
+        font-size: 12px;
+        padding: 6px 12px; /* Padding for table cells */
+        text-align: left;
+        border: 1px solid #000; /* Border around the table */
+        word-wrap: break-word; /* Prevent words from overflowing */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Light background for table headers */
+    }
+
+    /* Ensure striped rows are maintained */
+    tr:nth-child(odd) {
+        background-color: #f9f9f9; /* Light gray background for odd rows */
+    }
+
+    /* Avoid page breaks within the table */
+    table, tr, td {
+        page-break-inside: avoid;
+    }
+
+    /* Ensure the table fits within the page */
+    .table-responsive {
+        width: 100%;
+        overflow: auto;
+    }
+
+    /* Make sure the title is displayed at the top */
+    .cardTitle {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    
+}
+
+
+
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <body>
@@ -136,23 +248,36 @@
     @include('layouts.headerHealthWorkers')
   <!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-    @include('layouts.sidebarHealthWorkers')
-  <!-- End Sidebar -->
 
-<main id="main" class="main">
+<div id="container" class="container">
 
     <div class="pagetitle">
-        <h1>OPT, Deworming & Vitamin A. Masterlists</h1>
-        <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i>Print</button>
+        <div class="pageArea">
+            <h1>OPT FULL RECORD</h1>
+            <nav>
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{{ action('App\Http\Controllers\regValidation@optDeworming') }}">OPT Record Form</a></li>
+                  <li class="breadcrumb-item active">OPT Form</li>
+                </ol>
+            </nav>
         </div>
-    </div><!-- End Page Title -->
+        <div class="btnArea">
+            <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
+        </div>
+    </div>
   
     <div class="card">
         <div class="card-body">
             <div class="table-container">
-                <table id="example" class="display">
+                <div class="titleArea d-flex" style="justify-content: center; padding:10px;">
+                    <h4>OPT, DEWORMING, AND VITAMIN A. MASTERLIST</h4>
+                </div>
+                <div class="titleArea d-flex" style="flex-direction:column; align-items: flex-start; padding:10px;">
+                    <span>Purok: {{ $LoggedUserInfo ['em_address'] }} </span>
+                    <span>BHW: {{ $LoggedUserInfo ['em_fname'] }} {{ $LoggedUserInfo ['em_lname'] }}</span>
+                    <span>YEAR: {{ date('Y') }}</span>
+                </div>
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th rowspan="2">No.</th>
@@ -221,6 +346,7 @@
         </div>
     </div>
 
+</div><!-- End #main -->
       <!-- Extra Large Modal -->
       <div class="modal fade" id="ExtralargeModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
@@ -538,47 +664,21 @@
             </div>
         </div><!-- End UDPATE Large Modal-->
 
-</main><!-- End #main -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#childName').select2({
-            placeholder: "Choose...",
-            allowClear: true
-        });
-
-        // Initialize Select2 on modal show
-        $('#ExtralargeModal').on('shown.bs.modal', function () {
-            $('#childName').select2({
-                dropdownParent: $('#ExtralargeModal')
-            });
-        });
-    });
-
-
-    $(document).ready(function() {
-        $('#motherName').select2({
-            placeholder: "Choose...",
-            allowClear: true
-        });
-
-        // Initialize Select2 on modal show
-        $('#ExtralargeModal').on('shown.bs.modal', function () {
-            $('#motherName').select2({
-                dropdownParent: $('#ExtralargeModal')
-            });
-        });
-    });
-</script>
-
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#example').DataTable();
     });
+
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
 </script>
 
   @include('layouts.footerHealthWorkers')

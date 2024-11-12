@@ -19,7 +19,6 @@ return new class extends Migration
 
             $table->unsignedBigInteger('maiden_id')->nullable(); 
             $table->foreign('maiden_id')->references('res_id')->on('resident_tbls')->onDelete('cascade');
-            
             $table->string('mat_urMaiden', 80)->nullable();
             $table->date('mat_urBdate')->nullable();
             $table->string('mat_urOcc', 30)->nullable();
@@ -30,21 +29,21 @@ return new class extends Migration
             $table->string('mat_urAddress', 80)->nullable();
             $table->enum('mat_risk', ['Yes', 'No'])->nullable();
 
-            $table->string('mat_lmp', 15)->nullable();
-            $table->string('mat_edc', 15)->nullable();
-            $table->string('mat_g', 15)->nullable();
+            $table->date('mat_lmp')->nullable();
+            $table->date('mat_edc')->nullable();
+            $table->integer('mat_g')->nullable();
             $table->string('mat_t', 15)->nullable();
-            $table->string('mat_p', 15)->nullable();
-            $table->string('mat_a', 15)->nullable();
-            $table->string('mat_l', 15)->nullable();
+            $table->integer('mat_p')->nullable();
+            $table->integer('mat_a')->nullable();
+            $table->integer('mat_l')->nullable();
 
             $table->integer('mat_childAlive')->nullable();
             $table->integer('mat_livingChildAlive')->nullable();
             $table->integer('mat_abortion')->nullable();
             $table->integer('mat_fDeaths')->nullable();
-            $table->date('mat_cSection')->nullable();
-            $table->string('mat_ppHemorr', 35)->nullable();
-            $table->string('mat_abruptio', 35)->nullable();
+            $table->enum('mat_cSection', ['Yes', 'No'])->nullable();
+            $table->enum('mat_ppHemorr', ['Yes', 'No'])->nullable();
+            $table->enum('mat_abruptio', ['Yes', 'No'])->nullable();
             $table->string('mat_others', 50)->nullable();
 
             $table->enum('mat_tb', ['Yes', 'No'])->nullable();
@@ -53,11 +52,20 @@ return new class extends Migration
             $table->enum('mat_ba', ['Yes', 'No'])->nullable();
             $table->enum('mat_goiter', ['Yes', 'No'])->nullable();
             $table->enum('mat_tetanus', ['Yes', 'No'])->nullable();
-            
-            $table->json('des_signSymp')->nullable();
-            $table->date('vt_date')->nullable();
-            $table->double('vt_wt')->nullable();
-            
+
+            $table->date('mat_date1')->nullable();
+            $table->date('mat_date2')->nullable();
+            $table->date('mat_date3')->nullable();
+            $table->date('mat_date4')->nullable();
+            $table->date('mat_date5')->nullable();            
+            $table->integer('mat_total')->nullable();
+
+            $table->enum('mat_fp', ['Yes', 'No'])->nullable();
+            $table->string('mat_fpMethod', 50)->nullable();
+            $table->enum('mat_fpWilling', ['Yes', 'No'])->nullable();
+
+            $table->json('mat_riskFactor')->nullable();
+
             $table->timestamps();
         });
     }

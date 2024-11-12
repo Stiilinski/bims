@@ -85,9 +85,18 @@
                             <span class="text-danger error-text email_error"></span>
                         </div>
 
-                        <div class="col-md-6">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address" autocomplete="off">
+                        <div class="col-md-6 pt-2">
+                            <label for="address">Purok</label>
+                            <select id="address" class="form-select" name="address">
+                                <option value="" disabled selected>Select Purok</option>
+                                <option value="Tugas">Tugas</option>
+                                <option value="Tambis">Tambis</option>
+                                <option value="Mahogany">Mahogany</option>
+                                <option value="Guyabano">Guyabano</option>
+                                <option value="Mansinitas">Mansinitas</option>
+                                <option value="Ipil-ipil">Ipil-ipil</option>
+                                <option value="Lubi">Lubi</option>
+                            </select>
                             <span class="text-danger error-text address_error"></span>
                         </div>
 
@@ -108,6 +117,8 @@
                                 <option value="Barangay Health Worker">Barangay Health Worker</option>
                                 <option value="Under Secretary">Under Secretary</option>
                                 <option value="Under Treasurer">Under Treasurer</option>
+                                <option value="SK Chairman">SK Chairman</option>
+                                <option value="SK Kagawad">SK Kagawad</option>
                             </select>
                             <span class="text-danger error-text position_error"></span>
                         </div>

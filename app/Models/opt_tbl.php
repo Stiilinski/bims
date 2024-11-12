@@ -16,5 +16,9 @@ class opt_tbl extends Model
     {
         return $this->belongsTo(resident_tbl::class, 'res_id', 'res_id'); // Assuming 'res_id' is the foreign key in `opt_tbl`
     }
+    public function employee()
+    {
+        return $this->belongsTo(employee_tbl::class, 'em_id', 'em_id'); // Assuming 'res_id' is the foreign key in `opt_tbl`
+    }
     use HasFactory;
 }

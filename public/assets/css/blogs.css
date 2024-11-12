@@ -18,6 +18,15 @@ body {
   transition: background-color 1s ease; /* Smooth color transition */
 }
 
+.custom-button-white {
+  color: white;
+  transition: background-color 1s ease; /* Smooth color transition */
+}
+
+.custom-button-white:hover {
+  color: darkgray;
+}
+
 .custom-button:hover {
   color: darkgray;
 }
@@ -32,6 +41,7 @@ body {
 .top-container-content {
   height: 100vh;
   overflow-y: auto;
+  background-color: #37517e;
 }
 
 /* For WebKit browsers (Chrome, Safari, etc.) */
@@ -66,6 +76,13 @@ input.form-control.borderless {
   background: transparent; /* Make the background transparent */
   font-size: 24px;
   font-weight: 1000;
+  color: white;
+  
+}
+
+input.form-control::placeholder {
+  color: white;
+  opacity: 0.5;
 }
 
 /* Optional: Change focus outline for a cleaner look */
@@ -74,12 +91,13 @@ input.form-control.borderless:focus {
 }
 
 a.top-container-link {
-  color: black !important;
+  color: white !important;
   text-decoration: none !important;
 }
 
 .border-bb {
   border-bottom: 2px solid !important;
+  color: white;
 }
 
 .border-b {
@@ -169,4 +187,8 @@ a.top-container-link {
 
 .custom-ul {
   padding-left: 50px !important;
+}
+
+.navbar {
+  background-color: #37517e !important;
 }

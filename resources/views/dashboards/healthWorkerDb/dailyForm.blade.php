@@ -1,6 +1,6 @@
 @include('layouts.headHealthWorkers')
 <style>
-            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
     * {
         font-family: Inter;
     }
@@ -409,6 +409,143 @@
         display: flex;
         justify-content: center;
     }
+
+
+
+        /* Table styling */
+        table {
+        width: 100%; /* Ensure table takes up full width */
+        border-collapse: collapse; /* Collapse borders to prevent double lines */
+    }
+
+    th, td {
+        padding: 8px 12px; /* Adds space between text and borders */
+        text-align: left; /* Align text to the left */
+        font-size: 12px; /* Set font size */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Optional: Background color for table headers */
+    }
+
+    td {
+        word-wrap: break-word; /* Ensure long words wrap inside the table cells instead of overflowing */
+    }
+
+    /* Set minimum width for all columns */
+    th, td {
+        text-align: center; /* Center-align text */
+    }
+
+    /* Adjust width for numeric columns (e.g., age, BP) */
+    th:nth-child(8), td:nth-child(8), 
+    th:nth-child(9), td:nth-child(9), 
+    th:nth-child(11), td:nth-child(11), 
+    th:nth-child(12), td:nth-child(12),
+    th:nth-child(13), td:nth-child(13),
+    th:nth-child(14), td:nth-child(14),
+    th:nth-child(15), td:nth-child(15),
+    th:nth-child(16), td:nth-child(16),
+    th:nth-child(17), td:nth-child(17) { 
+        
+        min-width: 60px; 
+    }
+
+    td:nth-child(2), th:nth-child(2) {
+        width: 10px!important;
+    }
+
+    td:nth-child(19), th:nth-child(19) {
+        width: 80px!important; /* Ensure signature column is wide enough */
+    }
+
+    td:nth-child(19) img {
+        width: 150px; /* Ensure signature images fill the available space */
+        height: auto; /* Keep the aspect ratio of the signature images */
+    }
+@media print {
+   /* Set the page orientation to landscape */
+   @page {
+        size: landscape;
+        margin: 15mm; /* Adjust the margins as needed */
+    }
+
+    * {
+        font-size: 12px; /* Set font size to 12px */
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        visibility: visible; /* Ensure the body content is visible during printing */
+        background-color: #fff;
+        margin: 0; /* Ensure no margin around the body */
+    }
+
+    /* Hide everything else except the card and table */
+    .main, .pagetitle, .header {
+        display: none !important; /* Hide page title and header */
+    }
+
+    /* Only show the card during printing */
+    .card {
+        width: 100%;
+        position: absolute; /* Use absolute positioning to pin it to the top */
+        top: 0; /* Ensure it starts from the top */
+        left: 0; /* Ensure it starts from the left */
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block; /* Ensure it's displayed as a block */
+        padding: 10mm; /* Add padding to prevent clipping on edges */
+        box-sizing: border-box; /* Ensures padding doesn't affect the width */
+        margin: 0; /* Remove margin */
+    }
+
+    .card-body {
+        width: 100%; /* Ensure the card body takes full width */
+        display: block;
+        padding: 0;
+        background-color: #fff;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        table-layout: fixed; /* Prevent overflow by ensuring fixed column width */
+        border-collapse: collapse; /* Collapse borders to prevent double lines */
+    }
+
+    td {
+        font-size: 12px;
+        padding: 8px 12px; /* Padding for table cells */
+        text-align: left;
+        word-wrap: break-word; /* Ensure that long words break inside the cells */
+    }
+
+    th {
+        font-size: 12px!important;
+    }
+
+    td:nth-child(2), th:nth-child(2) {
+        width: 40px!important;
+        text-align: center;
+    }
+
+    th:nth-child(7), td:nth-child(7),
+    td:nth-child(4), th:nth-child(4),
+    td:nth-child(5), th:nth-child(5),
+    td:nth-child(6), th:nth-child(6) { 
+        
+        width: 60px!important; 
+    }
+
+    th {
+        background-color: #f2f2f2; /* Optional: Background color for table headers */
+    }
+}
+
+
 </style>
 
 <body>
@@ -430,7 +567,7 @@
             </nav>
         </div>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
         </div>
     </div><!-- End Page Title -->
 
@@ -444,6 +581,7 @@
                 <tr>
                     <th scope="col" style="display: none;">ID</th>
                     <th scope="col">NOS</th>
+                    <th scope="col">Date Visit</th>
                     <th scope="col">Family Name</th>
                     <th scope="col">First Name</th>
                     <th scope="col">Middle Name</th>
@@ -467,6 +605,7 @@
                         </tr>
                             <td style="display: none;">{{ $dsrs->dsr_id }}</td>
                             <td>{{ $index + 1 }}</td>
+                            <td>{{ $dsrs->dsr_dateVisit ?? '' }}</td>
                             <td>{{ $dsrs->resident->res_lname ?? '' }}</td>
                             <td>{{ $dsrs->resident->res_fname ?? '' }}</td>
                             <td>{{ $dsrs->resident->res_mname ?? '' }},  {{ $dsrs->resident->res_suffix ?? '' }}</td>
@@ -482,7 +621,7 @@
                             <td>{{ $dsrs->dsr_smoke}}</td>
                             <td>{{ $dsrs->dsr_alcohol}}</td>
                             <td>{{ $dsrs->medicine->med_prod ?? '' }}</td>
-                            <td><img src="/{{ $dsrs->dsr_signature }}" alt="signature Img" style="width: 100%; height: 50px;"></td>
+                            <td><img src="/{{ $dsrs->dsr_signature }}" alt="signature Img"></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -494,6 +633,11 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
   <script>
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    });
+
     $(document).ready(function() {
       $('#dob').inputmask('99/99/9999'); // This will set the format to MM/DD/YYYY
     });

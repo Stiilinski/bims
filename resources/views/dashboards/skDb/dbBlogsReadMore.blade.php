@@ -28,7 +28,7 @@
           <div class="row">
             <div class="text-end">
               <i
-                class="bi bi-x-lg fs-1 custom-button"
+                class="bi bi-x-lg fs-1 custom-button-white"
                 id="closeTopContainer"
               ></i>
             </div>
@@ -42,7 +42,7 @@
                     type="text"
                     placeholder="Search the Barangay's Blog"
                   />
-                  <i class="bi bi-search fs-1 custom-button"></i>
+                  <i class="bi bi-search fs-1 custom-button-white"></i>
                 </div>
               </div>
             </div>
@@ -51,19 +51,28 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-3">
-                    <b style="font-weight: 1000">Explore Blogs</b>
+                    <b style="font-weight: 1000; color: white;">Explore Site</b>
                     <ul class="list-unstyled mb-0 top-container-link">
                       <li>
-                        <a href="#!" class="top-container-link">Web Design</a>
+                        <a href="#!" class="top-container-link">Home</a>
                       </li>
-                      <li><a href="#!" class="top-container-link">HTML</a></li>
+                      <li><a href="#!" class="top-container-link">About</a></li>
                       <li>
-                        <a href="#!" class="top-container-link">Freebies</a>
+                        <a href="#!" class="top-container-link">Services</a>
+                      </li>
+                      <li>
+                        <a href="#!" class="top-container-link">Events</a>
+                      </li>
+                      <li>
+                        <a href="#!" class="top-container-link">Officials</a>
+                      </li>
+                      <li>
+                        <a href="#!" class="top-container-link">Contacts</a>
                       </li>
                     </ul>
                   </div>
                   <div class="col-sm-3">
-                    <b style="font-weight: 1000">Popular Topics</b>
+                    <b style="font-weight: 1000; color: white;">Popular Topics</b>
                     <ul class="list-unstyled mb-0">
                       <li>
                         <a href="#!" class="top-container-link">Events</a>
@@ -88,33 +97,15 @@
                     </ul>
                   </div>
                   <div class="col-sm-3">
-                    <b style="font-weight: 1000">Explore The Barangay</b>
-                    <ul class="list-unstyled mb-0 top-container-link">
-                      <li>
-                        <a href="#!" class="top-container-link">Officials</a>
-                      </li>
-                      <li>
-                        <a href="#!" class="top-container-link">Ordinances</a>
-                      </li>
-                      <li>
-                        <a href="#!" class="top-container-link"
-                          >Barangay Ordinance</a
-                        >
-                      </li>
-                      <li>
-                        <a href="#!" class="top-container-link">Updates</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-sm-3">
                     <ul class="list-unstyled mb-0">
-                      <li><i class="bi bi-facebook fs-3 custom-button"></i></li>
                       <li>
-                        <i class="bi bi-twitter-x fs-3 custom-button"></i>
+                        <i class="bi bi-facebook fs-3 custom-button-white"></i>
                       </li>
-                      <li><i class="bi bi-linkedin fs-3 custom-button"></i></li>
                       <li>
-                        <i class="bi bi-instagram fs-3 custom-button"></i>
+                        <i class="bi bi-twitter-x fs-3 custom-button-white"></i>
+                      </li>
+                      <li>
+                        <i class="bi bi-instagram fs-3 custom-button-white"></i>
                       </li>
                     </ul>
                   </div>
@@ -137,14 +128,14 @@
             />
           </a>
           <a class="navbar-brand">
-            <span style="font-weight: 1000; color: #7987c6">Barangay</span>
+            <span style="font-weight: 1000; color: white">Barangay</span>
             <br />
-            <span style="font-weight: 1000; color: #fe01c4">Blogs</span>
+            <span style="font-weight: 1000; color: white">Blogs</span>
           </a>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
               <i
-                class="bi bi-arrow-bar-down fs-1 custom-button"
+                class="bi bi-list fs-1 custom-button-white"
                 id="toggleContainerBtn"
               ></i>
             </li>
@@ -205,7 +196,6 @@
               <li>
                 <i class="bi bi-twitter-x custom-button larger-ic"></i>
               </li>
-              <li><i class="bi bi-linkedin custom-button larger-ic"></i></li>
               <li>
                 <i class="bi bi-instagram custom-button larger-ic"></i>
               </li>

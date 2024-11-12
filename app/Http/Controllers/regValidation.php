@@ -29,10 +29,20 @@ use App\Models\releaseMed_tbl;
 use App\Models\epiRecord_tbl;
 use App\Models\vaccineTaken_tbl;
 use App\Models\sched_tbl;
+use App\Models\maternal_tbl;
+use App\Models\blogs_tbl;
+use App\Models\schedule_tbl;
+use App\Models\recNews_tbl;
+use App\Models\antepartum_tbl;
+use App\Models\postpartum_tbl;
+use App\Models\delbirth_tbl;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str; 
+use Illuminate\Support\Facades\File;
+
 
 
 class regValidation extends Controller
@@ -265,6 +275,12 @@ class regValidation extends Controller
                     break;
                 case 'Barangay Health Worker':
                     return redirect('dashboards/dbHealthWorker');
+                    break;
+                case 'SK Kagawad':
+                    return redirect('dashboards/dbSk');
+                    break;
+                case 'SK Chairman':
+                    return redirect('dashboards/dbSkChairman');
                     break;
                 default:
                     return redirect('/'); // Default redirection if position is not recognized
@@ -2857,6 +2873,7 @@ class regValidation extends Controller
 
             $schedules = DB::table('schedule_tbls')
                 ->where('sched_type', 'public')
+                ->where('sched_status', 'Accepted') 
                 ->whereMonth('sched_date', $currentMonth)
                 ->whereYear('sched_date', $currentYear)
                 ->orderBy('sched_date')
@@ -2882,6 +2899,7 @@ class regValidation extends Controller
 
             $schedules = DB::table('schedule_tbls')
                 ->where('sched_type', 'private')
+                ->where('sched_status', 'Accepted') 
                 ->whereDate('sched_date', $currentDate)
                 ->orderBy('sched_date')
                 ->get();
@@ -2965,6 +2983,13 @@ class regValidation extends Controller
             $previousYearDengueData = [];
             $yearsService = [];
             $yearlyServiceData = [];
+
+            $currentYearPregData = [];
+            $previousYearPregData = [];
+            $currentYearUnder20PregData = [];
+            $currentYearAbove20PregData = [];
+            $previousYearUnder20PregData = [];
+            $previousYearAbove20PregData = [];
         // REFERRAL
             $currentYearRhuData = [];
             $previousYearRhuData = [];
@@ -3050,6 +3075,83 @@ class regValidation extends Controller
                     ->whereMonth('dengue_date', $month)
                     ->where('dengue_status', 'Dengue Positive')
                     ->count();
+
+
+
+
+                $currentYearPregData[] = maternal_tbl::whereYear('created_at', $currentYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+                
+                $previousYearPregData[] = maternal_tbl::whereYear('created_at', $previousYear)
+                    ->whereMonth('created_at', $month)
+                    ->count();
+
+
+                    // Pregnancies under 20 (current year)
+                    $currentYearUnder20PregData[] = maternal_tbl::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)
+                        ->where(function ($query) {
+                            // If maiden_id exists, check the birth date; otherwise, check mat_urBdate
+                            $query->whereHas('maiden', function ($subQuery) {
+                                $subQuery->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) < 20');
+                            })
+                            ->orWhere(function ($subQuery) {
+                                // Fallback to mat_urBdate in maternal_tbl when maiden_id is empty
+                                $subQuery->whereNull('maiden_id')
+                                        ->whereRaw('TIMESTAMPDIFF(YEAR, mat_urBdate, CURDATE()) < 20');
+                            });
+                        })
+                        ->count();
+
+                    // Pregnancies above 20 (current year)
+                    $currentYearAbove20PregData[] = maternal_tbl::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)
+                        ->where(function ($query) {
+                            // If maiden_id exists, check the birth date; otherwise, check mat_urBdate
+                            $query->whereHas('maiden', function ($subQuery) {
+                                $subQuery->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) >= 20');
+                            })
+                            ->orWhere(function ($subQuery) {
+                                // Fallback to mat_urBdate in maternal_tbl when maiden_id is empty
+                                $subQuery->whereNull('maiden_id')
+                                        ->whereRaw('TIMESTAMPDIFF(YEAR, mat_urBdate, CURDATE()) >= 20');
+                            });
+                        })
+                        ->count();
+
+                    // Pregnancies under 20 (previous year)
+                    $previousYearUnder20PregData[] = maternal_tbl::whereYear('created_at', $previousYear)
+                        ->whereMonth('created_at', $month)
+                        ->where(function ($query) {
+                            // If maiden_id exists, check the birth date; otherwise, check mat_urBdate
+                            $query->whereHas('maiden', function ($subQuery) {
+                                $subQuery->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) < 20');
+                            })
+                            ->orWhere(function ($subQuery) {
+                                // Fallback to mat_urBdate in maternal_tbl when maiden_id is empty
+                                $subQuery->whereNull('maiden_id')
+                                        ->whereRaw('TIMESTAMPDIFF(YEAR, mat_urBdate, CURDATE()) < 20');
+                            });
+                        })
+                        ->count();
+
+                    // Pregnancies above 20 (previous year)
+                    $previousYearAbove20PregData[] = maternal_tbl::whereYear('created_at', $previousYear)
+                        ->whereMonth('created_at', $month)
+                        ->where(function ($query) {
+                            // If maiden_id exists, check the birth date; otherwise, check mat_urBdate
+                            $query->whereHas('maiden', function ($subQuery) {
+                                $subQuery->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) >= 20');
+                            })
+                            ->orWhere(function ($subQuery) {
+                                // Fallback to mat_urBdate in maternal_tbl when maiden_id is empty
+                                $subQuery->whereNull('maiden_id')
+                                        ->whereRaw('TIMESTAMPDIFF(YEAR, mat_urBdate, CURDATE()) >= 20');
+                            });
+                        })
+                        ->count();
+
             // REFERRAL
                 $currentYearRhuData[] = rhu_tbl::whereYear('created_at', $currentYear)
                     ->whereMonth('created_at', $month)
@@ -3107,6 +3209,13 @@ class regValidation extends Controller
             $previousTbYear = array_sum($previousYearTbData);
             $currentDengueYear = array_sum($currentYearDengueData);
             $previousDengueYear = array_sum($previousYearDengueData);
+
+            $currentPregYear = array_sum($currentYearPregData);
+            $previousPregYear = array_sum($previousYearPregData);
+            $currentUnder20Year = array_sum($currentYearUnder20PregData);
+            $previousUnder20Year = array_sum($previousYearUnder20PregData);
+            $currentAbove20Year = array_sum($currentYearAbove20PregData);
+            $previousAbove20Year = array_sum($previousYearAbove20PregData);
         // REFERRAL
             $currentRhuYear = array_sum($currentYearRhuData);
             $previousRhuYear = array_sum($previousYearRhuData);
@@ -3123,6 +3232,11 @@ class regValidation extends Controller
             $fpChange = $this->calculatePercentageChange($currentFpYear, $previousFpYear);
             $tbChange = $this->calculatePercentageChange($currentTbYear, $previousTbYear);
             $dengueChange = $this->calculatePercentageChange($currentDengueYear, $previousDengueYear);
+
+            $pregChange = $this->calculatePercentageChange($currentPregYear, $previousPregYear);
+            $under20Change = $this->calculatePercentageChange($currentUnder20Year, $previousUnder20Year);
+            $above20Change = $this->calculatePercentageChange($currentAbove20Year, $previousAbove20Year);
+
         // REFERRAL
             $rhuChange = $this->calculatePercentageChange($currentRhuYear, $previousRhuYear);
             $destrictChange = $this->calculatePercentageChange($currentDestrictYear, $previousDestrictYear);
@@ -3138,9 +3252,21 @@ class regValidation extends Controller
         $tb = dstb::whereYear('created_at', now()->year)->count();
 
         $dengue = dengue_tbl::whereYear('dengue_date', $currentYear)->where('dengue_status', 'Dengue Positive')->count();
+        $maternal = maternal_tbl::whereYear('created_at', $currentYear)->count();
 
         // Prepare data array for the view
         $data = [
+            'maternal' => $maternal,
+            'currentYearPregData' => $currentYearPregData,
+            'previousYearPregData' => $previousYearPregData,
+            'currentYearUnder20PregData' => $currentYearUnder20PregData,
+            'previousYearUnder20PregData' => $previousYearUnder20PregData,
+            'currentYearAbove20PregData' => $currentYearAbove20PregData,
+            'previousYearAbove20PregData' => $previousYearAbove20PregData,
+            'pregChange' => $pregChange,
+            'under20Change' => $under20Change,
+            'above20Change' => $above20Change,
+
             'LoggedUserInfo' => $loggedUserInfo,
             'totalPopulation' => $totalPopulation,
             'populationChange' => $populationChange,
@@ -3192,7 +3318,7 @@ class regValidation extends Controller
             'tbChange' => $tbChange,
             'dengueChange' => $dengueChange,
             'rhuChange' => $rhuChange,
-            'destrictChange' => $destrictChange
+            'destrictChange' => $destrictChange,
         ];
 
         // Set headers to prevent caching
@@ -3220,8 +3346,6 @@ class regValidation extends Controller
 
         return $current > 0 ? 100 : 0;
     }
-
-
 
 // DSR
     public function dailyServiceRecord(Request $request)
@@ -3957,16 +4081,23 @@ class regValidation extends Controller
 
     public function optFullRecord(Request $request)
     {
+        $currentYear = date('Y');
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
         $resident = resident_tbl::all();
-        $opt = opt_tbl::with('resident')->get();
+        $opts = opt_tbl::join('resident_tbls', 'opt_tbls.res_id', '=', 'resident_tbls.res_id') // Join with resident_tbl
+        ->join('employee_tbls', 'opt_tbls.em_id', '=', 'employee_tbls.em_id') // Join with employee_tbl
+        ->whereYear('opt_tbls.created_at', $currentYear) // Filter by the current year
+        ->whereColumn('resident_tbls.res_purok', '=', 'employee_tbls.em_address') // Match res_purok with em_address
+        ->select('opt_tbls.*', 'resident_tbls.res_purok', 'employee_tbls.em_address') // Select necessary fields
+        ->get();
+    
 
         // Merge all the data into a single array
         $data = [
             'LoggedUserInfo' => $loggedUserInfo,
             'residents' => $resident,
-            'opts' => $opt,
+            'opts' => $opts,
         ];
 
         // Set headers for no-cache
@@ -5142,16 +5273,24 @@ class regValidation extends Controller
 
     public function fpSideB(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'fpDateVisit' => 'required|date',
-            'fpMedFind' => 'required|String',
-            'fpMetAcc' => 'required|String',
-            'fpDateFfVisit' => 'required|date',
+        $rules = [
+            'fpDateVisit' => 'required',
+            'fpMedFind' => 'required',
+            'fpMetAcc' => 'required',
+            'fpDateFfVisit' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, [
+            'required' => 'This Field is Required.',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
-        } else {
+        }
+
+        DB::beginTransaction();
+
+        try {
             $fp = new fpSideB_tbl;
             $fp->fp_id = $request->fp_id;
             $fp->em_id = $request->sideBEm_id;
@@ -5160,14 +5299,27 @@ class regValidation extends Controller
             $fp->sideB_metAcc = $request->fpMetAcc;
             $fp->sideB_followUpVisit = $request->fpDateFfVisit;
 
-            // Save the record in the database
             if ($fp->save()) {
-                return response()->json(['status' => 1, 'msg' => 'Family Planning record added successfully!']);
+                // Now create the sched_tbl record with vt_id as a foreign key
+                if ($request->filled('fpDateFfVisit')) {
+                    $schedule = new sched_tbl;
+                    $schedule->sideB_id = $fp->sideB_id;
+                    $schedule->sched_desc = 'Family Planning Schedule'; 
+                    $schedule->save();
+                }
+
+                DB::commit();
+                return response()->json(['status' => 1, 'msg' => 'Side-B Record Added Successfully']);
+            } else {
+                DB::rollBack();
+                return response()->json(['status' => 0, 'msg' => 'Failed to add Side-B Record'], 500);
             }
-            else {
-                return response()->json(['status' => 0, 'msg' => 'Failed to add new Family Planning record'], 500);
-            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
         }
+
+
     }
 
     public function fpForm($id)
@@ -5235,25 +5387,53 @@ class regValidation extends Controller
 
     public function updateFpSideB(Request $request)
     {
-        // Ensure no spaces in the column name
-        $fpSideB = fpSideB_tbl::find($request->sideB_id);
-
+        $fpSideB = fpSideB_tbl::find($request->edit_fpSideB_id);
+        
         if ($fpSideB) {
-            // Map the correct fields
+            // Log for debugging
+            Log::info('Updating FP_tbl record for sideB_id: ' . $request->edit_fpSideB_id);
+    
+            // Store original Next Schedule value to detect changes
+            $originalNextSchedule = $fpSideB->sideB_followUpVisit;
+    
+            // Update fields in FP_tbl
             $fpSideB->sideB_dateVisit = $request->edit_fpDateVisit;
             $fpSideB->sideB_MedFinds = $request->edit_fpMedFind;
             $fpSideB->sideB_metAcc = $request->edit_fpMetAcc;
             $fpSideB->sideB_followUpVisit = $request->edit_fpDateFfVisit;
-
-            // Save and respond accordingly
+    
             if ($fpSideB->save()) {
+                // Log successful save
+                Log::info('FP_tbl updated successfully for sideB_id: ' . $request->edit_fpSideB_id);
+    
+                // Only perform CRUD on sched_tbl if the Next Schedule value has changed
+                if ($request->edit_fpDateFfVisit !== $originalNextSchedule) {
+                    // If Next Schedule is filled, create or update sched_tbl
+                    if ($request->filled('edit_fpDateFfVisit')) {
+                        Log::info('Next schedule provided, updating or creating sched_tbl for sideB_id: ' . $fpSideB->sideB_id);
+    
+                        sched_tbl::updateOrCreate(
+                            ['sideB_id' => $fpSideB->sideB_id],
+                            ['sched_desc' => 'Family Planning Schedule']
+                        );
+                    } else {
+                        // If Next Schedule is empty, delete any existing sched_tbl record
+                        Log::info('No next schedule provided, deleting sched_tbl record if it exists for sideB_id: ' . $fpSideB->sideB_id);
+    
+                        sched_tbl::where('sideB_id', $fpSideB->sideB_id)->delete();
+                    }
+                } else {
+                    Log::info('Next schedule remains unchanged; no action taken on sched_tbl.');
+                }
+    
                 return response()->json(['status' => 1, 'msg' => 'Record updated successfully.']);
             } else {
+                Log::error('Failed to save vaccineTaken_tbl record for sideB_id: ' . $request->edit_fpSideB_id);
                 return response()->json(['status' => 0, 'msg' => 'Failed to update record.']);
             }
         }
-
-        // Return record not found response
+        
+        Log::error('Record not found for sideB_id: ' . $request->edit_fpSideB_id);
         return response()->json(['status' => 0, 'msg' => 'Record not found.']);
     }
 
@@ -5860,11 +6040,14 @@ class regValidation extends Controller
     {
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-
+        $resident = resident_tbl::all();
+        $maternal = maternal_tbl::with('maiden', 'husband')->get();
 
         // Merge all the data into a single array
         $data = [
             'LoggedUserInfo' => $loggedUserInfo,
+            'residents' => $resident,
+            'maternal' => $maternal,
         ];
 
         // Set headers for no-cache
@@ -5876,6 +6059,673 @@ class regValidation extends Controller
         return view('dashboards/healthWorkerDb/maternal', $data);
     }
 
+    public function inputMform1(Request $request)
+    {
+        $rules = [
+            'maternalClinic' => 'required',
+            'maternalBloodType' => 'required',
+            'maternalFamNum' => 'required',
+            'maternalRisk' => 'required',
+            'maternalLmp' => 'required',
+            'maternalEdc' => 'required',
+            'maternalG' => 'required',
+            'maternalT' => 'required',
+            'maternalP' => 'required',
+            'maternalA' => 'required',
+            'maternalL' => 'required',
+
+            'maternalChildAl' => 'required',
+            'maternalLivChild' => 'required',
+            'maternalAbort' => 'required',
+            'maternalStillBirth' => 'required',
+            'maternalCaesarian' => 'required',
+            'maternalHemorr' => 'required',
+            'maternalAbruptio' => 'required',
+            'maternalOthers' => 'required',
+
+            'maternalTb' => 'required',
+            'maternalHeart' => 'required',
+            'maternalDiabetes' => 'required',
+            'maternalAsthma' => 'required',
+            'maternalGoiter' => 'required',
+            'maternalTetanus' => 'required',
+
+            'maternalAsthma' => 'required',
+            'maternalGoiter' => 'required',
+            'maternalTetanus' => 'required',
+        ];
+
+        // Apply mother-related validations conditionally
+        if ($request->input('isMaidenResident') === 'No') {
+            $rules['maternalMaiden'] = 'required';
+            $rules['maternalBdate'] = 'required';
+            $rules['maternalOccupation'] = 'required';
+        }
+
+        if ($request->input('isMaidenResident') === 'Yes') {
+            $rules['inputMaidenName'] = 'required';
+        }
+
+        // Apply father-related validations conditionally
+        if ($request->input('isHusbandResident') === 'No') {
+            $rules['urMaternalHusband'] = 'required';
+            $rules['maternalAddress'] = 'required';
+        } 
+
+        if ($request->input('isHusbandResident') === 'Yes') {
+            $rules['inputMaternalHname'] = 'required';
+        }
+
+        // if ($request->input('maternalTetanus') === 'Yes') {
+        //     $rules['maternalGiven1'] = 'required';
+        //     $rules['maternalGiven2'] = 'required';
+        //     $rules['maternalGiven3'] = 'required';
+        //     $rules['maternalGiven4'] = 'required';
+        //     $rules['maternalGiven5'] = 'required';
+        //     $rules['maternalGivenTtl'] = 'required';
+        // }
+
+        if ($request->input('maternalTetanus') === 'Yes') {
+            $rules['maternalGiven1'] = 'required';
+
+            $rules['maternalGiven2'] = 'nullable';
+            $rules['maternalGiven3'] = 'nullable';
+            $rules['maternalGiven4'] = 'nullable';
+            $rules['maternalGiven5'] = 'nullable';
+
+            $rules['maternalGivenTtl'] = 'nullable|required_with:maternalGiven1,maternalGiven2,maternalGiven3,maternalGiven4,maternalGiven5';
+        }
+
+        if ($request->input('maternalFp') === 'No') {
+            $rules['maternalFpPrac'] = 'required';
+        } 
+        if ($request->input('maternalFp') === 'Yes') {
+            $rules['maternalFpMethod'] = 'required';
+        }
+
+
+
+        // Validate with dynamic rules
+        $validator = Validator::make($request->all(), $rules, [
+            'required' => 'This Field is Required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        }
+
+        // Saving to database if validation passes
+        $maternal = new maternal_tbl;
+        $maternal->mat_clinic = $request->maternalClinic;
+        $maternal->mat_bType = $request->maternalBloodType;
+        $maternal->mat_fNum = $request->maternalFamNum;
+        $maternal->mat_risk = $request->maternalRisk;
+        $maternal->mat_lmp = $request->maternalLmp;
+        $maternal->mat_edc = $request->maternalEdc;
+        $maternal->mat_g = $request->maternalG;
+        $maternal->mat_t = $request->maternalT;
+        $maternal->mat_p = $request->maternalP;
+        $maternal->mat_a = $request->maternalA;
+        $maternal->mat_l = $request->maternalL;
+
+        $maternal->mat_childAlive = $request->maternalChildAl;
+        $maternal->mat_livingChildAlive = $request->maternalLivChild;
+        $maternal->mat_abortion = $request->maternalAbort;
+        $maternal->mat_fDeaths = $request->maternalStillBirth;
+        $maternal->mat_cSection = $request->maternalCaesarian;
+        $maternal->mat_ppHemorr = $request->maternalHemorr;
+        $maternal->mat_abruptio = $request->maternalAbruptio;
+        $maternal->mat_others = $request->maternalOthers;
+
+        $maternal->mat_tb = $request->maternalTb;
+        $maternal->mat_hd = $request->maternalHeart;
+        $maternal->mat_diabetes = $request->maternalDiabetes;
+        $maternal->mat_ba = $request->maternalAsthma;
+        $maternal->mat_goiter = $request->maternalGoiter;
+        $maternal->mat_tetanus = $request->maternalTetanus;
+
+        $maternal->mat_status = 'Completed';
+        $maternal->mat_riskFactor = isset($request->maternalRiskFactors) ? json_encode($request->maternalRiskFactors) : null;
+
+        if ($request->input('isMaidenResident') === 'No') {
+            $maternal->mat_urMaiden = $request->maternalMaiden;
+            $maternal->mat_urBdate = $request->maternalBdate;
+            $maternal->mat_urOcc = $request->maternalOccupation;
+        } else {
+            $maternal->maiden_id = $request->inputMaidenName;
+        }
+
+        if ($request->input('isHusbandResident') === 'No') {
+            $maternal->mat_urHusband = $request->urMaternalHusband;
+            $maternal->mat_urAddress = $request->maternalAddress;
+        } else {
+            $maternal->husband_id = $request->inputMaternalHname;
+        }
+
+        if ($request->input('maternalTetanus') === 'Yes') {
+            $maternal->mat_date1 = $request->maternalGiven1;
+            $maternal->mat_date2 = $request->maternalGiven2;
+            $maternal->mat_date3 = $request->maternalGiven3;
+            $maternal->mat_date4 = $request->maternalGiven4;
+            $maternal->mat_date5 = $request->maternalGiven5;
+            $maternal->mat_total = $request->maternalGivenTtl;
+        }
+
+        $maternal->mat_fp = $request->maternalFp;
+        if ($request->input('maternalFp') === 'Yes') {
+            $maternal->mat_fpMethod = $request->maternalFpMethod;
+        }
+        else {
+            $maternal->mat_fpWilling = $request->maternalFpPrac;
+        }
+
+
+        $maternal->em_id = $request->empId;
+
+        if ($maternal->save()) {
+            return response()->json(['status' => 1, 'msg' => 'New Maternal Record Has Been Added']);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Failed to add new Record'], 500);
+        }
+    }
+
+    public function getMatData($mat_id)
+    {
+        $currentYear = now()->year;
+
+        $maternal = maternal_tbl::with('maiden', 'husband')
+            ->where('mat_id', $mat_id)
+            ->orderBy('created_at', 'desc')
+            ->first(); 
+
+        if (!$maternal) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+
+        return response()->json(['status' => 1, 'data' => $maternal]);
+    }
+
+    public function updateMat(Request $request)
+    {
+        $maternal = maternal_tbl::find($request->edit_matId);
+
+        if ($maternal) {
+            $maternal->mat_id = $request->edit_matId;
+            $maternal->mat_clinic = $request->edit_maternalClinic;
+            $maternal->mat_bType = $request->edit_maternalBloodType;
+            $maternal->mat_fNum = $request->edit_maternalFamNum;
+            
+            $maternal->maiden_id = $request->edit_inputMaidenName; 
+            $maternal->mat_urMaiden = $request->edit_maternalMaiden;
+            $maternal->mat_urBdate = $request->edit_maternalBdate;
+            $maternal->mat_urOcc = $request->edit_maternalOccupation;
+            $maternal->husband_id = $request->edit_inputMaternalHname; 
+            $maternal->mat_urHusband = $request->edit_urMaternalHusband;
+            $maternal->mat_urAddress = $request->edit_maternalAddress;
+            
+            $maternal->mat_lmp = $request->edit_maternalLmp;
+            $maternal->mat_edc = $request->edit_maternalEdc;
+            $maternal->mat_g = $request->edit_maternalG;
+            $maternal->mat_t = $request->edit_maternalT;
+            $maternal->mat_p = $request->edit_maternalP;
+            $maternal->mat_a = $request->edit_maternalA;
+            $maternal->mat_l = $request->edit_maternalL;
+            $maternal->mat_childAlive = $request->edit_maternalChildAl;
+            $maternal->mat_livingChildAlive = $request->edit_maternalLivChild;
+            $maternal->mat_abortion = $request->edit_maternalAbort;
+            $maternal->mat_fDeaths = $request->edit_maternalStillBirth;
+            $maternal->mat_others = $request->edit_maternalOthers;
+            $maternal->mat_date1 = $request->edit_maternalGiven1;
+            $maternal->mat_date2 = $request->edit_maternalGiven2;
+            $maternal->mat_date3 = $request->edit_maternalGiven3;
+            $maternal->mat_date4 = $request->edit_maternalGiven4;
+            $maternal->mat_date5 = $request->edit_maternalGiven5;
+            $maternal->mat_total = $request->edit_maternalGivenTtl;
+            $maternal->mat_fpMethod = $request->edit_maternalFpMethod;
+            $maternal->em_id = $request->edit_empId;
+            $maternal->mat_status = $request->edit_maternalStatus;
+            
+
+            // Checkbox
+                $maternal->mat_riskFactor = json_decode($request->edit_maternalRiskFactors, true);
+
+            // Radio
+                if ($request->filled('edit_maternalRisk')) {
+                    $maternal->mat_risk = $request->edit_maternalRisk;
+                }
+                if ($request->filled('edit_maternalCaesarian')) {
+                    $maternal->mat_cSection = $request->edit_maternalCaesarian;
+                }
+                if ($request->filled('edit_maternalHemorr')) {
+                    $maternal->mat_ppHemorr = $request->edit_maternalHemorr;
+                }
+                if ($request->filled('edit_maternalAbruptio')) {
+                    $maternal->mat_abruptio = $request->edit_maternalAbruptio;
+                }
+                if ($request->filled('edit_maternalTb')) {
+                    $maternal->mat_tb = $request->edit_maternalTb;
+                }
+                if ($request->filled('edit_maternalHeart')) {
+                    $maternal->mat_hd = $request->edit_maternalHeart;
+                }
+                if ($request->filled('edit_maternalDiabetes')) {
+                    $maternal->mat_diabetes = $request->edit_maternalDiabetes;
+                }
+                if ($request->filled('edit_maternalAsthma')) {
+                    $maternal->mat_ba = $request->edit_maternalAsthma;
+                }
+                if ($request->filled('edit_maternalGoiter')) {
+                    $maternal->mat_goiter = $request->edit_maternalGoiter;
+                }
+                if ($request->filled('edit_maternalTetanus')) {
+                    $maternal->mat_tetanus = $request->edit_maternalTetanus;
+                }
+                if ($request->filled('edit_maternalFp')) {
+                    $maternal->mat_fp = $request->edit_maternalFp;
+                }
+                if ($request->filled('edit_maternalFpPrac')) {
+                    $maternal->mat_fpWilling = $request->edit_maternalFpPrac;
+                }
+
+                
+            
+            if ($maternal->save()) {
+                return response()->json(['status' => 1, 'msg' => 'Risk Assessment Record updated successfully.']);
+            } else {
+                return response()->json(['status' => 0, 'msg' => 'Failed to update Risk Assessment Record.']);
+            }
+        }
+
+        return response()->json(['status' => 0, 'msg' => 'Record not found.']);
+    }
+    // ANTEPARTUM
+        public function matAnte($id)
+        {
+            $currentYear = Carbon::now()->year;
+            $maternal = maternal_tbl::with(['maiden', 'husband'])->where('mat_id', $id)->first();
+            $ante = antepartum_tbl::where('mat_id', $id)->get(); 
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+        
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'maternal' => $maternal,
+                'ante' => $ante,
+            ];
+        
+            return view('dashboards/healthWorkerDb/matAnte', $data);
+        }
+        
+        public function inputMform2(Request $request)
+        {
+            $rules = [
+                'apDate' => 'required',
+                'apComplaints' => 'required',
+                'apPresentation' => 'required',
+                'apLab' => 'required',
+                'apDiagnosis' => 'required',
+                'apPlan' => 'required',
+            ];
+        
+            $validator = Validator::make($request->all(), $rules, [
+                'required' => 'This Field is Required.',
+            ]);
+        
+            if ($validator->fails()) {
+                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+            }
+        
+            DB::beginTransaction();
+        
+            try {
+                $antePartum = new antepartum_tbl;
+                $antePartum->mat_id = $request->matId;
+                $antePartum->ap_dateVisit = $request->apDate;
+                $antePartum->ap_complaints = $request->apComplaints;
+                $antePartum->apf_aog = $request->apAog;
+                $antePartum->apf_ht = $request->apHt;
+                $antePartum->apf_wt = $request->apWt;
+                $antePartum->apf_bp = $request->apBp;
+                $antePartum->apf_fundal = $request->apFundal;
+                $antePartum->apf_fhb = $request->apFhb;
+                $antePartum->apf_presentation = $request->apPresentation;
+                $antePartum->ap_labResult = $request->apLab;
+                $antePartum->ap_diagnosis = $request->apDiagnosis;
+                $antePartum->ap_treatment = $request->apPlan;
+                $antePartum->ap_nextVisit = $request->apNxtVisit;
+                $antePartum->em_id = $request->empId;
+        
+                if ($antePartum->save()) {
+                    // Now create the sched_tbl record with vt_id as a foreign key
+                    if ($request->filled('apNxtVisit')) {
+                        $schedule = new sched_tbl;
+                        $schedule->ap_id = $antePartum->ap_id;
+                        $schedule->sched_desc = 'Antepartum Schedule'; 
+                        $schedule->save();
+                    }
+        
+                    DB::commit();
+                    return response()->json(['status' => 1, 'msg' => 'Antepartum Record Added Successfully']);
+                } else {
+                    DB::rollBack();
+                    return response()->json(['status' => 0, 'msg' => 'Failed to add Antepartum Record'], 500);
+                }
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+            }
+        }
+        
+        public function updateAnte(Request $request)
+        {
+            $antePartum = antepartum_tbl::find($request->edit_apId);
+        
+            if ($antePartum) {
+                // Log for debugging
+                Log::info('Updating antepartum_tbl record for ap_id: ' . $request->edit_apId);
+        
+                // Store original Next Schedule value to detect changes
+                $originalNextSchedule = $antePartum->ap_nextVisit;
+        
+                // Update fields in vaccineTaken_tbl
+                $antePartum->ap_dateVisit = $request->edit_apDate;
+                $antePartum->ap_complaints = $request->edit_apComplaints;
+                $antePartum->apf_aog = $request->edit_apAog;
+                $antePartum->apf_ht = $request->edit_apHt;
+                $antePartum->apf_wt = $request->edit_apWt;
+                $antePartum->apf_bp = $request->edit_apBp;
+                $antePartum->apf_fundal = $request->edit_apFundal;
+                $antePartum->apf_fhb = $request->edit_apFhb;
+                $antePartum->apf_presentation = $request->edit_apPresentation;
+                $antePartum->ap_labResult = $request->edit_apLab;
+                $antePartum->ap_diagnosis = $request->edit_apDiagnosis;
+                $antePartum->ap_treatment = $request->edit_apPlan;
+                $antePartum->ap_nextVisit = $request->edit_apNxtVisit;
+        
+                if ($antePartum->save()) {
+                    // Log successful save
+                    Log::info('vaccineTaken_tbl updated successfully for ap_id: ' . $request->edit_apId);
+        
+                    // Only perform CRUD on sched_tbl if the Next Schedule value has changed
+                    if ($request->edit_apNxtVisit !== $originalNextSchedule) {
+                        // If Next Schedule is filled, create or update sched_tbl
+                        if ($request->filled('edit_apNxtVisit')) {
+                            Log::info('Next schedule provided, updating or creating sched_tbl for ap_id: ' . $antePartum->ap_id);
+        
+                            sched_tbl::updateOrCreate(
+                                ['ap_id' => $antePartum->ap_id],
+                                ['sched_desc' => 'Antepartum Schedule']
+                            );
+                        } else {
+                            // If Next Schedule is empty, delete any existing sched_tbl record
+                            Log::info('No next schedule provided, deleting sched_tbl record if it exists for ap_id: ' . $antePartum->ap_id);
+        
+                            sched_tbl::where('ap_id', $antePartum->ap_id)->delete();
+                        }
+                    } else {
+                        Log::info('Next schedule remains unchanged; no action taken on sched_tbl.');
+                    }
+        
+                    return response()->json(['status' => 1, 'msg' => 'Record updated successfully.']);
+                } else {
+                    Log::error('Failed to save vaccineTaken_tbl record for vt_id: ' . $request->edit_apId);
+                    return response()->json(['status' => 0, 'msg' => 'Failed to update record.']);
+                }
+            }
+            
+            Log::error('Record not found for vt_id: ' . $request->edit_apId);
+            return response()->json(['status' => 0, 'msg' => 'Record not found.']);
+        }
+    // POST PARTUM
+        public function matPost($id)
+        {
+            $currentYear = Carbon::now()->year;
+            $maternal = maternal_tbl::with(['maiden', 'husband'])->where('mat_id', $id)->first();
+            $post = postpartum_tbl::where('mat_id', $id)->get(); 
+            $birth = delbirth_tbl::where('mat_id', $id)->get(); 
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'maternal' => $maternal,
+                'post' => $post,
+                'birth' => $birth,
+            ];
+
+            if (!$maternal) {
+                return redirect()->back()->with('error', 'Record not found.');
+            }
+            return view('dashboards/healthWorkerDb/matPost', $data);
+        }
+
+        public function inputMform3(Request $request)
+        {
+            $rules = [
+                'postVisit' => 'required',
+                'postFeSo' => 'required',
+                'postVit' => 'required',
+                'postIntervention' => 'required',
+            ];
+        
+            $validator = Validator::make($request->all(), $rules, [
+                'required' => 'This Field is Required.',
+            ]);
+        
+            if ($validator->fails()) {
+                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+            }
+        
+            DB::beginTransaction();
+        
+            try {
+                $postPartum = new postpartum_tbl;
+                $postPartum->mat_id = $request->matId;
+                $postPartum->pp_dateVisit = $request->postVisit;
+                $postPartum->pp_feso = $request->postFeSo;
+                $postPartum->pp_vitA = $request->postVit;
+                $postPartum->ap_Intervention = $request->postIntervention;
+                $postPartum->pp_dateNextVisit = $request->postNxtVisit;
+        
+                if ($postPartum->save()) {
+                    // Now create the sched_tbl record with vt_id as a foreign key
+                    if ($request->filled('postNxtVisit')) {
+                        $schedule = new sched_tbl;
+                        $schedule->pp_id = $postPartum->pp_id;
+                        $schedule->sched_desc = 'Postpartum Schedule'; 
+                        $schedule->save();
+                    }
+        
+                    DB::commit();
+                    return response()->json(['status' => 1, 'msg' => 'Postpartum Record Added Successfully']);
+                } else {
+                    DB::rollBack();
+                    return response()->json(['status' => 0, 'msg' => 'Failed to add Postpartum Record'], 500);
+                }
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+            }
+        }
+
+        public function updatePost(Request $request)
+        {
+            $postPartum = postpartum_tbl::find($request->edit_ppId);
+        
+            if ($postPartum) {
+                // Log for debugging
+                Log::info('Updating postPartum_tbl record for pp_id: ' . $request->edit_ppId);
+        
+                // Store original Next Schedule value to detect changes
+                $originalNextSchedule = $postPartum->pp_dateNextVisit;
+        
+                // Update fields in vaccineTaken_tbl
+                $postPartum->pp_dateVisit = $request->edit_postVisit;
+                $postPartum->pp_feso = $request->edit_postFeSo;
+                $postPartum->pp_vitA = $request->edit_postVit;
+                $postPartum->ap_Intervention = $request->edit_postIntervention;
+                $postPartum->pp_dateNextVisit = $request->edit_postNxtVisit;
+        
+                if ($postPartum->save()) {
+                    // Log successful save
+                    Log::info('vaccineTaken_tbl updated successfully for pp_id: ' . $request->edit_ppId);
+        
+                    // Only perform CRUD on sched_tbl if the Next Schedule value has changed
+                    if ($request->edit_postNxtVisit !== $originalNextSchedule) {
+                        // If Next Schedule is filled, create or update sched_tbl
+                        if ($request->filled('edit_postNxtVisit')) {
+                            Log::info('Next schedule provided, updating or creating sched_tbl for pp_id: ' . $postPartum->pp_id);
+        
+                            sched_tbl::updateOrCreate(
+                                ['pp_id' => $postPartum->pp_id],
+                                ['sched_desc' => 'Postpartum Schedule']
+                            );
+                        } else {
+                            // If Next Schedule is empty, delete any existing sched_tbl record
+                            Log::info('No next schedule provided, deleting sched_tbl record if it exists for pp_id: ' . $postPartum->pp_id);
+        
+                            sched_tbl::where('pp_id', $postPartum->pp_id)->delete();
+                        }
+                    } else {
+                        Log::info('Next schedule remains unchanged; no action taken on sched_tbl.');
+                    }
+        
+                    return response()->json(['status' => 1, 'msg' => 'Record updated successfully.']);
+                } else {
+                    Log::error('Failed to save vaccineTaken_tbl record for pp_id: ' . $request->edit_ppId);
+                    return response()->json(['status' => 0, 'msg' => 'Failed to update record.']);
+                }
+            }
+            
+            Log::error('Record not found for pp_id: ' . $request->edit_ppId);
+            return response()->json(['status' => 0, 'msg' => 'Record not found.']);
+        }
+    // BIRTH AND DELIVERY
+        public function inputMform4(Request $request)
+        {
+            // Validation rules
+            $rules = [
+                'postDelDate' => 'required',
+                'postDelPlace' => 'required',
+                'postDelType' => 'required',
+                'postDelFnameChild' => 'required',
+                'postDelSex' => 'required',
+                'postDelBirthLen' => 'required',
+                'postDelBirthWt' => 'required',
+                'postDelAttendant' => 'required',
+            ];
+            
+            // Custom error messages
+            $messages = [
+                'required' => 'This field is required.',
+            ];
+        
+            // Validate input
+            $validator = Validator::make($request->all(), $rules, $messages);
+            
+            // Return validation errors if any
+            if ($validator->fails()) {
+                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+            }
+        
+            // Begin database transaction to ensure consistency
+            DB::beginTransaction();
+        
+            try {
+                // Create a new record in the delbirth_tbl
+                $birth = new delbirth_tbl;
+                $birth->mat_id = $request->postmatId; // Maternal ID
+                $birth->db_delDateTime = $request->postDelDate; // Delivery Date and Time
+                $birth->db_placeDel = $request->postDelPlace; // Place of Delivery
+                $birth->db_outcome = $request->postDelType; // Delivery Outcome
+                $birth->db_childFullName = $request->postDelFnameChild; // Child's Full Name
+                $birth->db_sex = $request->postDelSex; // Child's Sex
+                $birth->db_birthLt = $request->postDelBirthLen; // Birth Length
+                $birth->db_birthWt = $request->postDelBirthWt; // Birth Weight
+                $birth->db_attendant = $request->postDelAttendant; // Attendant at Birth
+                $birth->db_fatherFullName = $request->postDelFnFather; // Father's Full Name (no validation)
+        
+                // Save the record to the database
+                if ($birth->save()) {
+                    // Commit transaction if the data is saved successfully
+                    DB::commit();
+                    return response()->json(['status' => 1, 'msg' => 'New Record Has Been Added']);
+                } else {
+                    // Rollback if save failed
+                    DB::rollBack();
+                    return response()->json(['status' => 0, 'msg' => 'Failed to add new Record'], 500);
+                }
+            } catch (\Exception $e) {
+                // Catch any exceptions and rollback the transaction
+                DB::rollBack();
+                return response()->json(['status' => 0, 'msg' => 'An error occurred', 'error' => $e->getMessage()], 500);
+            }
+        }
+        
+        public function updateDb(Request $request)
+        {
+            $birth = delbirth_tbl::find($request->edit_postdelId);
+    
+            if ($birth) {
+                $birth->mat_id = $request->edit_postdelId;
+                $birth->db_delDateTime = $request->edit_postDelDate;
+                $birth->db_placeDel = $request->edit_postDelPlace;
+                $birth->db_childFullName = $request->edit_postDelFnameChild; 
+                $birth->db_birthLt = $request->edit_postDelBirthLen;
+                $birth->db_birthWt = $request->edit_postDelBirthWt;
+                $birth->db_fatherFullName = $request->edit_postDelFnFather;
+                
+                // Radio
+                    if ($request->filled('edit_postDelType')) {
+                        $birth->db_outcome = $request->edit_postDelType;
+                    }
+                    if ($request->filled('edit_postDelSex')) {
+                        $birth->db_sex = $request->edit_postDelSex;
+                    }
+                    if ($request->filled('edit_postDelAttendant')) {
+                        $birth->db_attendant = $request->edit_postDelAttendant;
+                    }
+
+    
+                    
+                
+                if ($birth->save()) {
+                    return response()->json(['status' => 1, 'msg' => 'Record updated successfully.']);
+                } else {
+                    return response()->json(['status' => 0, 'msg' => 'Failed to update Record.']);
+                }
+            }
+    
+            return response()->json(['status' => 0, 'msg' => 'Record not found.']);
+        }
+
+        public function matView($id)
+        {
+            $currentYear = Carbon::now()->year;
+
+            $maternal = maternal_tbl::with(['maiden', 'husband'])->where('mat_id', $id)->first();
+
+            // $vacForm = vaccineTaken_tbl::with('epi')->where('epi_id', $id)->whereYear('created_at', $currentYear)->orderBy('created_at', 'desc')->get();
+            
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'maternal' => $maternal,
+                // 'vacForm' => $vacForm,
+            ];
+
+            if (!$maternal) {
+                return redirect()->back()->with('error', 'Record not found.');
+            }
+            return view('dashboards/healthWorkerDb/matView', $data);
+        }
+    
+        
 // END OF MATERNAL
 
 // IMMUNIZATION
@@ -6262,5 +7112,900 @@ public function fetchResidentsAge(Request $request)
     // Pass the ageSexCounts data to the view
     return response()->json($ageSexCounts);
 }
+
+public function calendar(Request $request)
+{
+    // Fetch the logged-in user's information
+    $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+    // Fetch all the schedule data along with the relationships
+    $sched = sched_tbl::with([
+        'vt.epi',    // Eager load epi (from vaccineTaken_tbl)
+        'ap',        // Eager load 'ap' (from antepartum_tbl)
+        'pp.maternal', // Eager load maternal (from postpartum_tbl)
+        'sb.fp.client' // Eager load fp and client (from fpSideB_tbl)
+    ])->get();
+
+    // Prepare an array to hold the schedule events for the calendar
+    $events = [];
+
+    // Loop through each schedule and get the relevant date information
+    foreach ($sched as $schedule) {
+        $fullName = '';
+
+        // Check if `vt` and `epi` relationship exists and get the full name
+        if ($schedule->vt && $schedule->vt->epi) {
+            $fullName = $schedule->vt->epi->epi_lname . ' ' . $schedule->vt->epi->epi_fname . ' ' . $schedule->vt->epi->epi_mname;
+        }
+
+        // Check if the related record exists and get the dates for the vaccineTaken_tbl (vt)
+        if ($schedule->vt) {
+            $events[] = [
+                'date' => $schedule->vt->vt_nxtSched,
+                'description' => $schedule->sched_desc . ': ' . $schedule->vt->vt_nxtSched,
+                'type' => 'vt',
+                'id' => $schedule->vt->epi_id,
+                'Name' => !empty($fullName) ? $fullName : ($schedule->ap->maternal->mother_id ?? '')
+            ];
+        }
+
+        // Check if the `ap` relationship exists and add antepartum data
+        if ($schedule->ap) {
+            $events[] = [
+                'date' => $schedule->ap->ap_nextVisit,
+                'description' => $schedule->sched_desc . ': ' . $schedule->ap->ap_nextVisit,
+                'type' => 'ap',
+                'id' => $schedule->ap->mat_id,
+                'Name' => !empty($schedule->ap->maternal->mat_urMaiden) 
+                        ? $schedule->ap->maternal->mat_urMaiden 
+                        : (
+                            $schedule->ap->ap->maiden 
+                                ? $schedule->ap->ap->maiden->res_fname . ' ' . 
+                                $schedule->ap->ap->maiden->res_mname . ' ' . 
+                                $schedule->ap->ap->maiden->res_lname . ' ' . 
+                                ($schedule->ap->ap->maiden->suffix ?? '') 
+                                : ''),
+
+            ];
+        }
+
+        // Check if the `pp` relationship exists and add postpartum data
+        if ($schedule->pp) {
+            $events[] = [
+                'date' => $schedule->pp->pp_dateNextVisit,
+                'description' => $schedule->sched_desc . ': ' . $schedule->pp->pp_dateNextVisit,
+                'type' => 'pp',
+                'id' => $schedule->pp->mat_id,
+                'Name' => !empty($schedule->pp->maternal->mat_urMaiden) 
+                        ? $schedule->pp->maternal->mat_urMaiden 
+                        : (
+                            $schedule->pp->maternal->maiden 
+                                ? $schedule->pp->maternal->maiden->res_fname . ' ' . 
+                                $schedule->pp->maternal->maiden->res_mname . ' ' . 
+                                $schedule->pp->maternal->maiden->res_lname . ' ' . 
+                                ($schedule->pp->maternal->maiden->suffix ?? '') 
+                                : ''),
+
+            ];
+        }
+
+        // Check if the `sb` relationship exists and add sideB data
+        if ($schedule->sb) {
+            $events[] = [
+                'date' => $schedule->sb->sideB_followUpVisit,
+                'description' => $schedule->sched_desc . ': ' . $schedule->sb->sideB_followUpVisit,
+                'type' => 'db',
+                'id' => $schedule->sb->fp_id,
+                'Name' => $schedule->sb->fp->client->res_fname . ' ' . $schedule->sb->fp->client->res_lname
+            ];
+        }
+    }
+
+    // Set headers for no-cache
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // Pass the data to the view
+    return view('dashboards/healthWorkerDb/calendar', [
+        'LoggedUserInfo' => $loggedUserInfo,
+        'events' => $events,
+    ]);
+}
+
+
+
+
 //END OF FOR HEALTH WORKERS
+
+
+// FOR SK KAGAWAD
+    // FOR ARTICLE
+        public function dbSk()
+        {
+            // Fetch logged-in employee information
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+        
+            // Fetch all blogs where blog_author is the logged-in user
+            $events = DB::table('schedule_tbls')
+                ->where('em_id', '=', $loggedUserInfo->em_id)
+                ->where('sched_status', '=', 'Pending Event') // Assuming drafts have 'Draft' status
+                ->get();
+
+            $blogs = DB::table('blogs_tbls')
+                ->where('blog_author', '=', $loggedUserInfo->em_id)
+                ->where('blog_status', '=', 'Draft') // Assuming drafts have 'Draft' status
+                ->get();
+        
+            // Prepare data to be passed to the view
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'blogs' => $blogs, // Add blogs data
+                'events' => $events,
+            ];
+        
+            return view('dashboards/dbSk', $data);
+        }
+
+        public function createArt()
+        {
+            // Fetch logged-in employee information
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            // Prepare data to be passed to the view
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+            ];
+
+            return view('dashboards/skDb/createArticle', $data);
+        }
+
+        public function articleInput(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'inputTitle' => 'required',
+                'inputSubTitle' => 'required',
+                'inputQoute' => 'required',
+                'inputDate' => 'required',
+                'inputContent' => 'required',
+                'inputCategory' => 'required',
+                'inputAuthor' => 'required',
+                'inputImg' => 'required|mimes:jpeg,png,jpg,svg',
+                'inputImgLoc' => 'required',
+                'inputImgOwn' => 'required',
+                'inputFbLink' => 'required',
+                'inputXLink' => 'required',
+                'inputInsLink' => 'required',
+            ], [
+                // Custom error messages
+                'required' => 'This field is required.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+            } else {
+                $blogs = new blogs_tbl;
+                $blogs->blog_title = $request->inputTitle;
+                $blogs->blog_subtitle = $request->inputSubTitle;
+                $blogs->blog_qoute = $request->inputQoute;
+                $blogs->blog_description = $request->inputContent;
+                $blogs->blog_date = $request->inputDate;
+                $blogs->blog_category = $request->inputCategory;
+                $blogs->blog_author = $request->inputAuthor;
+                $blogs->blog_picLocation = $request->inputImgLoc;
+                $blogs->blog_picOwner = $request->inputImgOwn;
+                $blogs->blog_fbLink = $request->inputFbLink;
+                $blogs->blog_xLink = $request->inputXLink;
+                $blogs->blog_insLink = $request->inputInsLink;
+
+                $blogs->blog_status = $request->input('blogStatus', 'Draft');
+
+                // Save primary image
+                if ($request->hasFile('inputImg')) {
+                    $picFile2 = $request->file('inputImg');
+                    $picFileName2 = uniqid() . '.' . $picFile2->getClientOriginalExtension();
+                    $picFilePath2 = 'public/assets/img/blogs/' . $picFileName2;
+                    $picFile2->move(public_path('assets/img/blogs'), $picFileName2);
+                    $blogs->blog_pic = $picFilePath2; // Store the image path
+                }
+
+                if ($blogs->save()) {
+                    return response()->json(['status' => 1, 'msg' => 'New article has been added.']);
+                } else {
+                    return response()->json(['status' => 0, 'msg' => 'Failed to add new article.'], 500);
+                }
+            }
+        }
+
+
+        public function myDraft($em_id)
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $blogs = blogs_tbl::where('blog_status', 'Draft')->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(),Carbon::now()->endOfDay()])->where('blog_author', $em_id)->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'blogs' => $blogs,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skDb/myDraft', $data);
+        }
+
+        public function mySubmission($em_id)
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $blogs = blogs_tbl::whereIn('blog_status', ['Pending Article', 'Published', 'Declined'])
+            ->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
+            ->where('blog_author', $em_id) // Filter by the 'blog_author' (the 'em_id' from the URL)
+            ->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'blogs' => $blogs,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skDb/mySubmission', $data);
+        }
+
+        public function editArticle($id)
+        {
+            $currentYear = Carbon::now()->year;
+
+            $blogs = blogs_tbl::where('blog_id', $id)->first();
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'blogs' => $blogs,
+            ];
+
+            if (!$blogs) {
+                return redirect()->back()->with('error', 'Record not found.');
+            }
+            return view('dashboards/skDb/editArticle', $data);
+        }
+
+        public function updateArticle(Request $request, $blogId)
+        {
+            // Find the blog by its ID
+            $blog = blogs_tbl::where('blog_id', $blogId)->firstOrFail();
+
+            // Update blog post fields
+            $blog->blog_title = $request->input('inputTitle');
+            $blog->blog_subtitle = $request->input('inputSubTitle');
+            $blog->blog_qoute = $request->input('inputQoute');
+            $blog->blog_date = $request->input('inputDate');
+            $blog->blog_description = $request->input('inputContent');
+            $blog->blog_category = $request->input('inputCategory');
+            $blog->blog_author = $request->input('inputAuthor');
+            $blog->blog_fbLink = $request->input('inputFbLink');
+            $blog->blog_xLink = $request->input('inputXLink');
+            $blog->blog_insLink = $request->input('inputInsLink');
+            $blog->blog_picLocation = $request->input('inputImgLoc');
+            $blog->blog_picOwner = $request->input('inputImgOwn');
+        
+            if ($request->hasFile('inputImg')) {
+                // Get the uploaded file
+                $image = $request->file('inputImg');
+
+                // Generate a random, unique image name using Str::random() method
+                $imageName = Str::random(12) . '.' . $image->getClientOriginalExtension(); // 12-character unique name
+
+                // Direct path to the pre-existing 'public/assets/img/blogs'
+                $destinationPath = public_path('assets/img/blogs');
+
+                // Save the file directly to 'public/assets/img/blogs' without creating new directories
+                $image->move($destinationPath, $imageName);
+
+                // Save the relative path in the database (no 'storage' prefix)
+                $blog->blog_pic = 'public/assets/img/blogs/' . $imageName; // Relative path
+            }
+
+            // Recommended links and images (for the recommended news section)
+            for ($i = 1; $i <= 4; $i++) {
+                $recLink = $request->input("inputRec{$i}");
+                $recTitle = $request->input("inputRecTitle{$i}");
+                $recImgField = $request->file("inputRecImg{$i}");
+
+                if ($recLink || $recTitle || $recImgField) {
+                    $blog->{"blog_recommend{$i}"} = $recLink;
+                    $blog->{"blog_recommendTitle{$i}"} = $recTitle;
+
+                    if ($recImgField) {
+                        // Handle recommended images upload
+                        $recImageName = Str::random(12) . '-' . $i . '.' . $recImgField->getClientOriginalExtension();
+
+                        // Direct path for recommended images to the pre-existing folder
+                        $recImagePath = public_path('assets/img/blogs');
+
+                        // Save the recommended image file directly to the folder (no creation of directories)
+                        $recImgField->move($recImagePath, $recImageName);
+
+                        // Save the relative path for the recommended image
+                        $blog->{"blog_recommendPic{$i}"} = 'public/assets/img/blogs/' . $recImageName;
+                    }
+                }
+            }
+
+
+            // Save the blog status (draft or submitted)
+            if ($request->has('blogStatus') && $request->input('blogStatus') === 'Draft') {
+                $blog->blog_status = 'Draft';
+            } else {
+                $blog->blog_status = 'Pending Article';
+            }
+
+            // $blogs->blog_status = $request->input('blogStatus', 'Draft');
+
+            // Save the blog
+            $blog->save();
+
+            // Return success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Article updated successfully!',
+            ]);
+        }
+
+        public function updateArticleStatus(Request $request)
+        {
+            $request->validate([
+                'id' => 'required|integer|exists:blogs_tbls,blog_id', // Changed to 'id'
+                'status' => 'required|string' // Changed to 'status'
+            ]);
+
+            $blogs = blogs_tbl::find($request->id); // Changed to 'id'
+            $blogs->blog_status = $request->status; // Ensure this is correctly set
+            $blogs->save();
+
+            return response()->json(['success' => true]);
+        }
+
+    // FOR  PUBLIC AND PRIVATE EVENTS
+        public function createEvent()
+        {
+            // Fetch logged-in employee information
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            // Prepare data to be passed to the view
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+            ];
+
+            return view('dashboards/skDb/createEvent', $data);
+        }
+
+        public function eventInput(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'inputDate' => 'required',
+                'inputTitle' => 'required',
+                'inputDesc' => 'required',
+                'inputType' => 'required',
+                'inputImg' => 'required|mimes:jpeg,png,jpg,svg',
+
+            ], [
+                // Custom error messages
+                'required' => 'This field is required.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+            } else {
+                $events = new schedule_tbl;
+                $events->sched_title = $request->inputTitle;
+                $events->sched_description = $request->inputDesc;
+                $events->sched_date = $request->inputDate;
+                $events->sched_type = $request->inputType;
+                $events->em_id = $request->inputEmp;
+                $events->sched_status = 'Pending Event';
+
+                // Save primary image
+                if ($request->hasFile('inputImg')) {
+                    $picFile2 = $request->file('inputImg');
+                    $picFileName2 = uniqid() . '.' . $picFile2->getClientOriginalExtension();
+                    $picFilePath2 = 'public/assets/img/events/' . $picFileName2;
+                    $picFile2->move(public_path('assets/img/events'), $picFileName2);
+                    $events->sched_picture = $picFilePath2; // Store the image path
+                }
+
+                if ($events->save()) {
+                    return response()->json(['status' => 1, 'msg' => 'New Event has been added.']);
+                } else {
+                    return response()->json(['status' => 0, 'msg' => 'Failed to add new event.'], 500);
+                }
+            }
+        }
+
+
+        public function eventLists($em_id)
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $events = schedule_tbl::whereIn('sched_status', ['Pending Event', 'Accepted', 'Denied', 'Archived'])->where('em_id', $em_id)->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'events' => $events,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skDb/eventList', $data);
+        }
+
+        public function editEvent($id)
+        {
+            $currentYear = Carbon::now()->year;
+
+            $event = schedule_tbl::where('sched_id', $id)->first();
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'event' => $event,
+            ];
+
+            if (!$event) {
+                return redirect()->back()->with('error', 'Destrict Referral record not found.');
+            }
+            return view('dashboards/skDb/editEvent', $data);
+        }
+
+        public function updateEvent(Request $request, $schedId)
+        {
+            $event = schedule_tbl::where('sched_id', $schedId)->firstOrFail();
+
+            $event->em_id = $request->input('empId');
+            $event->sched_date = $request->input('inputDate');
+            $event->sched_title = $request->input('inputTitle');
+            $event->sched_description = $request->input('inputContent');
+            $event->sched_type = $request->input('inputType');
+            $event->sched_status = $request->input('inputStatus');
+        
+            if ($request->hasFile('inputImg')) {
+                $image = $request->file('inputImg');
+                $imageName = Str::random(12) . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('assets/img/events');
+                $image->move($destinationPath, $imageName);
+                $event->sched_picture = 'public/assets/img/events/' . $imageName;
+            }
+
+            // Save the blog
+            $event->save();
+
+            // Return success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Event updated successfully!',
+            ]);
+        }
+
+        public function updateEventStatus(Request $request)
+        {
+            $request->validate([
+                'id' => 'required|integer|exists:schedule_tbls,sched_id', // Changed to 'id'
+                'status' => 'required|string' // Changed to 'status'
+            ]);
+
+            $event = schedule_tbl::find($request->id); // Changed to 'id'
+            $event->sched_status = $request->status; // Ensure this is correctly set
+            $event->save();
+
+            return response()->json(['success' => true]);
+        }
+
+// END OF SK KAGAWAD
+
+// SK CHAIRMAN
+    public function dbSkChairman()
+    {
+        // Fetch logged-in employee information
+        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+        // Fetch all blogs where blog_author is the logged-in user
+        $events = DB::table('schedule_tbls')
+            ->where('em_id', '=', $loggedUserInfo->em_id)
+            ->where('sched_status', '=', 'Pending Event') // Assuming drafts have 'Draft' status
+            ->get();
+
+        $blogs = DB::table('blogs_tbls')
+            ->where('blog_status', '=', 'Pending Article') // Assuming drafts have 'Draft' status
+            ->get();
+
+        // Prepare data to be passed to the view
+        $data = [
+            'LoggedUserInfo' => $loggedUserInfo,
+            'blogs' => $blogs, // Add blogs data
+            'events' => $events,
+        ];
+
+        return view('dashboards/dbSkChairman', $data);
+    }
+
+    // BLOGS
+        public function submittedBlogs()
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $blogs = blogs_tbl::where('blog_status', 'Pending Article')->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(),Carbon::now()->endOfDay()])->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'blogs' => $blogs,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('/dashboards/skChairmanDb/submittedBlogs', $data);
+        }
+
+        public function publishedBlogs()
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $blogs = blogs_tbl::where('blog_status', 'Published')->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(),Carbon::now()->endOfDay()])->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'blogs' => $blogs,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('/dashboards/skChairmanDb/publishedBlogs', $data);
+        }
+
+        public function archivedBlogs()
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $blogs = blogs_tbl::whereIn('blog_status', ['Archive', 'Denied'])->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(),Carbon::now()->endOfDay()])->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'blogs' => $blogs,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skChairmanDb/archivedBlogs', $data);
+        }
+
+        public function viewBlogs($id)
+        {
+            $currentYear = Carbon::now()->year;
+
+            $blogs = blogs_tbl::where('blog_id', $id)->first();
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'blogs' => $blogs,
+            ];
+
+            if (!$blogs) {
+                return redirect()->back()->with('error', 'Record not found.');
+            }
+            return view('dashboards/skChairmanDb/viewBlogs', $data);
+        }
+
+        public function updateArticleStatus1(Request $request)
+        {
+            $request->validate([
+                'id' => 'required|integer|exists:blogs_tbls,blog_id', // Validate the blog ID
+                'status' => 'required|string', // Validate the status (it will be "Denied")
+                'reason' => 'nullable|string' // Validate the reason for denial
+            ]);
+        
+            // Find the blog by ID
+            $blogs = blogs_tbl::find($request->id);
+        
+            // Update the blog's status and reason
+            $blogs->blog_status = $request->status;  // Set status to 'Denied'
+            $blogs->blog_reason = $request->reason;  // Set the reason for denial
+        
+            // Save the updated blog record
+            $blogs->save();
+        
+            // Return a success response
+            return response()->json(['success' => true]);
+        }
+        
+        public function recInput(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'inputRec1' => 'required',
+                'inputRecTitle1' => 'required',
+                'inputRecImg1' => 'required|mimes:jpeg,png,jpg,svg',
+                'inputRec2' => 'required',
+                'inputRecTitle2' => 'required',
+                'inputRecImg2' => 'required|mimes:jpeg,png,jpg,svg',
+                'inputRec3' => 'required',
+                'inputRecTitle3' => 'required',
+                'inputRecImg3' => 'required|mimes:jpeg,png,jpg,svg',
+                'inputRec4' => 'required',
+                'inputRecTitle4' => 'required',
+                'inputRecImg4' => 'required|mimes:jpeg,png,jpg,svg',
+            ], [
+                // Custom error messages
+                'required' => 'This field is required.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+            } else {
+                $news = new recNews_tbl;
+
+                $news->em_id = $request->empId;
+                $news->rec_status = 'Pending News';
+
+                $news->rec_link1 = $request->inputRec1;
+                $news->rec_title1 = $request->inputRecTitle1;
+                if ($request->hasFile('inputRecImg1')) {
+                    $recFile1 = $request->file('inputRecImg1');
+                    $recFileName1 = uniqid() . '.' . $recFile1->getClientOriginalExtension();
+                    $recFilePath1 = 'public/assets/img/blogs/' . $recFileName1;
+                    $recFile1->move(public_path('assets/img/blogs'), $recFileName1);
+                    $news->rec_img1 = $recFilePath1; // Store the image path
+                }
+                
+                $news->rec_link2 = $request->inputRec2;
+                $news->rec_title2 = $request->inputRecTitle2;
+                if ($request->hasFile('inputRecImg2')) {
+                    $recFile2 = $request->file('inputRecImg2');
+                    $recFileName2 = uniqid() . '.' . $recFile2->getClientOriginalExtension();
+                    $recFilePath2 = 'public/assets/img/blogs/' . $recFileName2;
+                    $recFile2->move(public_path('assets/img/blogs'), $recFileName2);
+                    $news->rec_img2 = $recFilePath2; // Store the image path
+                }
+                
+                $news->rec_link3 = $request->inputRec3;
+                $news->rec_title3 = $request->inputRecTitle3;
+                if ($request->hasFile('inputRecImg3')) {
+                    $recFile3 = $request->file('inputRecImg3');
+                    $recFileName3 = uniqid() . '.' . $recFile3->getClientOriginalExtension();
+                    $recFilePath3 = 'public/assets/img/blogs/' . $recFileName3;
+                    $recFile3->move(public_path('assets/img/blogs'), $recFileName3);
+                    $news->rec_img3 = $recFilePath3; // Store the image path
+                }
+                
+                $news->rec_link4 = $request->inputRec4;
+                $news->rec_title4 = $request->inputRecTitle4;
+                if ($request->hasFile('inputRecImg4')) {
+                    $recFile4 = $request->file('inputRecImg4');
+                    $recFileName4 = uniqid() . '.' . $recFile4->getClientOriginalExtension();
+                    $recFilePath4 = 'public/assets/img/blogs/' . $recFileName4;
+                    $recFile4->move(public_path('assets/img/blogs'), $recFileName4);
+                    $news->rec_img4 = $recFilePath4; // Store the image path
+                }
+
+                if ($news->save()) {
+                    return response()->json(['status' => 1, 'msg' => 'News has been added.']);
+                } else {
+                    return response()->json(['status' => 0, 'msg' => 'Failed to add News.'], 500);
+                }
+            }
+        }
+        
+        public function createArt1()
+        {
+            // Fetch logged-in employee information
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            // Prepare data to be passed to the view
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+            ];
+
+            return view('dashboards/skChairmanDb/createArticle', $data);
+        }
+
+        public function submittedNews()
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $blogs = recNews_tbl::whereIn('rec_status', ['Pending News'])
+            ->whereBetween('created_at', [Carbon::now()->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
+            ->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'blogs' => $blogs,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skChairmanDb/submittedNews', $data);
+        }
+
+        public function viewNews($id)
+        {
+            $currentYear = Carbon::now()->year;
+
+            $blogs = recNews_tbl::where('rec_id', $id)->first();
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'blogs' => $blogs,
+            ];
+
+            if (!$blogs) {
+                return redirect()->back()->with('error', 'Record not found.');
+            }
+            return view('dashboards/skChairmanDb/viewNews', $data);
+        }
+
+        public function updateNews(Request $request, $blogId)
+        {
+            // Find the blog by its ID
+            $blog = recNews_tbl::where('rec_id', $blogId)->firstOrFail();
+
+            for ($i = 1; $i <= 4; $i++) {
+                $recLink = $request->input("inputRec{$i}");
+                $recTitle = $request->input("inputRecTitle{$i}");
+                $recImgField = $request->file("inputRecImg{$i}");
+
+                if ($recLink || $recTitle || $recImgField) {
+                    $blog->{"rec_link{$i}"} = $recLink;
+                    $blog->{"rec_title{$i}"} = $recTitle;
+
+                    if ($recImgField) {
+                        // Handle recommended images upload
+                        $recImageName = Str::random(12) . '-' . $i . '.' . $recImgField->getClientOriginalExtension();
+
+                        // Direct path for recommended images to the pre-existing folder
+                        $recImagePath = public_path('assets/img/blogs');
+
+                        // Save the recommended image file directly to the folder (no creation of directories)
+                        $recImgField->move($recImagePath, $recImageName);
+
+                        // Save the relative path for the recommended image
+                        $blog->{"rec_img{$i}"} = 'public/assets/img/blogs/' . $recImageName;
+                    }
+                }
+            }
+
+            // $blogs->blog_status = $request->input('blogStatus', 'Draft');
+
+            // Save the blog
+            $blog->save();
+
+            // Return success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Article updated successfully!',
+            ]);
+        }
+
+        public function updateNewsStatus(Request $request)
+        {
+            $request->validate([
+                'id' => 'required|integer|exists:rec_news_tbls,rec_id', // Changed to 'id'
+                'status' => 'required|string' // Changed to 'status'
+            ]);
+
+            $blogs = recNews_tbl::find($request->id); // Changed to 'id'
+            $blogs->rec_status = $request->status; // Ensure this is correctly set
+            $blogs->save();
+
+            return response()->json(['success' => true]);
+        }
+    
+    // EVENTS
+        public function submittedEvents()
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $events = schedule_tbl::whereIn('sched_status', ['Pending Event'])->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'events' => $events,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skChairmanDb/submittedEvents', $data);
+        }
+
+        public function createEvent1()
+        {
+            // Fetch logged-in employee information
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            // Prepare data to be passed to the view
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+            ];
+
+            return view('dashboards/skChairmanDb/createEvent', $data);
+        }
+
+        public function eventLists1($em_id)
+        {
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+            $resident = resident_tbl::all();
+            $events = schedule_tbl::whereIn('sched_status', ['Pending Event', 'Accepted', 'Denied', 'Archived'])->where('em_id', $em_id)->get();
+
+            // Merge all the data into a single array
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'residents' => $resident,
+                'events' => $events,
+            ];
+
+            // Set headers for no-cache
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            return view('dashboards/skChairmanDb/eventList', $data);
+        }
+
+        public function editEvent1($id)
+        {
+            $currentYear = Carbon::now()->year;
+
+            $event = schedule_tbl::where('sched_id', $id)->first();
+            $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+            $data = [
+                'LoggedUserInfo' => $loggedUserInfo,
+                'event' => $event,
+            ];
+
+            if (!$event) {
+                return redirect()->back()->with('error', 'Record not found.');
+            }
+            return view('dashboards/skChairmanDb/editEvent', $data);
+        }
+// END OF SK CHAIRMAN
 }

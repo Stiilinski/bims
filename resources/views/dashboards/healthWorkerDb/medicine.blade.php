@@ -104,6 +104,7 @@
         width: 100%;
     }
 
+
     @media print {
         body * {
             visibility: hidden;
@@ -135,7 +136,10 @@
             font-size: 12px;
         }
 
-
+        .datatable th:nth-child(14),
+        .datatable td:nth-child(14){
+            display: none !important;
+        }
 
         .card-body * {
             visibility: visible;
@@ -146,21 +150,7 @@
             display: none!important;
         }
 
-        .datatable th:nth-child(1),
-        .datatable td:nth-child(1),
-        .datatable th:nth-child(3),
-        .datatable td:nth-child(3),
-        .datatable th:nth-child(7),
-        .datatable td:nth-child(7),
-        .datatable th:nth-child(9),
-        .datatable td:nth-child(9),
-        .datatable th:nth-child(11),
-        .datatable td:nth-child(11),
-        .datatable th:nth-child(12),
-        .datatable td:nth-child(12)
-        {
-            display: none !important;
-        }
+
 
         .datatable-bottom * {
             display: none !important;
@@ -227,35 +217,35 @@
                 </thead>
                 <tbody>
                     @foreach($medicine as $index => $medicines)
-                    <tr>
-                        <td style="display: none;">{{ $medicines->med_id }}</td>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $medicines->med_ndc }}</td>
-                        <td>{{ $medicines->med_prod}}</td>
-                        <td>{{ $medicines->med_desc }}</td>
-                        <td>{{ $medicines->med_qtBox }}</td>
-                        <td>{{ $medicines->med_unit}}</td>
-                        <td>{{ $medicines->med_qtPerUnit}}</td>
-                        <td>{{ $medicines->med_count}}</td>
-                        <td>{{ $medicines->med_datePurchases}}</td>
-                        <td>{{ $medicines->med_dateExpiration}}</td>
-                        <td>{{ $medicines->med_remarks}}</td>
-                        <td>{{ $medicines->med_status}}</td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Actions
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><button class="dropdown-item" type="button">Edit</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="updateMedStatus({{ $medicines->med_id }}, 'Available')">Available</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="updateMedStatus({{ $medicines->med_id }}, 'Out Of Stock')">Out Of Stock</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="updateMedStatus({{ $medicines->med_id }}, 'Archive')">Archive</button></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
+                        <tr>
+                            <td style="display: none;">{{ $medicines->med_id }}</td>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $medicines->med_ndc }}</td>
+                            <td>{{ $medicines->med_prod}}</td>
+                            <td>{{ $medicines->med_desc }}</td>
+                            <td>{{ $medicines->med_qtBox }}</td>
+                            <td>{{ $medicines->med_unit}}</td>
+                            <td>{{ $medicines->med_qtPerUnit}}</td>
+                            <td>{{ $medicines->med_count}}</td>
+                            <td>{{ $medicines->med_datePurchases}}</td>
+                            <td>{{ $medicines->med_dateExpiration}}</td>
+                            <td>{{ $medicines->med_remarks}}</td>
+                            <td>{{ $medicines->med_status}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item" type="button">Edit</button></li>
+                                        <li><button class="dropdown-item" type="button" onclick="updateMedStatus({{ $medicines->med_id }}, 'Available')">Available</button></li>
+                                        <li><button class="dropdown-item" type="button" onclick="updateMedStatus({{ $medicines->med_id }}, 'Out Of Stock')">Out Of Stock</button></li>
+                                        <li><button class="dropdown-item" type="button" onclick="updateMedStatus({{ $medicines->med_id }}, 'Archive')">Archive</button></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
           <!-- End Table with stripped rows -->

@@ -11,5 +11,5 @@ class resident_tbl extends Model
 
     protected $primaryKey = 'res_id';
 
-    
+    protected $table = 'resident_tbls';
 }

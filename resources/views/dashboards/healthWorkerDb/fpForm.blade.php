@@ -1383,7 +1383,7 @@
 
             // Create a FormData object with the form fields
             var formData = new FormData();
-            formData.append('sideB_id', sideB_id);
+            formData.append('edit_fpSideB_id', sideB_id);
             formData.append('edit_fpDateVisit', $('#edit_fpDateVisit').val());
             formData.append('edit_fpMedFind', $('#edit_fpMedFind').val());
             formData.append('edit_fpMetAcc', $('#edit_fpMetAcc').val());

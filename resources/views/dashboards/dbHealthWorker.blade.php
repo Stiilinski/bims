@@ -95,7 +95,7 @@
                   </li>
 
                   <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Diseases</button>
+                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Health</button>
                   </li>
 
                   <li class="nav-item" role="presentation">
@@ -250,7 +250,7 @@
                       </div>
 
                 </div>
-              {{-- DISEASES --}}
+              {{-- HEALTH --}}
                 <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
                   <div class="row">
                     {{-- CARDS --}}
@@ -386,7 +386,7 @@
 
                       <!-- Pregnancy Card -->
                         <div class="col-xxl-4 col-md-6 mt-4 mb-4">
-                          <div class="card info-card sales-card">
+                          <div class="card info-card sales-card" onclick="showPregGraphModal()">
                             <div class="card-body">
                               <h5 class="card-title">Pregnancy Cases <span>Total</span></h5>
 
@@ -395,9 +395,14 @@
                                   <i class="ri-hearts-fill"></i>
                                 </div>
                                 <div class="ps-3">
-                                  {{-- <h6>{{ $totalClearances }}</h6> --}}
-                                  <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
+                                   <h6>{{ $maternal }}</h6>
+                                   @if ($pregChange >= 0)
+                                        <span class="text-success small pt-1 fw-bold">{{ $pregChange }}%</span> 
+                                        <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-up-square" style="color: #19a987"></i></span>
+                                    @else
+                                        <span class="text-danger small pt-1 fw-bold">{{ abs($pregChange) }}%</span> 
+                                        <span class="text-muted small pt-2 ps-1"><i class="bx bxs-caret-down-square" style="color: #ae344a"></i></span>
+                                    @endif
                                 </div>
                               </div>
                             </div>
@@ -405,6 +410,22 @@
                           </div>
                         </div>
                       <!-- End Pregnancy Card -->
+
+                        {{-- Pregnancy Graph --}}
+                            <div class="modal fade" id="pregModal" tabindex="-1" aria-labelledby="pregModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="pregModalLabel">Pregnancy Details (Monthly Comparison)</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <canvas id="populationPregChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{-- End of Pregnancy Graph --}}
 
                       <!-- TB Card -->
                         <div class="col-xxl-4 col-md-6 mt-4 mb-4">
@@ -1200,6 +1221,111 @@
         }
     });
   }
+
+  function showPregGraphModal() {
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('pregModal'));
+    modal.show();
+
+    // Destroy the existing chart instance if it exists
+    if (window.populationPregChart && typeof window.populationPregChart.destroy === 'function') {
+        window.populationPregChart.destroy();
+    }
+
+    // Fetch current and previous year data
+    const currentYearPregData = @json($currentYearPregData);
+    const previousYearPregData = @json($previousYearPregData);
+    const currentYearUnder20PregData = @json($currentYearUnder20PregData);
+    const previousYearUnder20PregData = @json($previousYearUnder20PregData);
+    const currentYearAbove20PregData = @json($currentYearAbove20PregData);
+    const previousYearAbove20PregData = @json($previousYearAbove20PregData);
+
+    // Get the canvas context
+    const ctx = document.getElementById('populationPregChart').getContext('2d');
+
+    // Create a new Chart instance
+    window.populationPregChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: '{{ $currentYear }} Total Pregnancies',
+                    data: currentYearPregData,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Total Pregnancies',
+                    data: previousYearPregData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $currentYear }} Under 20 Pregnancies',
+                    data: currentYearUnder20PregData,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Under 20 Pregnancies',
+                    data: previousYearUnder20PregData,
+                    borderColor: 'darkgreen',
+                    backgroundColor: 'rgba(0, 255, 0, 0.3)',
+                    fill: true
+                },
+                {
+                    label: '{{ $currentYear }} Above 20 Pregnancies',
+                    data: currentYearAbove20PregData,
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                    fill: true
+                },
+                {
+                    label: '{{ $previousYear }} Above 20 Pregnancies',
+                    data: previousYearAbove20PregData,
+                    borderColor: 'darkorange',
+                    backgroundColor: 'rgba(255, 165, 0, 0.3)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Pregnancies: ${context.raw}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Pregnancies'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+}
+
 
   function showDengueGraphModal() 
   {
