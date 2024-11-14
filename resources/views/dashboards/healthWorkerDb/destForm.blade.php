@@ -188,7 +188,7 @@
     .port2 {
         display: flex;
         flex-direction: column;
-        justify-content: left;
+        justify-content: space-between;
         margin-left: 2px;
     }
     .sec-port2 {
@@ -211,9 +211,9 @@
         padding-bottom: 15px;
     }
     .para p {
+        padding-left: 75px;
         font-size: 12px;
         width: 100%;
-        margin-left: 75px;
         margin-top: -15px;
         margin-bottom: 0px;
     }
@@ -980,7 +980,67 @@
         padding: 0 10px;
         margin: 0 10px;
     }
+/* PRINT */
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: portrait;
+        margin: 1mm; /* Set margins */
+    }
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+
+    /* .port2 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-left: 2px;
+    }
+
+    .port2 h5 {
+        font-size: 14px!important;
+    } */
+
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #FFF;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    .card-title, .nav {
+        display: none !important;
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 1200px; /* Ensure the card takes full width of the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block;
+        padding: 5mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .card-body * {
+        padding: 5;
+        background-color: #fff;
+    }  
+}
 
 
 </style>
@@ -999,7 +1059,7 @@
                   </nav>
             </div>
             <div class="btnArea">
-                <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+                <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
             </div>
         </div><!-- End Page Title -->
 
@@ -1311,6 +1371,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
     <script>
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
+
       function calculateAge(dob) {
           const birthDate = new Date(dob);
           const today = new Date();

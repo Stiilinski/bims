@@ -15,6 +15,10 @@
         justify-content: space-between
     }
 
+    .pageArea {
+        width: 100%;
+    }
+
     .card-body {
         overflow: auto;
     }
@@ -256,10 +260,20 @@
             <h1>OPT FULL RECORD</h1>
             <nav>
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{ action('App\Http\Controllers\regValidation@optDeworming') }}">OPT Record Form</a></li>
-                  <li class="breadcrumb-item active">OPT Form</li>
+                    <li class="breadcrumb-item"><a href="{{ action('App\Http\Controllers\regValidation@optDeworming') }}">OPT Record Form</a></li>
+                    <li class="breadcrumb-item active">OPT Form</li>
                 </ol>
             </nav>
+            <div class="row g-3">
+                <div class="col-md-3 d-flex" style="align-items: center;">
+                    <label for="selectYear" class="selectYear" style="width: 120px;">Select Year</label>
+                    <select name="selectYear" class="form-select" id="selectYear">
+                        @foreach($availableYears as $year)
+                            <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="btnArea">
             <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
@@ -273,9 +287,9 @@
                     <h4>OPT, DEWORMING, AND VITAMIN A. MASTERLIST</h4>
                 </div>
                 <div class="titleArea d-flex" style="flex-direction:column; align-items: flex-start; padding:10px;">
-                    <span>Purok: {{ $LoggedUserInfo ['em_address'] }} </span>
-                    <span>BHW: {{ $LoggedUserInfo ['em_fname'] }} {{ $LoggedUserInfo ['em_lname'] }}</span>
-                    <span>YEAR: {{ date('Y') }}</span>
+                    <span>Purok: {{ $LoggedUserInfo['em_address'] }} </span>
+                    <span>BHW: {{ $LoggedUserInfo['em_fname'] }} {{ $LoggedUserInfo['em_lname'] }}</span>
+                    <span>YEAR: {{ $selectedYear }}</span> <!-- Update year display -->
                 </div>
                 <table class="table table-striped">
                     <thead>
@@ -293,7 +307,7 @@
                             <th colspan="2">N.S</th>
                             <th colspan="2">Vitamin A.</th>
                             <th colspan="2">Deworming</th>
-
+    
                             <th rowspan="2">Remarks</th>
                         </tr>
                         <tr>
@@ -339,13 +353,10 @@
                         </tr>
                         @endforeach
                     </tbody>
-                    
                 </table>
             </div>
         </div>
-        </div>
     </div>
-
 </div><!-- End #main -->
       <!-- Extra Large Modal -->
       <div class="modal fade" id="ExtralargeModal" tabindex="-1">
@@ -671,6 +682,12 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
+    // Handle year change
+    document.getElementById('selectYear').addEventListener('change', function() {
+        let selectedYear = this.value;
+        window.location.href = '{{ url()->current() }}?selectYear=' + selectedYear;
+    });
+
     $(document).ready(function() {
         $('#example').DataTable();
     });

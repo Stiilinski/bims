@@ -105,9 +105,6 @@
   <main id="main" class="main">
     <div class="pagetitle">
         <h1>Schedule (FP, ANTE-PARTUM, POST-PARTUM, IMMUNIZATION)</h1>
-        <div class="btnArea">
-            <button type="button" class="btn btn-primary" style="width: 40%;"><i class="bi bi-printer-fill"></i> Print</button>
-        </div>
     </div><!-- End Page Title -->
   
     <div class="card">

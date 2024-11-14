@@ -1,6 +1,6 @@
 @include('layouts.headHealthWorkers')
 <style>
-            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
     * {
         font-family: Inter;
     }
@@ -100,7 +100,11 @@
         width: 686px;
     }
     .resOccu {
-        width: 457px;
+        width: 392px;
+    }
+
+    #resPlace {
+        width: 345px;
     }
     .section3 {
         display: flex;
@@ -121,12 +125,20 @@
         width: 435px;
     }
     .section4 {
-        margin-left: 50px;
         display: flex;
         flex-direction: column;
         width: 100%;
         gap: 10px;
     }
+
+    #resIniSymp {
+        width: 1112px;
+    }
+
+    #resFev {
+        width: 350px;
+    }
+
     .sec4-1 {
         display: flex;
         flex-direction: row;
@@ -151,7 +163,7 @@
         display: flex;
         flex-direction: row;
         gap: 120px;
-        margin-left: 53%;
+        margin-left: 47%;
     }
     .section5 {
         display: flex;
@@ -400,6 +412,104 @@
     .five1 input {
         margin-left: 30px;
     }
+
+    #resAge {
+        width: 50px;
+    }
+/* PRINT */
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: portrait;
+        margin: 5mm; /* Set margins */
+    }
+
+    .sec5-2 {
+        gap: 100px!important;
+    }
+
+    #address0, #address1, #name0, #name1 {
+        width: 450px!important;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    .card-title, .nav {
+        display: none !important;
+    }
+
+    .card {
+        box-shadow: none;
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .mainContainer, .container1 {
+        width: 1100px; /* Ensure the card takes full width of the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        display: block;
+        padding: 1mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .titleArea {
+        text-align: center;
+    }
+
+    p.titleArea{
+        font-size: 20px!important;
+        font-weight: 700;
+    }
+
+    .mainContainer * {
+        padding: 5;
+        background-color: #fff;
+        font-size: 12px!important;
+    }  
+
+    .resName {
+        width: 460px!important;
+    }
+
+    .resDate {
+        width: 100px!important;
+    }
+
+    .resPlace {
+        width: 565px!important;
+    }
+
+    #resIniSymp {
+        width: 830px!important;
+    }
+
+    .resFev {
+        width: 100px!important;
+    }
+
+    .sec4-3 {
+        margin-left: 36%!important;
+    }
+}
 </style>
 
 <body>
@@ -421,7 +531,7 @@
             </nav>
         </div>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
         </div>
     </div><!-- End Page Title -->
 
@@ -441,7 +551,7 @@
                 {{-- FORM 1 --}}
                 <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="mainContainer">
-                        <p>EPIDEMIOLOGICAL QUESTIONNAIRE FOR DENGUE HEMORRHAGIC FEVER</p>
+                        <p class="titleArea">EPIDEMIOLOGICAL QUESTIONNAIRE FOR DENGUE HEMORRHAGIC FEVER</p>
                         <div class="content">
                             <div class="section1">
                                 <label for="resName">Name:</label>
@@ -871,6 +981,11 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
   <script>
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
+
     $(document).ready(function() {
       $('#dob').inputmask('99/99/9999'); // This will set the format to MM/DD/YYYY
     });

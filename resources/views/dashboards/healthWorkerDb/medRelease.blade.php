@@ -266,7 +266,12 @@
   
 
 </main><!-- End #main -->
-
+<script>
+        const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
+</script>
   @include('layouts.footerHealthWorkers')
 
 </body>

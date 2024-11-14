@@ -1,105 +1,435 @@
-@extends('layouts.dblayout')
+@include('layouts.headSecretary')
+<style>
+    a {
+        text-decoration: none!important;
+    }
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('css/certification.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
+    .innerContent {
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin-top: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    }
 
-@section('content')
-<div class="container">
-    <div class="containerCon">
-        <div class="sideBar">
-            <div class="sLogoPic">
-                <img src="/images/logo.png" class="logo" alt="brgy logo">
-                <h2 class="systemName">BIM SYSTEM</h2>
-            </div>
+    .navTitle {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+    }
 
-            <div class="profNameCon" onclick="toggleDropdown()">
-                @if($LoggedUserInfo)
-                    <div class="profilePart">
-                        <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
-                    </div>
+    .navtitleCon{
+        color: #000;
+        font-size: 35px;
+        font-family: "Inter";
+        font-weight: 700;
+    }
 
-                    <div class="namePart">
-                        <h4 class="profName">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
-                        <input type="hidden" name="idVal" value="{{ $LoggedUserInfo['em_id']}}">
-                        <h5 class="position">{{ $LoggedUserInfo['em_position']}}</h5>
-                    </div>
+    .printBtn {
+        height: 50px;
+        width: 180px;
+        border-radius: 10px;
+    }
 
-                    <div class="optionPartBtn">
-                        <h6>&#9660;</h6>
-                    </div>
+    .primaryBorderColor {
+        height: 60px;
+        background-color: #5696e4;
+        clip-path: polygon(71% 0, 100% 0, 100% 20%, 88% 15%, 78% 18%, 48% 30%, 26% 50%, 0 100%, 0 0, 33% 0);
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
 
-                    <div class="optionPart dropdown-content" id="dropdownContent">
-                        <button type="button" value="{{ $LoggedUserInfo['em_id'] }}" class="changeProf editProfile" onclick='openEditEmpForm(@json($LoggedUserInfo))'>Change Profile</button>
-                        <a href="{{ route('regValidation.logout') }}">Logout</a>
-                    </div>
-                @else
-                    <p>You are not logged in.</p>
-                @endif
-            </div>
+    .secondaryBorderColor {
+        height: 100px;
+        width: 100%;
+        background-color: #a30a0ae9;
+        clip-path: polygon(100% 0, 100% 25%, 65% 25%, 66% 25%, 51% 28%, 29% 40%, 13% 60%, 0 90%, 0 0, 48% 0);
+        position: absolute;
+    }
 
-             <div class="navBar">
-                <a href="{{ action('App\Http\Controllers\regValidation@dashboard') }}"><div class="secDashboard">
-                    <button class="btnSecDashboard"><span class="dashb"> <i class='bx bxs-home'></i> Dashboard</span></button>
-                </div></a>
+    .brgyAddressTitle {
+        width: 100%;
+        height: 180px;
+        display: flex;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@residentsRec') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-group'></i> Resident Record</span></button>
-                </div></a>
+    .brgyLogoCon {
+        width: 20%;
+        height: 100%;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@barangayCert') }}"><div class="resRecord">
-                    <button class="btnResRecord act"><span class="resR"> <i class='bx bxs-certification'></i>Certifications</span></button>
-                </div></a>
+    .logo1 {
+        position: absolute;
+        height: 150px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+        z-index: 3;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@barangayClearance') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-file'></i>Barangay Clearance</span></button>
-                </div></a>
+    .addressCon {
+        width: 40%;
+        padding-top: 50px;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@dbBlotter') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-folder-open'></i> Blotter Records</span></button>
-                </div></a>
+    .province, .brgyName {
+        font-size: 18px;
+        line-height: 0.9;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@businessPermit') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"><i class='bx bxs-book-open'></i>Business Permit</span></button>
-                </div></a>
+    .brgyName {
+        font-weight: 700;
+        font-style: italic;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@requestedDoc') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bxs-file-import'></i>Transaction Documents</span></button>
-                </div></a>
+    .titleCaptainCon {
+        width: 40%;
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .office{
+        font-size: 18px;
+        line-height: 0.9;
+        
+    }
+
+    .fbAccount {
+        font-size: 12px;
+    }
+
+    .residentProf {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .residentRes {
+        letter-spacing: 35px;
+        font-weight: 700;
+        font-size: 40px;
+    }
+
+    .contentsContainer {
+        display: flex;
+        padding: 10px;
+        gap: 20px;
+    }
+
+    .leftsContainer {
+        border: solid 2px #000;
+        border-style: double;
+        border-width: 4px;
+        width: 30%;
+        height: 900px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 50px;
+        font-size: 20px;
+    }
+
+    .signaturePart {
+        border-top: solid 2px #000;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 150px;
+    }
+
+    .leftInfo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 50px;
+    }
+
+    .leftInfoFooter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 150px;
+        margin-top: 50px;
+    }
+
+    .infoTitle {
+        text-decoration: underline;
+    }
 
 
-                <a href="{{ action('App\Http\Controllers\regValidation@dashboardPur') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-current-location'></i> Purok</span></button>
-                </div></a>
-            </div>
-        </div>
+    .rightsContainer {
+        border: solid 2px #000;
+        border-style: double;
+        border-width: 4px;
+        width: 70%;
+        height: 900px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        font-size: 20px;
+    }
+
+    .headerLetter {
+        margin-top: 50px;
+    }
+
+    .bodyLetter {
+        display: flex;
+        flex-direction: column;
+        text-indent: 40px;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .footerLetter {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+    }
+
+    .semiFooter {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .primaryOutBorderColor {
+        height: 100px;
+        background-color: #5696e4;
+        clip-path: polygon(51% 68%, 73% 65%, 89% 55%, 100% 39%, 100% 100%, 50% 100%, 0 100%, 0 66%, 12% 69%, 30% 68%);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .secondaryOutBorderColor {
+        height: 60px;
+        width: 100%;
+        clip-path: polygon(50% 80%, 80% 70%, 84% 60%, 100% 0%, 100% 100%, 50% 100%, 0 100%, 0 70%, 11% 78%, 31% 78%);
+        background-color: #a30a0ae9;
+    margin-bottom: 31px;
+    }
+
+    .rephraseBg {
+        background-color: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+    }
+
+    .rephraseMainBg {
+        background-color: #F3FEFF;
+        border-radius: 10px;
+        display: flex;
+        width: 1300px;
+        height: 700px;
+        padding: 10px;
+    }
+
+    .rephraseForm {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .orignalPurpose, .rephrasePurpose, .residenceCertificate, 
+    .officialReceipt, .amountPaids, .updateDates{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buttonArea {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .inputForm {
+        resize: none;
+        width: 100%;
+        height: 100px;
+    }
 
 
-        <div class="contentCon">
-            <div class="contentHeader">
-                <div class="fnamePart">
-                    <h4 class="profNames">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
+
+    .footer {
+        background-color: #0A50A3;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        margin-left: 20%;
+    }
+
+    .updateInsertTranCertCon {
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+        z-index: 4;
+        width: 100%;
+        height: 100%;
+    }
+
+    .updateInsertFormCon {
+        background-color: #F3FEFF;
+        width: 1000px;
+        height: 600px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inputForms {
+        width: 350px;
+        height: 40px;
+    }
+
+    .error-text {
+        color: #d33636;
+    }
+
+    .updateInsertForm {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .certNumArea, .orArea, .amountPaidArea, .dateArea
+    {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        max-width: 100%!important;
+        margin-top: 80px; 
+        padding-bottom:10px; 
+    }
+
+    .pagetitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pagetitle *{
+        font-size: 16px;
+    }
+
+    .toggle-sidebar-btn {
+        display: none;
+    }
+    
+
+    @media print {
+        /* Set page orientation to landscape */
+        @page {
+            size: portrait;
+            margin: 0mm; /* Set margins */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+        }
+
+        /* Ensure the body and all child elements are visible during printing */
+        body {
+            visibility: visible !important;
+            background-color: #FFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+        #header, .pagetitle {
+            display: none !important; /* Hide page title and button area */
+        }
+
+        .card-title, .nav {
+            display: none !important;
+        }
+
+        /* Make sure the card is visible and takes up the full page */
+        .innerContent {
+            width: 1200px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: visible !important;
+            background-color: #fff;
+            box-shadow: none;
+            display: block;
+            padding: 0; /* Adjust padding to prevent clipping */
+            box-sizing: border-box;
+            margin-top: 4px;
+        }
+
+        .card-body * {
+            background-color: #fff;
+        }
+        
+        .rightsContainer, .leftsContainer {
+            height: 1120px;
+        }
+    }
+
+</style>
+<body>
+    @include('layouts.headerSecretary')
+
+        <div class="container">
+            <div class="pagetitle">
+                <div class="pageArea">
+                    <h1>CERTIFICATE ISSUANCE</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="{{ action('App\Http\Controllers\regValidation@barangayCert') }}">Certifications</a></li>
+                          <li class="breadcrumb-item active">Certificate Issuance</li>
+                        </ol>
+                      </nav>
                 </div>
-
-                <div class="profPart">
-                    <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
+                <div class="btnArea">
+                    <button class="btn btn-secondary" onclick="openRephrasePurpose()">Update</button>
+                    <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i>Print</button>
                 </div>
             </div>
-
-            <div class="mainContentCon">
-                <div class="navTitle">
-                    <div class="navtitleCon">
-                        CERTIFICATE ISSUANCE
-                    </div>
-
-                    <div class="navprintBtn">
-                        <button class="printBtn" id="print">PRINT</button>
-                        <button class="printBtn" onclick="openRephrasePurpose()">UPDATE</button>
-                    </div>
-                </div>
-                
+            <div class="mainContentCon">                
                 <div class="innerContent" id="certificatePrint">
                     <div class="primaryBorderColor"></div>
                     <div class="secondaryBorderColor"></div>
@@ -196,176 +526,123 @@
                     <div class="secondaryOutBorderColor"></div>   
                     <div class="primaryOutBorderColor"></div>
                 </div>
-
-                
             </div>
         </div>
     </div>
-    <div class="footer">Copyright</div>
 </div>
 
-<div class="updateInsertTranCertCon" style="display: {{ $transactionExists ? 'none' : 'flex' }};">
-    <div class="updateInsertFormCon">
-        <form class="updateInsertForm" id="insertTransactions" action="{{ route('regValidation.insertCertTransaction', ['id' => request()->query('id')]) }}" method="POST">
-            @csrf
-            
-            <div class="certNumArea">
-                <label for="certNum">Residence Certificate Number</label>
-                <input type="text" name="certNum" id="certNum" class="inputForms">
-                <span class="error-text certNum_error"></span>
+<div class="modal fade" id="insertTransactionModal" tabindex="-1" aria-labelledby="insertTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="insertTransactionModalLabel">Insert Transaction Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        
-            <div class="orArea">
-                <label for="puOr">Paid Under O.R Number</label>
-                <input type="text" name="puOr" id="puOr" class="inputForms">
-                <span class="error-text puOr_error"></span>
-            </div>
-        
-            <div class="amountPaidArea">
-                <label for="amountPaid">Amount Paid</label>
-                <input type="number" name="amountPaid" id="amountPaid" class="inputForms">
-                <span class="error-text amountPaid_error"></span>
-            </div>
-        
-            <div class="dateArea">
-                <label for="dates">Date</label>
-                <input type="date" name="dates" id="dates" class="inputForms">
-                <span class="error-text dates_error"></span>
-            </div>
-        
-            <div class="btnArea">
-                <button type="submit" class="btn btn-success">Insert</button>
-            </div>
-        </form>
-        
-    </div>
-</div>
-
-<div class="rephraseBg">
-    <div class="rephraseMainBg">
-        <form id="updateForm" class="rephraseForm" method="POST" action="{{ route('updateTransaction', ['id' => $certificate->id]) }}">
-            @csrf
-            @method('PUT')
-
-            <input type="hidden" id="ecert_Id" value="{{ $certificate->id }}" readonly>
-
-            <div class="residenceCertificate">
-                <label for="certificateNum">Residence Certificate Number</label>
-                <input type="text" name="certificateNum" id="certificateNum" class="inputForms">
-                <span class="error-text certificateNum_error"></span>
-            </div>
-
-            <div class="officialReceipt">
-                <label for="orNum">O.R Number</label>
-                <input type="text" name="orNum" id="orNum" class="inputForms">
-                <span class="error-text orNum_error"></span>
-            </div>
-
-            <div class="amountPaids">
-                <label for="amountPaids">Amount Paid</label>
-                <input type="text" name="amountPaids" id="amountPaids" class="inputForms">
-                <span class="error-text amountPaids_error"></span>
-            </div>
-
-            <div class="updateDates">
-                <label for="updateDates">Date</label>
-                <input type="date" name="updateDates" id="updateDates" class="inputForms">
-                <span class="error-text updateDates_error"></span>
-            </div>
-
-            <div class="rephrasePurpose">
-                <label for="rephrasePurpose">PARAPHRASE PURPOSE</label>
-                <textarea name="rephrasePurpose" id="rephrasePurpose" class="inputForm"></textarea>
-                <span class="error-text rephrasePurpose_error"></span>
-            </div>
-
-            <div class="buttonArea">
-                <button type="submit" class="btn btn-success update_certTran">Update</button>
-                <button type="button" class="btn btn-danger" onclick="closeRephrasePurpose()">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div>  
-
-
-<div class="editEmployeeAccount">
-    <div class="editEmployeeAccountCon">
-        <div class="headerEditTitle">
-            <span>Edit Employee</span>
-            <span><i class='bx bx-x' onclick="closeEditEmpForm()"></i></span>
-        </div>
-
-        <form class="editEmployeeForms" id="e_empForm" autocomplete="off" enctype="multipart/form-data">
-            @csrf
-            <div class="emp_leftInput">    
-                <div class="emp_avatarcon">
-                    <img id="emp_profilePreview" class="e_avatar" alt="Profile Image">
-                    <input type="hidden" name="e_id" id="e_id">
-                    <input type="text" name="e_path" id="e_path" readonly>
+            <div class="modal-body">
+                <form class="updateInsertForm" id="insertTransactions" action="{{ route('regValidation.insertCertTransaction', ['id' => request()->query('id')]) }}" method="POST">
+                    @csrf
                     
-                    <div class="mb-3">
-                        <label for="e_profile" class="form-label1">Profile Picture</label>
-                        <input type="file" class="form-control" id="e_profile" name="picture" aria-describedby="inputGroupFileediton03" aria-label="Upload">
-                        <span class="text-danger error-text profile_error"></span>
-                    </div>  
-                </div>
+                    <div class="col-md-12">
+                        <label for="certNum">Residence Certificate Number</label>
+                        <input type="text" name="certNum" id="certNum" class="form-control">
+                        <span class="error-text certNum_error"></span>
+                    </div>
+                
+                    <div class="col-md-12">
+                        <label for="puOr">Paid Under O.R Number</label>
+                        <input type="text" name="puOr" id="puOr" class="form-control">
+                        <span class="error-text puOr_error"></span>
+                    </div>
+                
+                    <div class="col-md-12">
+                        <label for="amountPaid">Amount Paid</label>
+                        <input type="number" name="amountPaid" id="amountPaid" class="form-control">
+                        <span class="error-text amountPaid_error"></span>
+                    </div>
+                
+                    <div class="col-md-12">
+                        <label for="dates">Date</label>
+                        <input type="date" name="dates" id="dates" class="form-control">
+                        <span class="error-text dates_error"></span>
+                    </div>
             </div>
-            
-            <div class="emp_rightInput">
-                <div class="emp_fnameParts">
-                    <label for="emp_fname">First Name</label>
-                    <input type="text" class="form-control" name="fname" id="emp_fname" placeholder="Enter Firstname">
-                    <span class="text-danger error-text firstName_error"></span>
-                </div>
-
-                <div class="emp_lnamePart">
-                    <label for="emp_lname">Last Name</label>
-                    <input type="text" class="form-control" name="lname" id="emp_lname" placeholder="Enter Lastname">
-                    <span class="text-danger error-text lastName_error"></span>
-                </div>
-
-    
-    
-                <div class="emp_accountPart">
-                    <div class="emp_emailPart">
-                        <label for="emp_email">Email</label>
-                        <input type="text" class="form-control" name="email" id="emp_email">
-                        <span class="text-danger error-text email_error"></span>
-                    </div>
-
-                    <div class="emp_passwordPart">
-                        <label for="emp_password">Password</label>
-                        <input type="password" class="form-control" id="emp_password" name="password" placeholder="Enter Password">
-                        <span class="text-danger error-text password_error"></span>
-                    </div>
-
-                    <div class="emp_addressPart">
-                        <label for="emp_address">Address</label>
-                        <input type="text" class="form-control" name="address" id="emp_address">
-                        <span class="text-danger error-text address_error"></span>
-                    </div>
-
-                    <div class="emp_contactPart">
-                        <label for="emp_contact">Contact</label>
-                        <input type="text" class="form-control" name="contact" id="emp_contact">
-                        <span class="text-danger error-text contact_error"></span>
-                    </div>
-
-                    <div class="emp_positionPart">
-                        <label for="emp_position">Position</label>
-                        <input type="text" class="form-control" name="position" id="emp_position" readonly>
-                        <span class="text-danger error-text position_error"></span>
-                    </div>                            
-                </div>
-    
-    
-                <div class="buttonPart">
-                    <button type="button" class="btn btn-primary" onclick="closeEditEmpForm()">Cancel</button>
-                    <button type="button" class="btn btn-primary update_employee">Update</button>
-                </div>
-    
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Insert</button>
             </div>
         </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if $transactionExists is false (i.e., no transaction exists)
+        if (!{{ $transactionExists ? 'true' : 'false' }}) {
+            // If no transaction exists, show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('insertTransactionModal'));
+            myModal.show();
+        }
+    });
+</script>
+
+
+
+<!-- Modal for updating transaction -->
+<div class="modal fade" id="updateTransactionModal" tabindex="-1" aria-labelledby="updateTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTransactionModalLabel">Update Transaction Details</h5>
+                <!-- Close button fixed with data-bs-dismiss="modal" -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm" class="rephraseForm" method="POST" action="{{ route('updateTransaction', ['id' => $certificate->id]) }}">
+                    @csrf
+                    @method('PUT')
+
+                    <input type="hidden" id="ecert_Id" value="{{ $certificate->id }}" readonly>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="certificateNum">Residence Certificate Number</label>
+                            <input type="text" name="certificateNum" id="certificateNum" class="form-control">
+                            <span class="error-text certificateNum_error"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="orNum">O.R Number</label>
+                            <input type="text" name="orNum" id="orNum" class="form-control">
+                            <span class="error-text orNum_error"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="amountPaids">Amount Paid</label>
+                            <input type="text" name="amountPaids" id="amountPaids" class="form-control">
+                            <span class="error-text amountPaids_error"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="updateDates">Date</label>
+                            <input type="date" name="updateDates" id="updateDates" class="form-control">
+                            <span class="error-text updateDates_error"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="rephrasePurpose">PARAPHRASE PURPOSE</label>
+                            <textarea name="rephrasePurpose" id="rephrasePurpose" class="form-control"></textarea>
+                            <span class="error-text rephrasePurpose_error"></span>
+                        </div>
+                    </div>
+
+                    <div class="buttonArea mt-3">
+                        <!-- Cancel button also should have data-bs-dismiss="modal" -->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary update_certTran">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -398,104 +675,117 @@
         $('.paragraph4 b').text(formattedDate);
     });
 </script>
-@endsection
 
-@section('scripts')
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS and Popper.js (required for Bootstrap components like modal) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
     <script>
         $(function(){      
-    $("#insertTransactions").on('submit', function(e){
-        e.preventDefault();
+            $("#insertTransactions").on('submit', function(e){
+                e.preventDefault();
 
-        $.ajax({
-            url:$(this).attr('action'),
-            method:$(this).attr('method'),
-            data:new FormData(this),
-            processData:false,
-            dataType:'json',
-            contentType:false,
-            beforeSend:function(){
-                $(document).find('span.error-text').text('');
-            },
-            success:function(data){
-                if(data.status == 0){
-                    $.each(data.error, function(prefix, val){
-                        $('span.'+prefix+'_error').text(val[0]);
-                    });
-                }else{
-                    $('#insertTransactions')[0].reset();
-                    alert(data.msg);
-                }
-            }
-        });
-    });
-});
-
-
-// UPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATE
-$(document).on('click', '.update_certTran', function (e) {
-    e.preventDefault();
-    var cert_id = $('#ecert_Id').val();
-
-    var formData = new FormData();
-    formData.append('certificateNum', $('#certificateNum').val());
-    formData.append('orNum', $('#orNum').val());
-    formData.append('amountPaids', $('#amountPaids').val());
-    formData.append('updateDates', $('#updateDates').val());
-    formData.append('rephrasePurpose', $('#rephrasePurpose').val());
-    formData.append('_method', 'PUT'); // Add this line to specify the PUT method
-
-    $.ajax({
-        type: "POST", // Use POST to send the data
-        url: "/certificate/" + cert_id,
-        data: formData,
-        dataType: "json",
-        contentType: false, // Needed for FormData
-        processData: false, // Needed for FormData
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            console.log(response);
-            if(response.status == 400) {
-                alert("Validation Error");
-                // handle validation errors here, for example:
-                $.each(response.error, function(key, value) {
-                    $('span.' + key + '_error').text(value[0]);
+                $.ajax({
+                    url:$(this).attr('action'),
+                    method:$(this).attr('method'),
+                    data:new FormData(this),
+                    processData:false,
+                    dataType:'json',
+                    contentType:false,
+                    beforeSend:function(){
+                        $(document).find('span.error-text').text('');
+                    },
+                    success:function(data){
+                        if(data.status == 0){
+                            $.each(data.error, function(prefix, val){
+                                $('span.'+prefix+'_error').text(val[0]);
+                            });
+                        }else{
+                            $('#insertTransactions')[0].reset();
+                            alert(data.msg);
+                            location.reload();
+                        }
+                    }
                 });
-            } else if(response.status == 404) {
-                alert("Resource Not Found");
-            } else {
-                alert("Success");
-                document.querySelector('.rephraseBg').style.display = 'none';
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("An error occurred. Check the console for details.");
+            });
+        });
+
+
+        // UPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATE
+        $(document).on('click', '.update_certTran', function (e) {
+            e.preventDefault();
+            var cert_id = $('#ecert_Id').val();
+
+            var formData = new FormData();
+            formData.append('certificateNum', $('#certificateNum').val());
+            formData.append('orNum', $('#orNum').val());
+            formData.append('amountPaids', $('#amountPaids').val());
+            formData.append('updateDates', $('#updateDates').val());
+            formData.append('rephrasePurpose', $('#rephrasePurpose').val());
+            formData.append('_method', 'PUT'); // Add this line to specify the PUT method
+
+            $.ajax({
+                type: "POST", // Use POST to send the data
+                url: "/certificate/" + cert_id,
+                data: formData,
+                dataType: "json",
+                contentType: false, // Needed for FormData
+                processData: false, // Needed for FormData
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log(response);
+                    if(response.status == 400) {
+                        alert("Validation Error");
+                        // handle validation errors here, for example:
+                        $.each(response.error, function(key, value) {
+                            $('span.' + key + '_error').text(value[0]);
+                        });
+                    } else if(response.status == 404) {
+                        alert("Resource Not Found");
+                    } else {
+                        // Show success alert first
+                        alert("Success");
+
+                        // Hide the background (optional, based on your layout)
+                        document.querySelector('.rephraseBg').style.display = 'none';
+
+                        // Delay the reload after the alert box is closed
+                        setTimeout(function() {
+                            location.reload();  // Trigger reload after the alert closes
+                        }, 100);  // Adjust the delay if needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert("An error occurred. Check the console for details.");
+                }
+            });
+        });
+        // UPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATE
+
+        function openRephrasePurpose() 
+        {
+            var myModal = new bootstrap.Modal(document.getElementById('updateTransactionModal'));
+            myModal.show();
         }
-    });
-});
-// UPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATE
 
-function openRephrasePurpose() {
-    document.querySelector('.rephraseBg').style.display = 'flex';
-}
-
-function closeRephrasePurpose() {
-    document.querySelector('.rephraseBg').style.display = 'none';
-}
 
 
 
 
 
 const printBtn = document.getElementById('print');
-printBtn.addEventListener('click', function() {
-    window.print();
+    printBtn.addEventListener('click', function() {
+        window.print();
 });
 
 
@@ -590,4 +880,4 @@ document.getElementById('e_profile').addEventListener('change', function() {
     }
 });
     </script>
-@endsection
+</body>

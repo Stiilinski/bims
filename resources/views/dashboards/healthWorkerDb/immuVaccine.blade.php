@@ -174,6 +174,89 @@
         font-size: 16px;
     }
 
+/* PRINT */
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: portrait;
+        margin: 1mm; /* Set margins */
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Ensure main content is visible during print */
+    .main {
+        visibility: visible !important;
+        display: block !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle, .btnArea, .sidebar {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 1200px!important; /* Ensure the card takes full width of the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block;
+        padding: 10mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .table td:last-child, .table th:last-child {
+        display: none;
+    }
+
+    .col-md-12 {
+        width: 100%!important;
+    }
+
+    .col-md-10 {
+        width: 85%!important;
+    }
+
+    .col-md-2 {
+        width: 15%!important;
+    }
+
+    .col-md-8{
+        width: 70%
+    }
+
+    .datatable-top, .datatable-bottom,
+    .datatable-sorter::before, .datatable-sorter::after  {
+        display: none;
+    }
+
+    .datatable-wrapper.no-footer .datatable-container {
+        border-bottom: none;
+    }
+ 
+
+    .card-body * {
+        padding: 0;
+        background-color: #fff;
+    }  
+}
 </style>
 <body>
 
@@ -198,7 +281,7 @@
               </nav>
         </div>
         <div class="btnArea">
-            <button type="button" class="btn btn-secondary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-secondary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal">New Record</button> 
         </div>
     </div><!-- End Page Title -->
@@ -327,7 +410,7 @@
                             <td>{{ $vacs->vt_vaccines }}</td>
                             <td style="display: none;">{{ $vacs->vt_nxtSched }}</td>
                             <td>{{ $vacs->vt_status }}</td>
-                            <td style="display: none;">{{ $vacs->em_id  }}</td>
+                            <td style="display: none;">{{ $vacs->em_id }}</td>
                             <td>
                                 <button class="btn btn-primary editButton" type="button">Edit</button>
                             </td>
@@ -524,6 +607,11 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
+
     //CRUD
     //iNSERT
     $(function() {

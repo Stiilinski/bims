@@ -1,105 +1,453 @@
-@extends('layouts.dblayout')
+@include('layouts.headSecretary')
+<style>
+    a {
+        text-decoration: none!important;
+    }
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('css/brgyBlotter.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
+    .innerContent {
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        margin-top: 10px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }   
 
-@section('content')
-<div class="container">
-    <div class="containerCon">
-        <div class="sideBar">
-            <div class="sLogoPic">
-                <img src="/images/logo.png" class="logo" alt="brgy logo">
-                <h2 class="systemName">BIM SYSTEM</h2>
-            </div>
+    .navTitle {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+    }
 
-            <div class="profNameCon" onclick="toggleDropdown()">
-                @if($LoggedUserInfo)
-                    <div class="profilePart">
-                        <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
-                    </div>
+    .navtitleCon{
+        color: #000;
+        font-size: 35px;
+        font-family: "Inter";
+        font-weight: 700;
+    }
 
-                    <div class="namePart">
-                        <h4 class="profName">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
-                        <input type="hidden" name="idVal" value="{{ $LoggedUserInfo['em_id']}}">
-                        <h5 class="position">{{ $LoggedUserInfo['em_position']}}</h5>
-                    </div>
+    .printBtn {
+        height: 50px;
+        width: 180px;
+        border-radius: 10px;
+    }
 
-                    <div class="optionPartBtn">
-                        <h6>&#9660;</h6>
-                    </div>
+    .primaryBorderColor {
+        height: 60px;
+        background-color: #5696e4;
+        clip-path: polygon(71% 0, 100% 0, 100% 20%, 88% 15%, 78% 18%, 48% 30%, 26% 50%, 0 100%, 0 0, 33% 0);
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
 
-                    <div class="optionPart dropdown-content" id="dropdownContent">
-                        <button type="button" value="{{ $LoggedUserInfo['em_id'] }}" class="changeProf editProfile" onclick='openEditEmpForm(@json($LoggedUserInfo))'>Change Profile</button>
-                        <a href="{{ route('regValidation.logout') }}">Logout</a>
-                    </div>
-                @else
-                    <p>You are not logged in.</p>
-                @endif
-            </div>
+    .secondaryBorderColor {
+        height: 100px;
+        width: 100%;
+        background-color: #a30a0ae9;
+        clip-path: polygon(100% 0, 100% 25%, 65% 25%, 66% 25%, 51% 28%, 29% 40%, 13% 60%, 0 90%, 0 0, 48% 0);
+        position: absolute;
+    }
 
-            <div class="navBar">
-                <a href="{{ action('App\Http\Controllers\regValidation@dashboard') }}"><div class="secDashboard">
-                    <button class="btnSecDashboard"><span class="dashb"> <i class='bx bxs-home'></i> Dashboard</span></button>
-                </div></a>
+    .brgyAddressTitle {
+        width: 100%;
+        height: 180px;
+        display: flex;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@residentsRec') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-group'></i> Resident Record</span></button>
-                </div></a>
+    .brgyLogoCon {
+        width: 20%;
+        height: 100%;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@barangayCert') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bxs-certification'></i>Certifications</span></button>
-                </div></a>
+    .logo1 {
+        position: absolute;
+        height: 150px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+        z-index: 3;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@barangayClearance') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-file'></i>Barangay Clearance</span></button>
-                </div></a>
+    .addressCon {
+        width: 100%;
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@dbBlotter') }}"><div class="resRecord">
-                    <button class="btnResRecord act"><span class="resR"> <i class='bx bx-folder-open'></i> Blotter Records</span></button>
-                </div></a>
+    .province, .brgyName {
+        font-size: 18px;
+        line-height: 0.9;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@businessPermit') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"><i class='bx bxs-book-open'></i>Business Permit</span></button>
-                </div></a>
+    .province1 {
+        font-size: 18px;
+        line-height: 0.9;
+        font-weight: 700;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@requestedDoc') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bxs-file-import'></i>Transaction Documents</span></button>
-                </div></a>
+    .brgyName {
+        font-weight: 700;
+        font-style: italic;
+    }
+
+    .titleCaptainCon {
+        width: 40%;
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .office{
+        font-size: 18px;
+        line-height: 0.9;
+        
+    }
+
+    .fbAccount {
+        font-size: 12px;
+    }
+
+    .residentProf {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .residentRes {
+        letter-spacing: 20px;
+        font-weight: 700;
+        font-size: 40px;
+    }
+
+    .contentsContainer {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        gap: 20px;
+    }
+
+    .nameCaseArea {
+        width: 100%;
+        height: 300px;
+        display: flex;
+
+    }
+    .nameLeft {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        width: 50%;
+    }
+
+    .compLabel {
+        width: 250px;
+        border-top: solid 2px #000;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .comName {
+        width: 250px;
+        text-align: center; 
+        font-size: 18px;
+    }
+
+    .againstLabel {
+        width: 250px;
+        text-align: center; 
+        font-size: 18px;
+        margin-top: 50px;
+    }
+
+    .resLabel {
+        width: 250px;
+        border-top: solid 2px #000;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .resName {
+        width: 250px;
+        text-align: center; 
+        font-size: 18px;
+        margin-top: 50px;
+    }
+
+    .caseNumRight {
+        padding: 10px;
+        display: flex;
+        padding-left: 120px;
+    }
+
+    .caseNum {
+        display: flex;
+        flex-direction: column;
+        font-size: 18px;
+        gap: 15px;
+    }
+
+    .titleArea {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 10px;
+    }
+
+    .paragraph1, .paragraph2, 
+    .paragraph3, .paragraph4,
+    .paragraph5{
+        width: 100%;
+        font-size: 20px;
+        display: flex;
+        text-align: justify;
+        text-indent: 20px;
+        margin-top: 20px;
+    }
+
+    .paragraph3,.paragraph5{
+        margin-top: 80px;
+    }
+
+    .complainant2 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .capitan {
+        font-size: 20px;
+        text-indent: 20px;
+    }
+
+    .capitanTitle {
+        font-size: 18px;
+        text-indent: 20px;
+    }
+
+    .semiFooter {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-end;
+        margin-top: 40px;
+        padding-right: 20px;
+    }
+
+    .rephraseBg {
+        background-color: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+    }
+
+    .rephraseMainBg {
+        background-color: #F3FEFF;
+        border-radius: 10px;
+        display: flex;
+        width: 500px;
+        height: 400px;
+        padding: 10px;
+    }
+
+    .rephraseForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .orignalPurpose, .rephrasePurpose, .residenceCertificate, 
+    .officialReceipt, .amountPaids, .updateDates{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buttonArea {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .inputForm {
+        resize: none;
+        width: 100%;
+        height: 100px;
+    }
 
 
-                <a href="{{ action('App\Http\Controllers\regValidation@dashboardPur') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-current-location'></i> Purok</span></button>
-                </div></a>
-            </div>
-        </div>
+    .footer {
+        background-color: #0A50A3;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        margin-left: 20%;
+    }
+
+    .updateInsertTranCertCon {
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+        z-index: 4;
+        width: 100%;
+        height: 100%;
+    }
+
+    .updateInsertFormCon {
+        background-color: #F3FEFF;
+        width: 1000px;
+        height: 600px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inputForms {
+        width: 350px;
+        height: 40px;
+    }
+
+    .error-text {
+        color: #d33636;
+    }
+
+    .updateInsertForm {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .certNumArea, .orArea, .amountPaidArea, .dateArea
+    {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        max-width: 100%!important;
+        margin-top: 80px; 
+        padding-bottom:10px; 
+    }
+
+    .pagetitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pagetitle *{
+        font-size: 16px;
+    }
+
+    .toggle-sidebar-btn {
+        display: none;
+    }
+    
+
+    @media print {
+        /* Set page orientation to landscape */
+        @page {
+            size: portrait;
+            margin: 0mm; /* Set margins */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+        }
+
+        /* Ensure the body and all child elements are visible during printing */
+        body {
+            visibility: visible !important;
+            background-color: #FFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+        #header, .pagetitle {
+            display: none !important; /* Hide page title and button area */
+        }
+
+        .card-title, .nav {
+            display: none !important;
+        }
+
+        /* Make sure the card is visible and takes up the full page */
+        .innerContent {
+            width: 1200px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: visible !important;
+            background-color: #fff;
+            box-shadow: none;
+            display: block;
+            padding: 0; /* Adjust padding to prevent clipping */
+            box-sizing: border-box;
+            margin-top: 4px;
+        }
+
+        .card-body * {
+            background-color: #fff;
+        }
+        
+        .rightsContainer, .leftsContainer {
+            height: 1120px;
+        }
+    }
+
+</style>
+<body>
+    @include('layouts.headerSecretary')
 
 
-        <div class="contentCon">
-            <div class="contentHeader">
-                <div class="fnamePart">
-                    <h4 class="profNames">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
+        <div class="container">
+            <div class="pagetitle">
+                <div class="pageArea">
+                    <h1>BLOTTER ISSUANCE</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="{{ action('App\Http\Controllers\regValidation@dbBlotter') }}">Blotter</a></li>
+                          <li class="breadcrumb-item active">Blotter Issuance</li>
+                        </ol>
+                      </nav>
                 </div>
-
-                <div class="profPart">
-                    <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
+                <div class="btnArea">
+                    <button class="btn btn-secondary" onclick="openRephrasePurpose()">Update</button>
+                    <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i>Print</button>
                 </div>
             </div>
-
-            <div class="mainContentCon">
-                <div class="navTitle">
-                    <div class="navtitleCon">
-                        BLOTTER ISSUANCE
-                    </div>
-
-                    <div class="navprintBtn">
-                        <button class="printBtn" id="print">PRINT</button>
-                        <button class="printBtn" onclick="openRephrasePurpose()">UPDATE</button>
-                    </div>
-                </div>
-                
+            <div class="mainContentCon">                
                 <div class="innerContent" id="certificatePrint">                    
                     <div class="brgyAddressTitle">
 
@@ -163,129 +511,53 @@
                         <p class="semiFooterTxt"><b>Revised JFC 10-28-2020</b></p>
                     </div>
                 </div>
-
-                
             </div>
         </div>
-    </div>
-    <div class="footer">Copyright</div>
-</div>
 
 
-<div class="rephraseBg">
-    <div class="rephraseMainBg">
-        <form id="updateForm" class="rephraseForm" method="POST" action="{{ route('updateBrgyClearance', ['id' => $complaint->blotter_com_id]) }}">
-            @csrf
-            @method('PUT')
-        
-            <input type="hidden" id="ecert_Id" value="{{ $complaint->blotter_com_id }}" readonly>
-        
-            <div class="residenceCertificate">
-                <label for="caseNum">Barangay Case Number</label>
-                <input type="text" name="caseNum" id="caseNum" class="inputForms">
-                <span class="error-text caseNum_error"></span>
+<!-- Modal for updating transaction -->
+<div class="modal fade" id="updateTransactionModal" tabindex="-1" aria-labelledby="updateTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTransactionModalLabel">Update Transaction Details</h5>
+                <!-- Close button fixed with data-bs-dismiss="modal" -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        
-            <div class="officialReceipt">
-                <label for="caseFor">For:</label>
-                <input type="text" name="caseFor" id="caseFor" class="inputForms">
-                <span class="error-text caseFor_error"></span>
-            </div>
+            <div class="modal-body">
+                <form id="updateForm" class="rephraseForm" method="POST" action="{{ route('updateBrgyClearance', ['id' => $complaint->blotter_com_id]) }}">
+                    @csrf
+                    @method('PUT')
 
-            <div class="updateDates">
-                <label for="caseDates">Date Recieved</label>
-                <input type="date" name="caseDates" id="caseDates" class="inputForms">
-                <span class="error-text caseDates_error"></span>
-            </div>
-        
-            <div class="buttonArea">
-                <button type="submit" class="btn btn-success update_certTran">Update</button>
-                <button type="button" class="btn btn-danger" onclick="closeRephrasePurpose()">Cancel</button>
-            </div>
-        </form>
-        
-    </div>
-</div>  
-
-
-<div class="editEmployeeAccount">
-    <div class="editEmployeeAccountCon">
-        <div class="headerEditTitle">
-            <span>Edit Employee</span>
-            <span><i class='bx bx-x' onclick="closeEditEmpForm()"></i></span>
-        </div>
-
-        <form class="editEmployeeForms" id="e_empForm" autocomplete="off" enctype="multipart/form-data">
-            @csrf
-            <div class="emp_leftInput">    
-                <div class="emp_avatarcon">
-                    <img id="emp_profilePreview" class="e_avatar" alt="Profile Image">
-                    <input type="hidden" name="e_id" id="e_id">
-                    <input type="text" name="e_path" id="e_path" readonly>
+                    <input type="hidden" id="ecert_Id" value="{{ $complaint->blotter_com_id }}" readonly>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="caseNum">Barangay Case Number</label>
+                            <input type="text" name="caseNum" id="caseNum" class="form-control">
+                            <span class="error-text caseNum_error"></span>
+                        </div>
                     
-                    <div class="mb-3">
-                        <label for="e_profile" class="form-label1">Profile Picture</label>
-                        <input type="file" class="form-control" id="e_profile" name="picture" aria-describedby="inputGroupFileediton03" aria-label="Upload">
-                        <span class="text-danger error-text profile_error"></span>
-                    </div>  
-                </div>
-            </div>
+                        <div class="col-md-12">
+                            <label for="caseFor">For:</label>
+                            <input type="text" name="caseFor" id="caseFor" class="form-control">
+                            <span class="error-text caseFor_error"></span>
+                        </div>
             
-            <div class="emp_rightInput">
-                <div class="emp_fnameParts">
-                    <label for="emp_fname">First Name</label>
-                    <input type="text" class="form-control" name="fname" id="emp_fname" placeholder="Enter Firstname">
-                    <span class="text-danger error-text firstName_error"></span>
-                </div>
-
-                <div class="emp_lnamePart">
-                    <label for="emp_lname">Last Name</label>
-                    <input type="text" class="form-control" name="lname" id="emp_lname" placeholder="Enter Lastname">
-                    <span class="text-danger error-text lastName_error"></span>
-                </div>
-
-    
-    
-                <div class="emp_accountPart">
-                    <div class="emp_emailPart">
-                        <label for="emp_email">Email</label>
-                        <input type="text" class="form-control" name="email" id="emp_email">
-                        <span class="text-danger error-text email_error"></span>
+                        <div class="col-md-12">
+                            <label for="caseDates">Date Recieved</label>
+                            <input type="date" name="caseDates" id="caseDates" class="form-control">
+                            <span class="error-text caseDates_error"></span>
+                        </div>
                     </div>
 
-                    <div class="emp_passwordPart">
-                        <label for="emp_password">Password</label>
-                        <input type="password" class="form-control" id="emp_password" name="password" placeholder="Enter Password">
-                        <span class="text-danger error-text password_error"></span>
+                    <div class="modal-footer">
+                        <!-- Cancel button also should have data-bs-dismiss="modal" -->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary update_certTran">Update</button>
                     </div>
-
-                    <div class="emp_addressPart">
-                        <label for="emp_address">Address</label>
-                        <input type="text" class="form-control" name="address" id="emp_address">
-                        <span class="text-danger error-text address_error"></span>
-                    </div>
-
-                    <div class="emp_contactPart">
-                        <label for="emp_contact">Contact</label>
-                        <input type="text" class="form-control" name="contact" id="emp_contact">
-                        <span class="text-danger error-text contact_error"></span>
-                    </div>
-
-                    <div class="emp_positionPart">
-                        <label for="emp_position">Position</label>
-                        <input type="text" class="form-control" name="position" id="emp_position" readonly>
-                        <span class="text-danger error-text position_error"></span>
-                    </div>                            
-                </div>
-    
-    
-                <div class="buttonPart">
-                    <button type="button" class="btn btn-primary" onclick="closeEditEmpForm()">Cancel</button>
-                    <button type="button" class="btn btn-primary update_employee">Update</button>
-                </div>
-    
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -319,13 +591,17 @@
         $('.paragraph4 b').text(formattedDate);
     });
 </script>
-@endsection
 
-@section('scripts')
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS and Popper.js (required for Bootstrap components like modal) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script>
         $(function(){      
     $("#insertTransactions").on('submit', function(e){
@@ -400,14 +676,11 @@ $(document).on('click', '.update_certTran', function (e) {
 });
 // UPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATEUPDATE
 
-function openRephrasePurpose() {
-    document.querySelector('.rephraseBg').style.display = 'flex';
+function openRephrasePurpose() 
+{
+    var myModal = new bootstrap.Modal(document.getElementById('updateTransactionModal'));
+    myModal.show();
 }
-
-function closeRephrasePurpose() {
-    document.querySelector('.rephraseBg').style.display = 'none';
-}
-
 
 
 
@@ -509,4 +782,4 @@ document.getElementById('e_profile').addEventListener('change', function() {
     }
 });
     </script>
-@endsection
+</body>

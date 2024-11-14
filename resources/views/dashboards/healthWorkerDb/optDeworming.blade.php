@@ -168,7 +168,7 @@
                             <th scope="col">DOB</th>
                             <th scope="col">SEX</th>
                             <th scope="col">Remarks</th>
-                            <th scope="col">Status</th>
+                            <th scope="col" style="display: none;">Status</th>
                             <th scope="col">Actions</th>
                             {{-- Hidden Field --}}
                                 <th scope="col" style="display: none;">age1</th>
@@ -197,7 +197,7 @@
                             <td>{{ $opt->opt_dob }}</td>
                             <td>{{ $opt->opt_sex }}</td>
                             <td>{{ $opt->opt_remarks}}</td>
-                            <td>{{ $opt->opt_status}}</td>
+                            <td style="display: none;">{{ $opt->opt_status}}</td>
                             <td>
                                 @if ($opt->opt_status === 'Completed')
                                     <div class="btn-group">
@@ -716,6 +716,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 {{-- End of script cdn --}}
 <script>
+function calculateAgeInMonthsAndDays(dob) {
+    const currentDate = new Date();  // Get today's date
+    const dobDate = new Date(dob);   // Convert the DOB string to a Date object
+    
+    // Calculate difference in months
+    let ageMonths = currentDate.getFullYear() * 12 + currentDate.getMonth() - (dobDate.getFullYear() * 12 + dobDate.getMonth());
+    
+    // Calculate the difference in days
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();  // Number of days in the current month
+    const dayOfMonth = currentDate.getDate();
+    const dobDay = dobDate.getDate();
+    
+    const days = dayOfMonth - dobDay;
+    
+    // If the DOB day is greater than today's day, subtract a full month
+    if (dobDay > dayOfMonth) {
+        ageMonths--;
+    }
+    
+    // Now calculate the fractional part of the month for the remaining days
+    const fractionOfMonth = days / daysInMonth;
+    
+    // Combine months and fractional part
+    const ageInDecimal = ageMonths + fractionOfMonth;
+    
+    return ageInDecimal.toFixed(1);  // Return age with one decimal place
+}
+
+// Event listener for DOB input field
+document.getElementById('inputDate').addEventListener('change', function() {
+    const dob = this.value;  // Get the selected date of birth
+    if (dob) {
+        const age = calculateAgeInMonthsAndDays(dob);  // Calculate the age
+        document.getElementById('ageMonthFirst').value = age;  // Set the value of the age field
+    }
+});
+
+
+
     //insert opt first form
     $(function(){      
         $("#optForm").on('submit', function(e){

@@ -83,12 +83,7 @@
     .sections1 {
         display: flex;
         flex-direction: column;
-        width: 38%;
-    }
-
-    .signature {
-        width: 100%;
-        height: 100%;
+        width: 35%;
     }
 
     .first-sec {
@@ -212,7 +207,7 @@
         flex-direction: row;
     }
     .third-sec1 {
-        width: 45%;
+        width: 90%;
     }
     .third-sec2 {
         width: 55%;
@@ -272,7 +267,7 @@
         padding: 5px;
         display: flex;
         flex-direction: column;
-        height: 453px;
+        height: 350px;
     }
     .fam2-2 {
         display: flex;
@@ -407,10 +402,8 @@
         align-items: center;
         justify-content: center;
     }
-    .context p {
-        font-size: 11px;
-        margin-bottom: 2px;
-        margin-top: -3px;
+    .context{
+        margin-top: -12px;
     }
     .third-sec2 {
         width: 100%;
@@ -418,6 +411,7 @@
         flex-direction: column;
         border-top: 1px solid black;
         border-bottom: 1px solid black;
+        height: 545px;
     }
     .smoke {
         padding: 3px;
@@ -522,6 +516,20 @@
         flex-direction: column;
         height: 220px;
         padding: 8px;
+        gap: 30px;
+    }
+    .assessing {
+        display: flex;
+        flex-direction: column;
+        margin-top: -25px
+    }
+
+    .signature{
+        width: 250px;
+    }
+
+    .sig2 img{
+        margin-top: 5px;
     }
 
     .assessing input {
@@ -536,7 +544,7 @@
         display: flex;
         flex-direction: column;
         border: 1px solid black;
-        width: 100%;
+        width: 885px;
     }
     .questions {
         padding: 5px;
@@ -933,7 +941,7 @@
         border-bottom: 1px solid black;
         border-left: 1px solid black;
         border-right: 1px solid black;
-        width: 100%
+        width: 1440px;
     }
     .findings input {
         width: 625px;
@@ -942,6 +950,74 @@
         border-left: none;
         border-right: none;
     }
+
+    .mainContent * {
+        font-size: 10px;
+    }
+
+/* PRINT */
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: landscape;
+        margin: 5mm; /* Set margins */
+    }
+
+    .section2 {
+        width: 97.9%;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+    
+    .info2-1, .info2-2 {
+        width: 95%!important;
+    }
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    .mainContent {
+        margin-top: -5px!important;
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 1450px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block;
+        padding: 5mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .card-body * {
+        width: 100%;
+        background-color: #fff;
+        padding: 5px;
+    }
+
+    .second-sec {
+        margin-top: -30px
+    }
+}
 </style>
 
 <body>
@@ -964,7 +1040,7 @@
               </nav>
         </div>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
         </div>
     </div><!-- End Page Title -->
   
@@ -1060,7 +1136,7 @@
                                 <div class="third-sec1">
                                     <div class="fam1">
                                         <p><b>Family History</b></p>
-                                        <p>Does patient have 1st degree <br>relative with:</p>
+                                        <p>Does patient have 1st degree relative with:</p>
                                         <div class="fam1-1">
                                             <div class="famm1">
                                                 <label for="hyper">Hypertension</label>
@@ -1210,7 +1286,7 @@
                                                     <p>Average</p>
                                                 </div>
                                                 <div class="context">
-                                                    <p>Always get the average of two readings <br>Obtained at least 2 minutes apart.</p>
+                                                    <p>Always get the average of two readings Obtained at least 2 minutes apart.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1320,14 +1396,14 @@
                                         </div>
                                     </div>
                                     <div class="assess">
-                                        <p class="assesss">Assessed by:</p>
+                                        <span class="assesss">Assessed by:</span>
                                         <div class="assessing">
-                                            <img src="{{ asset(($risk->risk_signatureFirst ?? '')) }}" alt="Signature" class="signature">
-                                            <p>Name and Signature</p>
+                                            <img src="{{ asset(($risk->risk_signatureFirst ?? '')) }}" alt="Signature" class="signature sig1">
+                                            <span>Name and Signature</span>
                                         </div>
                                         <div class="assessing">
-                                            <img src="{{ asset(($risk->risk_signatureSecond ?? '')) }}" alt="Signature" srcset="" class="signature">
-                                            <p>Name and Signature</p>
+                                            <img src="{{ asset(($risk->risk_signatureSecond ?? '')) }}" alt="Signature" srcset="" class="signature sig2">
+                                            <span>Name and Signature</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1619,7 +1695,7 @@
                                                 </div>
                                             </div>
                                             <div class="keton">
-                                                <div class="keton1">
+                                                <div class="input3">
                                                     <input type="text" name="ketone" id="ketone" value="{{ $risk->risk_ketone ?? '' }}" readonly>
                                                     <label for="ketone">Urine Ketone</label>
                                                 </div>
@@ -1640,7 +1716,7 @@
                                                 </div>
                                             </div>
                                             <div class="ketons">
-                                                <div class="ketone3">
+                                                <div class="input3">
                                                     <input type="text" name="protein" id="protein"  value="{{ $risk->risk_protein ?? '' }}" readonly>
                                                     <label for="protein">Urine Protein</label>
                                                 </div>
@@ -1699,6 +1775,11 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
   <script>
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
+
     $(document).ready(function() {
       $('#dob').inputmask('99/99/9999'); // This will set the format to MM/DD/YYYY
     });

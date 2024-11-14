@@ -80,7 +80,7 @@ class regValidation extends Controller
     }
 
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
@@ -94,7 +94,106 @@ class regValidation extends Controller
         $totalBlotters = blotter_tbl::count();
         $totalCertificates = brgyCertificate_tbl::count();
         $totalBusinessPermits = businessBrgyClearance_tbl::count();
-        $totalClearances = BrgyClearance_tbl::count();
+        $totalClearances = brgyClearance_tbl::count();
+
+        // Determine the filter type
+        $filter = $request->query('filter', 'today');
+
+        // Initialize data arrays
+        $todayBlotters = [];
+        $todayCertificates = [];
+        $todayClearances = [];
+        $todayBusinessPermits = [];
+        $monthlyBlotters = [];
+        $monthlyCertificates = [];
+        $monthlyClearances = [];
+        $monthlyBusinessPermits = [];
+        $yearlyData = [];
+         // Determine the filter type
+         $filter = $request->query('filter', 'today');
+        // Get the current date and time in Manila time zone
+        $manilaTime = new \DateTimeZone('Asia/Manila');
+        $currentDate = new \DateTime('now', $manilaTime);
+        $currentYear = $currentDate->format('Y');
+
+        if ($filter === 'today') {
+            for ($hour = 8; $hour <= 19; $hour++) {
+                $startHour = $currentDate->format('Y-m-d') . ' ' . $hour . ':00:00';
+                $endHour = $currentDate->format('Y-m-d') . ' ' . ($hour + 1) . ':00:00';
+
+                $todayBlotters[] = blotter_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
+                $todayCertificates[] = brgyCertificate_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
+                $todayClearances[] = brgyClearance_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
+                $todayBusinessPermits[] = businessBrgyClearance_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
+            }
+        } elseif ($filter === 'monthly') {
+            for ($month = 1; $month <= 12; $month++) {
+                $monthlyBlotters[] = blotter_tbl::whereYear('blotter_complaintMade', $currentYear)
+                    ->whereMonth('blotter_complaintMade', $month)->count();
+                $monthlyCertificates[] = brgyCertificate_tbl::whereYear('cert_dateIssued', $currentYear)
+                    ->whereMonth('cert_dateIssued', $month)->count();
+                $monthlyClearances[] = brgyClearance_tbl::whereYear('bcl_dateIssued', $currentYear)
+                    ->whereMonth('bcl_dateIssued', $month)->count();
+                $monthlyBusinessPermits[] = businessBrgyClearance_tbl::whereYear('bc_dateIssued', $currentYear)
+                    ->whereMonth('bc_dateIssued', $month)->count();
+            }
+        } elseif ($filter === 'yearly') {
+            // Fetch data for each year from current year back to 10 years ago
+            for ($year = $currentYear - 10; $year <= $currentYear; $year++) {
+                $yearlyData[] = [
+                    'year' => $year,
+                    'blotters' => blotter_tbl::whereYear('blotter_complaintMade', $year)->count(),
+                    'certificates' => brgyCertificate_tbl::whereYear('cert_dateIssued', $year)->count(),
+                    'clearances' => brgyClearance_tbl::whereYear('bcl_dateIssued', $year)->count(),
+                    'businessPermits' => businessBrgyClearance_tbl::whereYear('bc_dateIssued', $year)->count(),
+                ];
+            }
+        }
+
+        // Calculate age ranges
+        $ageGroups = [
+            '0-59_months' => ['min' => 0, 'max' => 4], // 0-4 years
+            '5-12_years' => ['min' => 5, 'max' => 12], // 5-12 years
+            '13-17_years' => ['min' => 13, 'max' => 17], // 13-17 years
+            '18-30_years' => ['min' => 18, 'max' => 30], // 18-30 years
+            '31-45_years' => ['min' => 31, 'max' => 45], // 31-45 years
+            '45-65_years' => ['min' => 46, 'max' => 65], // 46-65 years
+            '66_above' => ['min' => 66, 'max' => null] // 66 and above
+        ];
+
+        $ageGroupData = [];
+
+        foreach ($ageGroups as $key => $ageRange) {
+            $query = resident_tbl::whereNotNull('res_bdate');
+
+            if ($ageRange['min'] !== null) {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) >= ?', [$ageRange['min']]);
+            }
+            if ($ageRange['max'] !== null) {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) <= ?', [$ageRange['max']]);
+            }
+
+            $total = $query->count();  // Total count
+
+            // Create a fresh query builder instance for male count
+            $maleQuery = clone $query;
+            $male = $maleQuery->where('res_sex', 'male')->count();  // Count of males
+            
+            // Create another fresh query builder instance for female count
+            $femaleQuery = clone $query;
+            $female = $femaleQuery->where('res_sex', 'female')->count();  // Count of females
+            
+            
+            $ageGroupData[$key] = [
+                'total' => $total,
+                'male' => $male,
+                'female' => $female
+            ];
+
+            // Debug output for age group data
+            echo "Total for $key: $total\n";
+        }
+
 
         // Merge all the data into a single array
         $data = [
@@ -108,6 +207,17 @@ class regValidation extends Controller
             'totalCertificates' => $totalCertificates,
             'totalBusinessPermits' => $totalBusinessPermits,
             'totalClearances' => $totalClearances,
+            'todayBlotters' => $todayBlotters,
+            'todayCertificates' => $todayCertificates,
+            'todayClearances' => $todayClearances,
+            'todayBusinessPermits' => $todayBusinessPermits,
+            'monthlyBlotters' => $monthlyBlotters,
+            'monthlyCertificates' => $monthlyCertificates,
+            'monthlyClearances' => $monthlyClearances,
+            'monthlyBusinessPermits' => $monthlyBusinessPermits,
+            'yearlyData' => $yearlyData,
+            'ageGroupData' => $ageGroupData, // Include age group data
+            'filter' => $filter
         ];
 
         // Set headers for no-cache
@@ -120,7 +230,7 @@ class regValidation extends Controller
     }
 
 
-    //FOR RESIDENT MANAGEMENT VIEW NI SIYA DAPIT!
+//FOR RESIDENT MANAGEMENT VIEW NI SIYA DAPIT!
     public function residentsRec()
     {
         $data = [
@@ -176,7 +286,7 @@ class regValidation extends Controller
         return view('/dashboards/captainDb/viewResidentDetails')->with($data);
     }
     
-    //END OF FOR RESIDENT MANAGEMENT VIEW!
+//END OF FOR RESIDENT MANAGEMENT VIEW!
 
     function dashboardPur()
     {
@@ -289,39 +399,39 @@ class regValidation extends Controller
             return back()->withErrors(['fail' => 'Incorrect ID or Password!'])->withInput();
         }
     }
-     //for residents ni dapit!
+// SECRETARY
     public function saveResidents(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'profile' => 'required|image|max:2048',
             'household' => 'required',
             'dateRegister' => 'required|date',
-            'suffix' => 'required',
-
             'firstName' => 'required|string',
             'middleName' => 'required|string',
             'lastName' => 'required|string',
-            
             'birthPlace' => 'required|string',
             'birthDate' => 'required|date',
-
-            
             'civilStatus' => 'required',
             'sex' => 'required',
+            'education' => 'required',
+            'religion' => 'required',
+            'tempAddress' => 'required',
+            'otherContact' => 'required',
             'purok' => 'required',
-
             'person' => 'required',
             'living' => 'required',
             'sitio' => 'required',
-            
             'voters' => 'required',
             'email' => 'required|email|unique:resident_tbls,res_email', 
             'contact' => 'required|numeric|digits:11',
-
             'citizens' => 'required|string',
             'address' => 'required|string',
             'occupation' => 'required|string'
-            ]);
+        ], [
+            'required' => 'This Field is Required',
+            'email' => 'Must Be An Email Format',
+            'unique' => 'Already Taken',
+        ]);
 
         if ($validator->fails()) 
         {
@@ -330,36 +440,33 @@ class regValidation extends Controller
         else 
         {
             $profilePath = $request->file('profile')->store('/profilePictures', 'public');
-
             $resident = new resident_tbl;
             $resident->res_picture = $profilePath;
             $resident->res_household = $request->household;
             $resident->res_dateReg = $request->dateRegister;
             $resident->res_suffix = $request->suffix;
-
             $resident->res_fname = $request->firstName;
             $resident->res_mname = $request->middleName;
             $resident->res_lname = $request->lastName;
-
             $resident->res_bplace = $request->birthPlace;
             $resident->res_bdate = $request->birthDate;
-
             $resident->res_civil = $request->civilStatus;
             $resident->res_sex = $request->sex;
             $resident->res_purok = $request->purok;
-
             $resident->res_voters = $request->voters;
             $resident->res_email = $request->email;
             $resident->res_contact = $request->contact;
-
             $resident->res_personStatus = $request->person;
             $resident->res_status = $request->living;
             $resident->res_sitio = $request->sitio;
-
             $resident->res_citizen = $request->citizens;
             $resident->res_address = $request->address;
             $resident->res_occupation = $request->occupation;
-            
+            $resident->res_religion = $request->religion;
+            $resident->res_educ = $request->education;
+            $resident->res_otherContact = $request->otherContact;
+            $resident->res_tempAddress = $request->tempAddress;
+            $resident->res_nationalId = $request->national;
             
             if ($resident->save()) 
             {
@@ -391,74 +498,93 @@ class regValidation extends Controller
         }
     }
 
-
     public function updateResident(Request $request, $id)
     {
         // Find the resident by ID
         $resident = resident_tbl::find($id);
-
+    
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'picture' => 'sometimes|nullable',
-            'household' => 'sometimes|required',
-            'dateRegister' => 'sometimes|required',
-            'suffix' => 'sometimes|required',
-            'fname' => 'sometimes|required|string',
-            'mname' => 'sometimes|required|string',
-            'lname' => 'sometimes|required|string',
-            'bplace' => 'sometimes|required|string',
-            'bdate' => 'sometimes|required|date',
-            'civil' => 'sometimes|required|string',
-            'sex' => 'sometimes|required',
-            'purok' => 'sometimes|required',
-            'voters' => 'sometimes|required',
-            'person' => 'sometimes|required',
-            'living' => 'sometimes|required',
-            'sitio' => 'sometimes|required',
-            'email' => 'sometimes|required|email',
-            'contact' => 'sometimes|required|numeric|digits:11',
-            'citizen' => 'sometimes|required|string',
-            'address' => 'sometimes|required|string',
-            'occupation' => 'sometimes|required|string'
+            'edit_profile' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',  // Ensure correct file types and size
+            'edit_household' => 'nullable|string',
+            'edit_dateRegister' => 'nullable|date',
+            'edit_fname' => 'required|string',           // make fname required
+            'edit_mname' => 'nullable|string',
+            'edit_lname' => 'required|string',           // make lname required
+            'edit_suffix' => 'nullable|string',
+            'edit_bPlace' => 'required|string',          // make bPlace required
+            'edit_bDate' => 'required|date',
+            'edit_age' => 'nullable|integer',
+            'edit_sex' => 'required|string',             // make sex required
+            'edit_education' => 'nullable|string',
+            'edit_religion' => 'nullable|string',
+            'edit_civilStatus' => 'required|string',    // make civilStatus required
+            'edit_voters' => 'required|string',
+            'edit_email' => 'nullable|email',
+            'edit_contact' => 'nullable|numeric|digits:11',
+            'edit_otherContact' => 'nullable|numeric|digits:11',
+            'edit_citizens' => 'nullable|string',
+            'edit_address' => 'required|string',       // make address required
+            'edit_occupation' => 'nullable|string',
+            'edit_person' => 'nullable|string',
+            'edit_living' => 'nullable|string',
+            'edit_sitio' => 'nullable|string',
+            'edit_purok' => 'nullable|string',
+            'edit_tempAddress' => 'nullable|string',
         ]);
-
+    
+        // If validation fails, return errors
         if ($validator->fails()) {
-            return response()->json(['status' => 400, 'error' => $validator->errors()->toArray()]);
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->errors()->toArray(),
+            ]);
         }
-
-        if ($request->hasFile('picture')) {
-            $file = $request->file('picture');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public/profilePictures', $filename); // Store file in storage/profilePictures
-            $resident->res_picture = 'profilePictures/' . $filename; // Save the full file path in the database
+    
+        // Handle profile picture upload
+        if ($request->hasFile('edit_profile')) {
+            $image = $request->file('edit_profile');
+            $imagePath = $image->store('profilePictures', 'public');
+            $resident->res_picture = $imagePath;
         }
-
-        $resident->res_household = $request->input('household');
-        $resident->res_dateReg = $request->input('dateReg');
-        $resident->res_fname = $request->input('fname');
-        $resident->res_mname = $request->input('mname');
-        $resident->res_lname = $request->input('lname');
-        $resident->res_suffix = $request->input('suffix');
-        $resident->res_bplace = $request->input('bplace');
-        $resident->res_bdate = $request->input('bdate');
-        $resident->res_civil = $request->input('civil');
-        $resident->res_sex = $request->input('sex');
-        $resident->res_purok = $request->input('purok');
-        $resident->res_voters = $request->input('voters');
-        $resident->res_personStatus= $request->input('person');
-        $resident->res_status = $request->input('living');
-        $resident->res_sitio = $request->input('sitio');
-        $resident->res_email = $request->input('email');
-        $resident->res_contact = $request->input('contact');
-        $resident->res_citizen = $request->input('citizen');
-        $resident->res_address = $request->input('address');
-        $resident->res_occupation = $request->input('occupation');
-
-        $resident->save();
-
-        return response()->json(['status' => 200, 'resident' => $resident, 'msg' => 'Resident has been updated successfully']);
+            // Update resident data
+            $resident->res_household = $request->input('edit_household');
+            $resident->res_dateReg = $request->input('edit_dateRegister');
+            $resident->res_fname = $request->input('edit_fname');
+            $resident->res_mname = $request->input('edit_mname');
+            $resident->res_lname = $request->input('edit_lname');
+            $resident->res_suffix = $request->input('edit_suffix');
+            $resident->res_bplace = $request->input('edit_bPlace');
+            $resident->res_bdate = $request->input('edit_bDate');
+            $resident->res_civil = $request->input('edit_civilStatus');
+            $resident->res_sex = $request->input('edit_sex');
+            $resident->res_educ = $request->input('edit_education');
+            $resident->res_religion = $request->input('edit_religion');
+            $resident->res_purok = $request->input('edit_purok');
+            $resident->res_voters = $request->input('edit_voters');
+            $resident->res_personStatus = $request->input('edit_person');
+            $resident->res_status = $request->input('edit_living');
+            $resident->res_sitio = $request->input('edit_sitio');
+            $resident->res_email = $request->input('edit_email');
+            $resident->res_contact = $request->input('edit_contact');
+            $resident->res_otherContact = $request->input('edit_otherContact');
+            $resident->res_citizen = $request->input('edit_citizens');
+            $resident->res_address = $request->input('edit_address');
+            $resident->res_occupation = $request->input('edit_occupation');
+            $resident->res_tempAddress = $request->input('edit_tempAddress');
+            $resident->res_nationalId = $request->input('edit_national');
+            // Save the updated resident data
+            $resident->save();
+        
+            // Return success response
+            return response()->json([
+                'status' => 200,
+                'resident' => $resident,
+                'msg' => 'Resident has been updated successfully'
+            ]);
     }
-
+    
+    
     public function dbBlogs()
     {
         return view('dashboards/dbBlogs');
@@ -582,34 +708,78 @@ class regValidation extends Controller
         }
     }
 
+    public function getCertData($id)
+    {
+        // Fetch the dstb record based on the ID, including the related resident information
+        $cert = brgyCertificate_tbl::with('resident')->find($id);
+
+        if (!$cert) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+
+        return response()->json(['status' => 1, 'data' => $cert]);
+    }
+
+    public function updateCert(Request $request, $id)
+    {
+        // Find the resident by ID
+        $cert = brgyCertificate_tbl::find($id);
+    
+        // Update resident data
+        $cert->cert_transactionCode = $request->input('edit_tcode4');
+        $cert->cert_purpose = $request->input('edit_Purpose4');
+        $cert->cert_dateIssued = $request->input('edit_dIssued4');
+        $cert->cert_pickUpDate = $request->input('edit_pickUp4');
+
+        // Save the updated resident data
+        $cert->save();
+    
+        // Return success response
+        return response()->json([
+            'status' => 200,
+            'cert' => $cert,
+            'msg' => 'Certificate has been updated successfully'
+        ]);
+    }
+
     // FOR BARANGAY CLEARANCE/BUSINESS INPUT
     public function saveBusinessClearance(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-            'fName2' => 'required|string|exists:resident_tbls,res_fname',
-            'mName2' => 'required|string|exists:resident_tbls,res_mname',
-            'lName2' => 'required|string|exists:resident_tbls,res_lname',
-            'suffix2' => 'nullable|string|exists:resident_tbls,res_suffix',
-            'bDate2' => 'required|date|exists:resident_tbls,res_bdate',
-            'tcode2' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    // Check if tcode2 already exists in any of the relevant tables
-                    if (BrgyClearance_tbl::where('bcl_transactionCode', $value)->exists() ||
-                        businessBrgyClearance_tbl::where('bc_transactionCode', $value)->exists() ||
-                        brgyCertificate_tbl::where('cert_transactionCode', $value)->exists() ||
-                        blotter_tbl::where('blotter_transactionCode', $value)->exists()) {
-                        $fail('Transaction Code Already Exists');
+                'fName2' => 'required|string|exists:resident_tbls,res_fname',
+                'mName2' => 'required|string|exists:resident_tbls,res_mname',
+                'lName2' => 'required|string|exists:resident_tbls,res_lname',
+                'suffix2' => 'nullable|string|exists:resident_tbls,res_suffix',
+                'bDate2' => 'required|date|exists:resident_tbls,res_bdate',
+                'tcode2' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        // Check if tcode2 already exists in any of the relevant tables
+                        if (BrgyClearance_tbl::where('bcl_transactionCode', $value)->exists() ||
+                            businessBrgyClearance_tbl::where('bc_transactionCode', $value)->exists() ||
+                            brgyCertificate_tbl::where('cert_transactionCode', $value)->exists() ||
+                            blotter_tbl::where('blotter_transactionCode', $value)->exists()) {
+                            $fail('Transaction Code Already Exists');
+                        }
                     }
-                }
-            ],
-            'businessName' => 'required|string',
-            'businessAddress' => 'required|string',
-            'businessType' => 'required|string',
-            'businessNature' => 'required|string',
-            'dateIssued2' => 'required|date',
-            'pickUp2' => 'required|date'
+                ],
+                'businessName' => 'required|string',
+                'businessAddress' => 'required|string',
+                'businessType' => 'required|string',
+                'businessNature' => 'required|string',
+                'dateIssued2' => 'required|date',
+                'pickUp2' => 'required|date'
+            ], [
+                // Custom messages for each validation rule
+                'required' => 'This field is required.',  // Custom message for all "required" fields
+                'string' => 'This field must be a valid string.',
+                'date' => 'This field must be a valid date.',
+                'fName2.exists' => 'First Name Not Found',
+                'mName2.exists' => 'Middle Name Not Found',
+                'lName2.exists' => 'Last Name Not Found',
+                'suffix2.exists' => 'Suffix Not Found',
+                'bDate2.exists' => 'BirthDate Not Same As Your Registered BirthDate',
             ]);
 
             if ($validator->fails()) {
@@ -663,6 +833,70 @@ class regValidation extends Controller
             // Return error response
             return response()->json(['status' => 0, 'msg' => 'Failed To Submit'], 500);
         }
+    }
+
+    public function getPermitData($id)
+    {
+        // Fetch the dstb record based on the ID, including the related resident information
+        $permit = businessBrgyClearance_tbl::with('resident')->find($id);
+
+        if (!$permit) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+
+        return response()->json(['status' => 1, 'data' => $permit]);
+    }
+    
+
+    public function getClearData($id)
+    {
+        // Fetch the dstb record based on the ID, including the related resident information
+        $cert = BrgyClearance_tbl::with('resident')->find($id);
+
+        if (!$cert) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+
+        return response()->json(['status' => 1, 'data' => $cert]);
+    }
+
+    public function updateBcl(Request $request, $id)
+    {
+        // Find the resident by ID
+        $cert = BrgyClearance_tbl::find($id);
+    
+        // Update resident data
+        $cert->bcl_transactionCode = $request->input('edit_tcode4');
+        $cert->bcl_purpose = $request->input('edit_Purpose4');
+        $cert->bcl_dateIssued = $request->input('edit_dIssued4');
+        $cert->bcl_pickUpDate = $request->input('edit_pickUp4');
+
+        // Save the updated resident data
+        $cert->save();
+    
+        // Return success response
+        return response()->json([
+            'status' => 200,
+            'cert' => $cert,
+            'msg' => 'Clearance has been updated successfully'
+        ]);
+    }
+
+    public function updateBclStatus(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'id' => 'required|integer|exists:brgy_clearance_tbls,bcl_id',
+            'status' => 'required|string'
+        ]);
+
+        // Find the certificate and update its status
+        $certificate = BrgyClearance_tbl::find($request->id);
+        $certificate->bcl_status = $request->status;
+        $certificate->bcl_pickUpDate = now(); // Optionally update the pickup date
+        $certificate->save();
+
+        return response()->json(['success' => true]);
     }
 
 
@@ -1044,7 +1278,6 @@ class regValidation extends Controller
 
         return response()->json(['success' => true]);
     }
-
 
     public function rejectCertificate(Request $request) 
     {
@@ -1533,23 +1766,6 @@ class regValidation extends Controller
         return response()->json(['success' => false], 404);
     }
 
-    public function updateBclStatus(Request $request)
-    {
-        // Validate the request
-        $request->validate([
-            'id' => 'required|integer|exists:brgy_clearance_tbls,bcl_id',
-            'status' => 'required|string'
-        ]);
-
-        // Find the certificate and update its status
-        $certificate = BrgyClearance_tbl::find($request->id);
-        $certificate->bcl_status = $request->status;
-        $certificate->bcl_pickUpDate = now(); // Optionally update the pickup date
-        $certificate->save();
-
-        return response()->json(['success' => true]);
-    }
-
     public function updateBcStatus(Request $request)
     {
         // Validate the request
@@ -1838,6 +2054,18 @@ class regValidation extends Controller
         }
 
         return response()->json(['success' => false], 404);
+    }
+
+    public function getBlotterData($id)
+    {
+        // Fetch the dstb record based on the ID, including the related resident information
+        $blotter = blotter_tbl::with('resident')->find($id);
+
+        if (!$blotter) {
+            return response()->json(['status' => 0, 'msg' => 'Record not found'], 404);
+        }
+
+        return response()->json(['status' => 1, 'data' => $blotter]);
     }
 
 
@@ -4082,22 +4310,31 @@ class regValidation extends Controller
     public function optFullRecord(Request $request)
     {
         $currentYear = date('Y');
+
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-        $resident = resident_tbl::all();
-        $opts = opt_tbl::join('resident_tbls', 'opt_tbls.res_id', '=', 'resident_tbls.res_id') // Join with resident_tbl
-        ->join('employee_tbls', 'opt_tbls.em_id', '=', 'employee_tbls.em_id') // Join with employee_tbl
-        ->whereYear('opt_tbls.created_at', $currentYear) // Filter by the current year
-        ->whereColumn('resident_tbls.res_purok', '=', 'employee_tbls.em_address') // Match res_purok with em_address
-        ->select('opt_tbls.*', 'resident_tbls.res_purok', 'employee_tbls.em_address') // Select necessary fields
-        ->get();
-    
+
+        // Fetch available distinct years from the 'created_at' column of 'opt_tbls'
+        $availableYears = opt_tbl::selectRaw('YEAR(created_at) as year')
+                                ->distinct()
+                                ->orderByDesc('year')
+                                ->pluck('year');
+
+        // Fetch the relevant OPT records for the selected year or current year by default
+        $year = $request->input('selectYear', $currentYear); // Default to current year if not selected
+        $opts = opt_tbl::join('resident_tbls', 'opt_tbls.res_id', '=', 'resident_tbls.res_id')
+                    ->join('employee_tbls', 'opt_tbls.em_id', '=', 'employee_tbls.em_id')
+                    ->whereYear('opt_tbls.created_at', $year) // Filter by selected year
+                    ->whereColumn('resident_tbls.res_purok', '=', 'employee_tbls.em_address')
+                    ->select('opt_tbls.*', 'resident_tbls.res_purok', 'employee_tbls.em_address')
+                    ->get();
 
         // Merge all the data into a single array
         $data = [
             'LoggedUserInfo' => $loggedUserInfo,
-            'residents' => $resident,
+            'availableYears' => $availableYears,  // Pass the available years to the view
             'opts' => $opts,
+            'selectedYear' => $year,  // Pass the selected year to the view
         ];
 
         // Set headers for no-cache
@@ -4108,6 +4345,7 @@ class regValidation extends Controller
         // Pass the data to the view
         return view('dashboards/healthWorkerDb/optFullRecord', $data);
     }
+
 // END OF OPT
 
 // FOR RISK ASSESSMENT
@@ -5271,6 +5509,55 @@ class regValidation extends Controller
         return response()->json(['status' => 0, 'msg' => 'OPT not found.']);
     }
 
+    // public function fpSideB(Request $request)
+    // {
+    //     $rules = [
+    //         'fpDateVisit' => 'required',
+    //         'fpMedFind' => 'required',
+    //         'fpMetAcc' => 'required',
+    //         'fpDateFfVisit' => 'required',
+    //     ];
+
+    //     $validator = Validator::make($request->all(), $rules, [
+    //         'required' => 'This Field is Required.',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+    //     }
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         $fp = new fpSideB_tbl;
+    //         $fp->fp_id = $request->fp_id;
+    //         $fp->em_id = $request->sideBEm_id;
+    //         $fp->sideB_dateVisit = $request->fpDateVisit;
+    //         $fp->sideB_MedFinds = $request->fpMedFind;
+    //         $fp->sideB_metAcc = $request->fpMetAcc;
+    //         $fp->sideB_followUpVisit = $request->fpDateFfVisit;
+
+    //         if ($fp->save()) {
+    //             // Now create the sched_tbl record with vt_id as a foreign key
+    //             if ($request->filled('fpDateFfVisit')) {
+    //                 $schedule = new sched_tbl;
+    //                 $schedule->sideB_id = $fp->sideB_id;
+    //                 $schedule->sched_desc = 'Family Planning Schedule'; 
+    //                 $schedule->save();
+    //             }
+
+    //             DB::commit();
+    //             return response()->json(['status' => 1, 'msg' => 'Side-B Record Added Successfully']);
+    //         } else {
+    //             DB::rollBack();
+    //             return response()->json(['status' => 0, 'msg' => 'Failed to add Side-B Record'], 500);
+    //         }
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+    //     }
+    // }
+
     public function fpSideB(Request $request)
     {
         $rules = [
@@ -5291,6 +5578,24 @@ class regValidation extends Controller
         DB::beginTransaction();
 
         try {
+            // Find the previous Side-B record for the same patient (fp_id) with a follow-up visit
+            $previousSideB = fpSideB_tbl::where('fp_id', $request->fp_id)
+                ->whereNotNull('sideB_followUpVisit') // Only consider records with a next follow-up visit
+                ->orderBy('sideB_id', 'desc')  // Get the latest record by sideB_id
+                ->first();
+
+            // If a previous record exists, check if the fpDateVisit matches the previous sideB_followUpVisit
+            if ($previousSideB && $request->fpDateVisit === $previousSideB->sideB_followUpVisit) {
+                // Update the previous schedule's status to "Completed"
+                $previousSchedule = sched_tbl::where('sideB_id', $previousSideB->sideB_id)->first();
+
+                if ($previousSchedule) {
+                    $previousSchedule->sched_status = 'Completed';
+                    $previousSchedule->save();
+                }
+            }
+
+            // Create a new Side-B record
             $fp = new fpSideB_tbl;
             $fp->fp_id = $request->fp_id;
             $fp->em_id = $request->sideBEm_id;
@@ -5300,11 +5605,13 @@ class regValidation extends Controller
             $fp->sideB_followUpVisit = $request->fpDateFfVisit;
 
             if ($fp->save()) {
-                // Now create the sched_tbl record with vt_id as a foreign key
-                if ($request->filled('fpDateFfVisit')) {
+                // Create the schedule record with sideB_id as a foreign key
+                if ($request->filled('fpDateFfVisit')) 
+                {
                     $schedule = new sched_tbl;
                     $schedule->sideB_id = $fp->sideB_id;
-                    $schedule->sched_desc = 'Family Planning Schedule'; 
+                    $schedule->sched_desc = 'Family Planning Schedule';
+                    $schedule->sched_status = 'Scheduled';
                     $schedule->save();
                 }
 
@@ -5316,11 +5623,10 @@ class regValidation extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+            return response()->json(['status' => 0, 'msg' => 'An error occurred: ' . $e->getMessage()], 500);
         }
-
-
     }
+
 
     public function fpForm($id)
     {
@@ -6357,6 +6663,66 @@ class regValidation extends Controller
             return view('dashboards/healthWorkerDb/matAnte', $data);
         }
         
+        // public function inputMform2(Request $request)
+        // {
+        //     $rules = [
+        //         'apDate' => 'required',
+        //         'apComplaints' => 'required',
+        //         'apPresentation' => 'required',
+        //         'apLab' => 'required',
+        //         'apDiagnosis' => 'required',
+        //         'apPlan' => 'required',
+        //     ];
+        
+        //     $validator = Validator::make($request->all(), $rules, [
+        //         'required' => 'This Field is Required.',
+        //     ]);
+        
+        //     if ($validator->fails()) {
+        //         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        //     }
+        
+        //     DB::beginTransaction();
+        
+        //     try {
+        //         $antePartum = new antepartum_tbl;
+        //         $antePartum->mat_id = $request->matId;
+        //         $antePartum->ap_dateVisit = $request->apDate;
+        //         $antePartum->ap_complaints = $request->apComplaints;
+        //         $antePartum->apf_aog = $request->apAog;
+        //         $antePartum->apf_ht = $request->apHt;
+        //         $antePartum->apf_wt = $request->apWt;
+        //         $antePartum->apf_bp = $request->apBp;
+        //         $antePartum->apf_fundal = $request->apFundal;
+        //         $antePartum->apf_fhb = $request->apFhb;
+        //         $antePartum->apf_presentation = $request->apPresentation;
+        //         $antePartum->ap_labResult = $request->apLab;
+        //         $antePartum->ap_diagnosis = $request->apDiagnosis;
+        //         $antePartum->ap_treatment = $request->apPlan;
+        //         $antePartum->ap_nextVisit = $request->apNxtVisit;
+        //         $antePartum->em_id = $request->empId;
+        
+        //         if ($antePartum->save()) {
+        //             // Now create the sched_tbl record with vt_id as a foreign key
+        //             if ($request->filled('apNxtVisit')) {
+        //                 $schedule = new sched_tbl;
+        //                 $schedule->ap_id = $antePartum->ap_id;
+        //                 $schedule->sched_desc = 'Antepartum Schedule'; 
+        //                 $schedule->save();
+        //             }
+        
+        //             DB::commit();
+        //             return response()->json(['status' => 1, 'msg' => 'Antepartum Record Added Successfully']);
+        //         } else {
+        //             DB::rollBack();
+        //             return response()->json(['status' => 0, 'msg' => 'Failed to add Antepartum Record'], 500);
+        //         }
+        //     } catch (\Exception $e) {
+        //         DB::rollBack();
+        //         return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+        //     }
+        // }
+
         public function inputMform2(Request $request)
         {
             $rules = [
@@ -6367,18 +6733,37 @@ class regValidation extends Controller
                 'apDiagnosis' => 'required',
                 'apPlan' => 'required',
             ];
-        
+
             $validator = Validator::make($request->all(), $rules, [
                 'required' => 'This Field is Required.',
             ]);
-        
+
             if ($validator->fails()) {
                 return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
             }
-        
+
             DB::beginTransaction();
-        
+
             try {
+                // Find the previous antepartum record for the same patient (mat_id)
+                $previousAntePartum = antepartum_tbl::where('mat_id', $request->matId)
+                    ->whereNotNull('ap_nextVisit')  // Only consider records with a next visit
+                    ->orderBy('ap_id', 'desc')  // Order by ID descending (get the most recent record)
+                    ->first();
+
+                // If there is a previous record, check if the ap_dateVisit matches the previous ap_nextVisit
+                if ($previousAntePartum && $request->apDate === $previousAntePartum->ap_nextVisit) {
+                    // Update the previous record's schedule status to "Completed"
+                    $previousSchedule = sched_tbl::where('ap_id', $previousAntePartum->ap_id)
+                        ->first();
+
+                    if ($previousSchedule) {
+                        $previousSchedule->sched_status = 'Completed';
+                        $previousSchedule->save();
+                    }
+                }
+
+                // Create a new Antepartum record
                 $antePartum = new antepartum_tbl;
                 $antePartum->mat_id = $request->matId;
                 $antePartum->ap_dateVisit = $request->apDate;
@@ -6395,16 +6780,17 @@ class regValidation extends Controller
                 $antePartum->ap_treatment = $request->apPlan;
                 $antePartum->ap_nextVisit = $request->apNxtVisit;
                 $antePartum->em_id = $request->empId;
-        
+
                 if ($antePartum->save()) {
-                    // Now create the sched_tbl record with vt_id as a foreign key
+                    // Create the schedule record with ap_id as a foreign key
                     if ($request->filled('apNxtVisit')) {
                         $schedule = new sched_tbl;
                         $schedule->ap_id = $antePartum->ap_id;
-                        $schedule->sched_desc = 'Antepartum Schedule'; 
+                        $schedule->sched_desc = 'Antepartum Schedule';
+                        $schedule->sched_status = 'Scheduled';
                         $schedule->save();
                     }
-        
+
                     DB::commit();
                     return response()->json(['status' => 1, 'msg' => 'Antepartum Record Added Successfully']);
                 } else {
@@ -6413,9 +6799,10 @@ class regValidation extends Controller
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
-                return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+                return response()->json(['status' => 0, 'msg' => 'An error occurred: ' . $e->getMessage()], 500);
             }
         }
+
         
         public function updateAnte(Request $request)
         {
@@ -6501,6 +6888,55 @@ class regValidation extends Controller
             return view('dashboards/healthWorkerDb/matPost', $data);
         }
 
+        // public function inputMform3(Request $request)
+        // {
+        //     $rules = [
+        //         'postVisit' => 'required',
+        //         'postFeSo' => 'required',
+        //         'postVit' => 'required',
+        //         'postIntervention' => 'required',
+        //     ];
+        
+        //     $validator = Validator::make($request->all(), $rules, [
+        //         'required' => 'This Field is Required.',
+        //     ]);
+        
+        //     if ($validator->fails()) {
+        //         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        //     }
+        
+        //     DB::beginTransaction();
+        
+        //     try {
+        //         $postPartum = new postpartum_tbl;
+        //         $postPartum->mat_id = $request->matId;
+        //         $postPartum->pp_dateVisit = $request->postVisit;
+        //         $postPartum->pp_feso = $request->postFeSo;
+        //         $postPartum->pp_vitA = $request->postVit;
+        //         $postPartum->ap_Intervention = $request->postIntervention;
+        //         $postPartum->pp_dateNextVisit = $request->postNxtVisit;
+        
+        //         if ($postPartum->save()) {
+        //             // Now create the sched_tbl record with vt_id as a foreign key
+        //             if ($request->filled('postNxtVisit')) {
+        //                 $schedule = new sched_tbl;
+        //                 $schedule->pp_id = $postPartum->pp_id;
+        //                 $schedule->sched_desc = 'Postpartum Schedule'; 
+        //                 $schedule->save();
+        //             }
+        
+        //             DB::commit();
+        //             return response()->json(['status' => 1, 'msg' => 'Postpartum Record Added Successfully']);
+        //         } else {
+        //             DB::rollBack();
+        //             return response()->json(['status' => 0, 'msg' => 'Failed to add Postpartum Record'], 500);
+        //         }
+        //     } catch (\Exception $e) {
+        //         DB::rollBack();
+        //         return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+        //     }
+        // }
+
         public function inputMform3(Request $request)
         {
             $rules = [
@@ -6529,12 +6965,31 @@ class regValidation extends Controller
                 $postPartum->ap_Intervention = $request->postIntervention;
                 $postPartum->pp_dateNextVisit = $request->postNxtVisit;
         
+                // Find the latest postpartum record for this patient
+                $lastPostPartum = postpartum_tbl::where('mat_id', $request->matId)
+                                                ->orderBy('pp_dateVisit', 'desc')
+                                                ->first();
+        
+                // If a previous record exists and the current visit date matches the previous next visit date
+                if ($lastPostPartum && $request->postVisit == $lastPostPartum->pp_dateNextVisit) {
+                    // Update the sched_tbl record of the last visit to mark it as completed
+                    $lastSchedule = sched_tbl::where('pp_id', $lastPostPartum->pp_id)
+                                             ->first();
+        
+                    if ($lastSchedule) {
+                        $lastSchedule->sched_status = 'Completed';
+                        $lastSchedule->save();
+                    }
+                }
+        
+                // Save the new postpartum record
                 if ($postPartum->save()) {
-                    // Now create the sched_tbl record with vt_id as a foreign key
+                    // Now create the sched_tbl record with pp_id as a foreign key
                     if ($request->filled('postNxtVisit')) {
                         $schedule = new sched_tbl;
                         $schedule->pp_id = $postPartum->pp_id;
                         $schedule->sched_desc = 'Postpartum Schedule'; 
+                        $schedule->sched_status = 'Scheduled';  // The new schedule initially has no status
                         $schedule->save();
                     }
         
@@ -6546,7 +7001,7 @@ class regValidation extends Controller
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
-                return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+                return response()->json(['status' => 0, 'msg' => 'An error occurred: ' . $e->getMessage()], 500);
             }
         }
 
@@ -6934,6 +7389,57 @@ class regValidation extends Controller
         return view('dashboards/healthWorkerDb/immuVaccine', $data);
     }
 
+    // public function inputVac(Request $request)
+    // {
+    //     $rules = [
+    //         'vacDate' => 'required',
+    //         'vacWt' => 'required',
+    //         'vaccines' => 'required',
+    //         'vacStatus' => 'required',
+    //     ];
+    
+    //     $validator = Validator::make($request->all(), $rules, [
+    //         'required' => 'This Field is Required.',
+    //     ]);
+    
+    //     if ($validator->fails()) {
+    //         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+    //     }
+    
+    //     DB::beginTransaction();
+    
+    //     try {
+    //         // Create vaccine record
+    //         $vac = new vaccineTaken_tbl;
+    //         $vac->epi_id = $request->epId;
+    //         $vac->vt_date = $request->vacDate;
+    //         $vac->vt_wt = $request->vacWt;
+    //         $vac->vt_vaccines = $request->vaccines;
+    //         $vac->vt_nxtSched = $request->vacSched;
+    //         $vac->vt_status = $request->vacStatus;
+    //         $vac->em_id = $request->empId;
+    
+    //         if ($vac->save()) {
+    //             // Now create the sched_tbl record with vt_id as a foreign key
+    //             if ($request->filled('vacSched')) {
+    //                 $schedule = new sched_tbl;
+    //                 $schedule->vt_id = $vac->vt_id;
+    //                 $schedule->sched_desc = 'Immunization Schedule'; 
+    //                 $schedule->save();
+    //             }
+    
+    //             DB::commit();
+    //             return response()->json(['status' => 1, 'msg' => 'Vaccination and Schedule Added Successfully']);
+    //         } else {
+    //             DB::rollBack();
+    //             return response()->json(['status' => 0, 'msg' => 'Failed to add Vaccination'], 500);
+    //         }
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+    //     }
+    // }
+
     public function inputVac(Request $request)
     {
         $rules = [
@@ -6942,19 +7448,36 @@ class regValidation extends Controller
             'vaccines' => 'required',
             'vacStatus' => 'required',
         ];
-    
+
         $validator = Validator::make($request->all(), $rules, [
             'required' => 'This Field is Required.',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         }
-    
+
         DB::beginTransaction();
-    
+
         try {
-            // Create vaccine record
+            // Find the previous vaccination record for the same patient (epi_id)
+            $previousVac = vaccineTaken_tbl::where('epi_id', $request->epId)
+                ->whereNotNull('vt_nxtSched') // Only consider records with a next scheduled date
+                ->orderBy('vt_id', 'desc')  // Get the latest record by vt_id
+                ->first();
+
+            // If there is a previous record, check if the vacDate matches the previous vt_nxtSched
+            if ($previousVac && $request->vacDate === $previousVac->vt_nxtSched) {
+                // Update the previous schedule's status to "Completed"
+                $previousSchedule = sched_tbl::where('vt_id', $previousVac->vt_id)->first();
+
+                if ($previousSchedule) {
+                    $previousSchedule->sched_status = 'Completed';
+                    $previousSchedule->save();
+                }
+            }
+
+            // Create a new Vaccine record
             $vac = new vaccineTaken_tbl;
             $vac->epi_id = $request->epId;
             $vac->vt_date = $request->vacDate;
@@ -6963,16 +7486,16 @@ class regValidation extends Controller
             $vac->vt_nxtSched = $request->vacSched;
             $vac->vt_status = $request->vacStatus;
             $vac->em_id = $request->empId;
-    
+
             if ($vac->save()) {
-                // Now create the sched_tbl record with vt_id as a foreign key
+                // Create the schedule record with vt_id as a foreign key
                 if ($request->filled('vacSched')) {
                     $schedule = new sched_tbl;
                     $schedule->vt_id = $vac->vt_id;
-                    $schedule->sched_desc = 'Immunization Schedule'; 
+                    $schedule->sched_desc = 'Immunization Schedule';
                     $schedule->save();
                 }
-    
+
                 DB::commit();
                 return response()->json(['status' => 1, 'msg' => 'Vaccination and Schedule Added Successfully']);
             } else {
@@ -6981,7 +7504,7 @@ class regValidation extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 0, 'msg' => 'An error occurred'], 500);
+            return response()->json(['status' => 0, 'msg' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
     
@@ -7131,6 +7654,11 @@ public function calendar(Request $request)
 
     // Loop through each schedule and get the relevant date information
     foreach ($sched as $schedule) {
+        // Normalize and check if sched_status is "Completed"
+        if (strtolower(trim($schedule->sched_status)) === 'completed') {
+            continue;  // Skip this iteration if the status is "Completed"
+        }
+
         $fullName = '';
 
         // Check if `vt` and `epi` relationship exists and get the full name
@@ -7165,7 +7693,6 @@ public function calendar(Request $request)
                                 $schedule->ap->ap->maiden->res_lname . ' ' . 
                                 ($schedule->ap->ap->maiden->suffix ?? '') 
                                 : ''),
-
             ];
         }
 
@@ -7185,7 +7712,6 @@ public function calendar(Request $request)
                                 $schedule->pp->maternal->maiden->res_lname . ' ' . 
                                 ($schedule->pp->maternal->maiden->suffix ?? '') 
                                 : ''),
-
             ];
         }
 
@@ -7212,6 +7738,8 @@ public function calendar(Request $request)
         'events' => $events,
     ]);
 }
+
+
 
 
 

@@ -10,4 +10,11 @@ class blotter_tbl extends Model
     use HasFactory;
     protected $table = 'blotter_tbls';
     protected $primaryKey = 'blotter_id';
+    public $incrementing = true; 
+    protected $keyType = 'int';
+
+    public function resident()
+    {
+        return $this->belongsTo(resident_tbl::class, 'res_id', 'res_id');
+    }
 }

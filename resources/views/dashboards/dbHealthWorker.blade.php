@@ -627,7 +627,7 @@
                     {{-- End of Destrict Graph --}}
 
                     {{-- RHU and Destrict Comparison Graph --}}
-                      <div class="card mt-4 mb-4">
+                    <div class="card mt-4 mb-4">
                         <div class="card-body">
                             <div class="titleCard">
                                 <h4>RHU and Destrict Monthly Comparison as of {{ date('Y') }}</h4>
@@ -645,7 +645,7 @@
                             <!-- Line Chart -->
                             <canvas id="rhuDestrictChart"></canvas>
                         </div>
-                      </div>
+                    </div>
                     {{-- End of RHU and Destrict Comparison Graph --}}
 
                   </div>

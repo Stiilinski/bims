@@ -35,7 +35,68 @@
         display: flex;
         justify-content: center;
     }
+/* PRINT */
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: portrait;
+        margin: 1mm; /* Set margins */
+    }
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+
+    /* .port2 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-left: 2px;
+    }
+
+    .port2 h5 {
+        font-size: 14px!important;
+    } */
+
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #FFF;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    .card-title, .nav {
+        display: none !important;
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 1200px; /* Ensure the card takes full width of the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block;
+        padding: 1mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .card-body * {
+        padding: 5;
+        background-color: #fff;
+        font-size: 12px;
+    }  
+}
 </style>
 <body>
 
@@ -61,7 +122,7 @@
                 <option value="Lubi">Lubi</option>
             </select>
 
-            <button type="button" class="btn btn-primary" style="width: 40%;"><i class="bi bi-printer-fill"></i> Print</button>
+            <button type="button" class="btn btn-primary" id="print" style="width: 40%;"><i class="bi bi-printer-fill"></i> Print</button>
         </div>
     </div><!-- End Page Title -->
   
@@ -110,6 +171,12 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+const printBtn = document.getElementById('print');
+printBtn.addEventListener('click', function() {
+    window.print();
+}); 
+
+
 document.getElementById('purokSelect').addEventListener('change', function() {
     var purok = this.value;
     

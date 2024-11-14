@@ -288,7 +288,6 @@
     <div class="pagetitle">
         <h1>Dengue</h1>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">New Record</button>  
         </div>
     </div><!-- End Page Title -->
@@ -340,7 +339,7 @@
         </div>
     </div>
 
-      <!-- SIDE A -->
+    <!-- SIDE A -->
     <div class="modal fade" id="ExtralargeModal" tabindex="-1">
         <div class="modal-dialog custom-modal-width">
             <div class="modal-content">
@@ -976,7 +975,8 @@
                 </form><!-- End Horizontal Form -->
             </div>
         </div>
-    </div><!-- End OF SIDE A-->
+    </div>
+    <!-- End OF SIDE A-->
 
     {{-- EDIT FORM --}}
     <div class="modal fade" id="EditExtralargeModal" tabindex="-1">

@@ -9,6 +9,9 @@ Route::get('/', function () {
 
 //for multipurpose barangay clearance
 Route::post('saveBrgyClearance', [regValidation::class, 'saveBrgyClearance'])->name('regValidation.saveBrgyClearance');
+Route::get('/clearance/{id}', [regValidation::class, 'getClearData']);
+Route::post('/update-bcl/{id}', [regValidation::class, 'updateBcl']);
+
 Route::get('/dashboards/secretariesDb/dbBrgyClearance', [regValidation::class, 'barangayClearance']);
 Route::get('/dashboards/secretariesDb/brgyClearance', [regValidation::class, 'viewBrgyClearance']);
 Route::put('/upBrgyClearance/{id}', [regValidation::class, 'updateBrgyClearance'])->name('updateBrgyClearance');
@@ -21,6 +24,8 @@ Route::get('/residentClearance/{id}', [regValidation::class, 'getResidentClearan
 
 //for business barangay clearance
 Route::post('saveBusinessClearance', [regValidation::class, 'saveBusinessClearance'])->name('regValidation.saveBusinessClearance');
+Route::get('/permit/{id}', [regValidation::class, 'getPermitData']);
+
 Route::get('/dashboards/secretariesDb/dbBusinessPermit', [regValidation::class, 'businessPermit']);
 Route::get('/dashboards/secretariesDb/businessClearance', [regValidation::class, 'viewBusinessClearance']);
 Route::post('insertBusiTransaction', [regValidation::class, 'insertBusiTransaction'])->name('regValidation.insertBusiTransaction');
@@ -31,6 +36,7 @@ Route::get('/residentBusiness/{id}', [regValidation::class, 'getResidentBusiness
 
 // for certificates
 Route::post('saveCertificate', [regValidation::class, 'saveCertificate'])->name('regValidation.saveCertificate');
+Route::get('/certificate/{id}', [regValidation::class, 'getCertData']);
 Route::get('/dashboards/secretariesDb/certIndigency', [regValidation::class, 'viewCertIndigency']);
 Route::post('insertCertTransaction', [regValidation::class, 'insertCertTransaction'])->name('regValidation.insertCertTransaction');
 Route::get('/resident/{id}', [regValidation::class, 'getResidentData'])->name('resident.data');
@@ -41,23 +47,29 @@ Route::get('/dashboards/secretariesDb/certification', [regValidation::class, 'vi
 Route::get('/dashboards/secretariesDb/brgyCertification', [regValidation::class, 'viewBrgyCertification']);
 Route::get('/dashboards/secretariesDb/goodMoral', [regValidation::class, 'viewGoodMoral']);
 Route::get('/residentCertificate/{id}', [regValidation::class, 'getResidentCertificate']);
+Route::post('/update-cert/{id}', [regValidation::class, 'updateCert']);
+
 
 
 // for complaints
 Route::post('saveComplaints', [regValidation::class, 'saveComplaints'])->name('regValidation.saveComplaints');
 Route::get('/dashboards/secretariesDb/dbBlotter', [regValidation::class, 'dbBlotter']);
+Route::get('/blotter/{id}', [regValidation::class, 'getBlotterData']);
+Route::post('/update-blotter-status', [regValidation::class, 'updateBlotterStatus']);
+
 Route::get('/residentComplaint/{id}', [regValidation::class, 'getResidentComplaint'])->name('resident.data');
 Route::get('/dashboards/secretariesDb/brgyBlotter', [regValidation::class, 'viewBrgyBlotter']);
 Route::put('/upBlotter/{id}', [regValidation::class, 'updateBlotter'])->name('updateBlotter');
-Route::post('/update-blotter-status', [regValidation::class, 'updateBlotterStatus']);
+
 Route::post('/reject-blotter', [regValidation::class, 'rejectBlotter']);
 Route::get('/residentBlotter/{id}', [regValidation::class, 'getResidentBlotter']);
 
 // for residents
     Route::post('saveResidents', [regValidation::class, 'saveResidents'])->name('regValidation.saveResidents');
     Route::get('displayResident', [regValidation::class, 'displayResident'])->name('regValidation.displayResident');
-    Route::get('edit-resident/{id}', [regValidation::class, 'editResident']);
+    Route::get('/edit-resident/{id}', [regValidation::class, 'editResident']);
     Route::post('/update-resident/{id}', [regValidation::class, 'updateResident']);
+
     Route::get('dbResidents', [regValidation::class, 'dbResidents'])->name('dbResidents');
     Route::get('/residentTraceTran', [regValidation::class, 'traceResidents'])->name('residentTraceTran');
     Route::post('dbResidents', [regValidation::class, 'traceTransaction'])->name('traceTransaction');

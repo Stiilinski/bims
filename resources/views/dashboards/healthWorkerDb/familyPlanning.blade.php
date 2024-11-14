@@ -277,7 +277,6 @@
     <div class="pagetitle">
         <h1>Family Planning</h1>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">New Record</button>  
         </div>
     </div><!-- End Page Title -->

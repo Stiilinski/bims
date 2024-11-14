@@ -1092,9 +1092,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <form method="POST" action="{{ route('regValidation.saveComplaints')}}" class="certificate" id="complaint">
+                    <form method="POST" action="{{ route('regValidation.saveComplaints')}}" class="complaint" id="complaint">
                       @csrf
-                      <div class="row g-3">
+                        <div class="row g-3">
                           <div class="col-md-6">
                             <label for="tcode4" class="form-label">Transaction Code</label>
                             <input type="text" class="form-control" id="tcode4" name="tcode4" readonly>
@@ -1156,15 +1156,15 @@
                             <input type="date" class="form-control" id="dateIssued4" name="dateIssued4" readonly>
                         </div>
                       </div>  
-                  </div>
-                  <div class="alertCon">
-                    <div id="alert-container2"></div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                  </div>
-                </form>
+                      </div>
+                      <div class="alertCon">
+                        <div id="alert-container2"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                      </div>
+                    </form>
                 </div>
               </div>
             </div>
@@ -1178,71 +1178,71 @@
                       </div>
                       <div class="modal-body">
                         <form method="POST" action="{{ route('regValidation.saveCertificate')}}" class="certificate" id="certificate">
-                          <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="tcode3" class="form-label">Transaction Code</label>
-                                <input type="text" class="form-control" id="tcode3" name="tcode3" readonly>
-                                <span class="text-danger error-text tcode3_error"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="fName3" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="fName3" name="fName3">
-                                <span class="text-danger error-text fName3_error"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="mName3" class="form-label">Middle Name</label>
-                                <input type="text" class="form-control" id="mName3" name="mName3">
-                                <span class="text-danger error-text mName3_error"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lName3" class="form-label">Family Name</label>
-                                <input type="text" class="form-control" id="lName3" name="lName3">
-                                <span class="text-danger error-text lName3_error"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="suffix3" class="form-label">Suffix (Leave It If None)</label>
-                                <select name="suffix3" id="suffix3"  class="form-control">
-                                    <option value="">N/A</option>
-                                    <option value="1">I</option>
-                                    <option value="2">II</option>
-                                    <option value="3">III</option>
-                                    <option value="4">IV</option>
-                                    <option value="5">V</option>
-                                    <option value="Jr.">Jr.</option>
-                                </select>
-                                <span class="text-danger error-text suffix3_error"></span>
-                            </div>
-            
-                            <div class="col-md-6">
-                                <label for="bDate3" class="form-label">Birth Date</label>
-                                <input type="date" class="form-control" id="bDate3" name="bDate3">
-                                <span class="text-danger error-text bDate3_error"></span>
-                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="tcode3" class="form-label">Transaction Code</label>
+                                    <input type="text" class="form-control" id="tcode3" name="tcode3" readonly>
+                                    <span class="text-danger error-text tcode3_error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fName3" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="fName3" name="fName3">
+                                    <span class="text-danger error-text fName3_error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="mName3" class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="mName3" name="mName3">
+                                    <span class="text-danger error-text mName3_error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lName3" class="form-label">Family Name</label>
+                                    <input type="text" class="form-control" id="lName3" name="lName3">
+                                    <span class="text-danger error-text lName3_error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="suffix3" class="form-label">Suffix (Leave It If None)</label>
+                                    <select name="suffix3" id="suffix3"  class="form-control">
+                                        <option value="">N/A</option>
+                                        <option value="1">I</option>
+                                        <option value="2">II</option>
+                                        <option value="3">III</option>
+                                        <option value="4">IV</option>
+                                        <option value="5">V</option>
+                                        <option value="Jr.">Jr.</option>
+                                    </select>
+                                    <span class="text-danger error-text suffix3_error"></span>
+                                </div>
+                
+                                <div class="col-md-6">
+                                    <label for="bDate3" class="form-label">Birth Date</label>
+                                    <input type="date" class="form-control" id="bDate3" name="bDate3">
+                                    <span class="text-danger error-text bDate3_error"></span>
+                                </div>
 
-                            <div class="col-md-6">
-                              <label for="purposeCertificate3" class="form-label">Purpose</label>
-                              <input type="text" class="form-control" id="purposeCertificate3" name="purposeCertificate3" >
-                              <span class="text-danger error-text purposeCertificate3_error"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="dateIssued3" class="form-label">Date Issued</label>
-                                <input type="date" class="form-control" id="dateIssued3" name="dateIssued3" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="pickUp3" class="form-label">Pick Up Date</label>
-                                <input type="date" class="form-control" id="pickUp3" name="pickUp3">
-                                <span class="text-danger error-text pickUp3_error"></span>
-                            </div>
+                                <div class="col-md-6">
+                                  <label for="purposeCertificate3" class="form-label">Purpose</label>
+                                  <input type="text" class="form-control" id="purposeCertificate3" name="purposeCertificate3" >
+                                  <span class="text-danger error-text purposeCertificate3_error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dateIssued3" class="form-label">Date Issued</label>
+                                    <input type="date" class="form-control" id="dateIssued3" name="dateIssued3" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="pickUp3" class="form-label">Pick Up Date</label>
+                                    <input type="date" class="form-control" id="pickUp3" name="pickUp3">
+                                    <span class="text-danger error-text pickUp3_error"></span>
+                                </div>
+                              </div>
                           </div>
-                      </div>
-                      <div class="alertCon">
-                        <div id="alert-container3"></div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </form>
+                          <div class="alertCon">
+                            <div id="alert-container3"></div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </form>
                 </div>
               </div>
             </div>

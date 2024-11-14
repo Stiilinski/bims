@@ -346,6 +346,60 @@
         padding-bottom: 3px;
         margin-left: 5px;
     }
+
+/* PRINT */
+@media print {
+    /* Set page orientation to landscape */
+    @page {
+        size: landscape;
+        margin: 10mm; /* Set margins */
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+    }
+    /* Ensure the body and all child elements are visible during printing */
+    body {
+        visibility: visible !important;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+    .header, .pagetitle {
+        display: none !important; /* Hide page title and button area */
+    }
+
+    .card-title, .nav {
+        display: none !important;
+    }
+
+    /* Make sure the card is visible and takes up the full page */
+    .card {
+        width: 1500px; /* Ensure the card takes full width of the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: visible !important;
+        background-color: #fff;
+        box-shadow: none;
+        display: block;
+        padding: 1mm; /* Adjust padding to prevent clipping */
+        box-sizing: border-box;
+    }
+
+    .back-to-top {
+        display: none;
+    }
+
+    .card-body * {
+        padding: 5;
+        background-color: #fff;
+    }  
+}
 </style>
 <body>
     @include('layouts.headerHealthWorkers')
@@ -362,7 +416,7 @@
                   </nav>
             </div>
             <div class="btnArea">
-                <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
+                <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
             </div>
         </div><!-- End Page Title -->
 
@@ -517,6 +571,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
     <script>
+    const printBtn = document.getElementById('print');
+    printBtn.addEventListener('click', function() {
+        window.print();
+    }); 
+
       $(document).ready(function() {
         $('#dob').inputmask('99/99/9999'); // This will set the format to MM/DD/YYYY
       });

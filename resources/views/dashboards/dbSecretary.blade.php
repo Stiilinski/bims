@@ -1,352 +1,536 @@
-@extends('layouts.dbLayout')
+@include('layouts.headSecretary')
+<style>
+    /* Dropdown Menu Styles */
+    .dropdown {
+        display: flex;
+        justify-content: flex-end;
+    }
 
-@section('style')
-    <link rel="stylesheet" href="/css/dbSecretary.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
+    .dots-icon {
+        background-color: transparent;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 10px;
+        color: #333;
+    }
 
-@section('content')
-<div class="container">
-    <div class="containerCon">
-        <div class="sideBar">
-            <div class="sLogoPic">
-                <img src="/images/logo.png" class="logo" alt="brgy logo">
-                <h2 class="systemName">BIM SYSTEM</h2>
-            </div>
+    .dots-icon:focus {
+        outline: none;
+    }
 
-            <div class="profNameCon" onclick="toggleDropdown()">
-                @if($LoggedUserInfo)
-                    <div class="profilePart">
-                        <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
-                    </div>
+    .dropdown-content {
+        display: none; /* Hide the dropdown initially */
+        position: absolute;
+        right: 0;
+        background-color: #fff;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        padding: 10px 0;
+        margin-top: 5px;
+    }
 
-                    <div class="namePart">
-                        <h4 class="profName">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
-                        <input type="hidden" name="idVal" value="{{ $LoggedUserInfo['em_id']}}">
-                        <h5 class="position">{{ $LoggedUserInfo['em_position']}}</h5>
-                    </div>
+    .dropdown-content a {
+        color: #333;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+    }
 
-                    <div class="optionPartBtn">
-                        <h6>&#9660;</h6>
-                    </div>
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
 
-                    <div class="optionPart dropdown-content" id="dropdownContent">
-                        <button type="button" value="{{ $LoggedUserInfo['em_id'] }}" class="changeProf editProfile" onclick='openEditEmpForm(@json($LoggedUserInfo))'>Change Profile</button>
-                        <a href="{{ route('regValidation.logout') }}">Logout</a>
-                    </div>
-                @else
-                    <p>You are not logged in.</p>
-                @endif
-            </div>
+    .show {
+        display: block; /* Show the dropdown when the 'show' class is added */
+    }
 
-            <div class="navBar">
-                <a href="{{ action('App\Http\Controllers\regValidation@dashboard') }}"><div class="secDashboard">
-                    <button class="btnSecDashboard act"><span class="dashb"> <i class='bx bxs-home'></i> Dashboard</span></button>
-                </div></a>
+    /* Chart Container Styling */
+    #frontServiceChart {
+        max-width: 100%; /* Make sure the chart is responsive */
+        height: 400px;  /* Set a height for the chart */
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@residentsRec') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-group'></i> Resident Record</span></button>
-                </div></a>
+    /* Title Styling */
+    .titleCard h4 {
+        font-size: 24px;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: left;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@barangayCert') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bxs-certification'></i>Certifications</span></button>
-                </div></a>
+    /* Additional Padding and Margin for Card */
+    .card-body {
+        padding: 20px;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@barangayClearance') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-file'></i>Barangay Clearance</span></button>
-                </div></a>
+    /* Styling for the Heading */
+    #chartHeading {
+        font-size: 20px;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@dbBlotter') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-folder-open'></i> Blotter Records</span></button>
-                </div></a>
+    /* Ensure the page body has enough space for the dropdown */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@businessPermit') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"><i class='bx bxs-book-open'></i>Business Permit</span></button>
-                </div></a>
+    /* Card Styling */
+    .card {
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@requestedDoc') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bxs-file-import'></i>Transaction Documents</span></button>
-                </div></a>
+    /* Card Body Padding */
+    .card-body {
+        padding: 20px;
+    }
 
+    /* Responsiveness for smaller screens */
+    @media (max-width: 768px) {
+        .titleCard h4 {
+            font-size: 18px;  /* Smaller title on mobile */
+        }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@dashboardPur') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-current-location'></i> Purok</span></button>
-                </div></a>
-            </div>
-        </div>
+        #frontServiceChart {
+            height: 300px;  /* Smaller chart on mobile */
+        }
 
+        .dropdown-content {
+            min-width: 140px;  /* Adjust dropdown width for smaller screens */
+        }
 
-        <div class="contentCon">
-            <div class="contentHeader">
-                <div class="fnamePart">
-                    <h4 class="profNames">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
-                </div>
+        .dots-icon {
+            font-size: 20px;  /* Smaller dots icon on mobile */
+        }
+    }
 
-                <div class="profPart">
-                    <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
-                </div>
-            </div>
+</style>
 
-            <div class="mainContentCon">
-                <div class="innerContent">
-                    <div class="navTitle">DASHBOARD</div>
-                    <hr>
-                    <div class="cardBoard">
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">POPULATION</h5>
-                                <p class="card-text">{{ $totalPopulation }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">MALE</h5>
-                                <p class="card-text">{{ $totalMale }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">FEMALE</h5>
-                                <p class="card-text">{{ $totalFemale }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">VOTERS</h5>
-                                <p class="card-text">{{ $totalVoters }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">NON VOTERS</h5>
-                                <p class="card-text">{{ $totalNonVoters }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">BLOTTER</h5>
-                                <p class="card-text">{{ $totalBlotters }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">CERTIFICATE</h5>
-                                <p class="card-text">{{ $totalCertificates }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">BUSINESS PERMIT</h5>
-                                <p class="card-text">{{ $totalBusinessPermits }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;">
-                            <div class="card-body">
-                                <h5 class="card-title">BARANGAY CLEARANCE</h5>
-                                <p class="card-text">{{ $totalClearances }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body>
+    @include('layouts.headerSecretary')
 
-
-        <div class="editEmployeeAccount">
-            <div class="editEmployeeAccountCon">
-                <div class="headerEditTitle">
-                    <span>Edit Employee</span>
-                    <span><i class='bx bx-x' onclick="closeEditEmpForm()"></i></span>
-                </div>
-
-                <form class="editEmployeeForms" id="e_empForm" autocomplete="off" enctype="multipart/form-data">
-                    @csrf
-                    <div class="emp_leftInput">    
-                        <div class="emp_avatarcon">
-                            <img id="emp_profilePreview" class="e_avatar" alt="Profile Image">
-                            <input type="hidden" name="e_id" id="e_id">
-                            <input type="text" name="e_path" id="e_path" readonly>
-                            
-                            <div class="mb-3">
-                                <label for="e_profile" class="form-label1">Profile Picture</label>
-                                <input type="file" class="form-control" id="e_profile" name="picture" aria-describedby="inputGroupFileediton03" aria-label="Upload">
-                                <span class="text-danger error-text profile_error"></span>
-                            </div>  
-                        </div>
-                    </div>
-                    
-                    <div class="emp_rightInput">
-                        <div class="emp_fnameParts">
-                            <label for="emp_fname">First Name</label>
-                            <input type="text" class="form-control" name="fname" id="emp_fname" placeholder="Enter Firstname">
-                            <span class="text-danger error-text firstName_error"></span>
-                        </div>
-
-                        <div class="emp_lnamePart">
-                            <label for="emp_lname">Last Name</label>
-                            <input type="text" class="form-control" name="lname" id="emp_lname" placeholder="Enter Lastname">
-                            <span class="text-danger error-text lastName_error"></span>
-                        </div>
-
-            
-            
-                        <div class="emp_accountPart">
-                            <div class="emp_emailPart">
-                                <label for="emp_email">Email</label>
-                                <input type="text" class="form-control" name="email" id="emp_email">
-                                <span class="text-danger error-text email_error"></span>
-                            </div>
-
-                            <div class="emp_passwordPart">
-                                <label for="emp_password">Password</label>
-                                <input type="password" class="form-control" id="emp_password" name="password" placeholder="Enter Password">
-                                <span class="text-danger error-text password_error"></span>
-                            </div>
-
-                            <div class="emp_addressPart">
-                                <label for="emp_address">Address</label>
-                                <input type="text" class="form-control" name="address" id="emp_address">
-                                <span class="text-danger error-text address_error"></span>
-                            </div>
-
-                            <div class="emp_contactPart">
-                                <label for="emp_contact">Contact</label>
-                                <input type="text" class="form-control" name="contact" id="emp_contact">
-                                <span class="text-danger error-text contact_error"></span>
-                            </div>
-
-                            <div class="emp_positionPart">
-                                <label for="emp_position">Position</label>
-                                <input type="text" class="form-control" name="position" id="emp_position" readonly>
-                                <span class="text-danger error-text position_error"></span>
-                            </div>                            
-                        </div>
-            
-            
-                        <div class="buttonPart">
-                            <button type="button" class="btn btn-primary" onclick="closeEditEmpForm()">Cancel</button>
-                            <button type="button" class="btn btn-primary update_employee">Update</button>
-                        </div>
-            
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <script src="/js/dbsecretary.js"></script>
-    </div>
+    @include('layouts.sidebarSecretary')
     
-    <br>
-    <br>
-    <div class="footer">Copyright</div>
+    <main id="main" class="main">
+        <div class="containerCon">
 
-    {{-- <script src="/js/dbsecretary.js"></script> --}}
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    {{-- <script src="/js/jquery-3.5.0.min.js"></script> --}}
+            <div class="pagetitle">
+                <h1>Dashboard</h1>
+            </div>
+          
+            <section class="section dashboard">
+              <div class="row">
+          
+                <!-- Left side columns -->
+                <div class="col-lg-8">
+                  <div class="row">
+          
+                    <!-- Population Card -->
+                    <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Population <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalPopulation }}</h6>
+                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+          
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Population Card -->
+          
+                    <!-- Male Card -->
+                    <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card revenue-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Male <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #a4c5f4; color: #012970; ">
+                              <i class="bx bx-male"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalMale }}</h6>
+                              <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+          
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End MAle Card -->
+          
+                    <!-- Female Card -->
+                    <div class="col-xxl-4 col-xl-12">
+                      <div class="card info-card customers-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Female <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #FFC0CB!important; color: #d80f30!important">
+                              <i class="bx bx-female"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalFemale }}</h6>
+                              <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
+          
+                            </div>
+                          </div>
+          
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Female Card -->
+          
+                    <!-- Certificate Card -->
+                    <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Certificate <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bx bxs-certification"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalCertificates }}</h6>
+                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+          
+                            </div>
+                          </div>
+                        </div>
+          
+                      </div>
+                    </div>
+                    <!-- End Certificate Card -->
+          
+                    <!-- Clearance Card -->
+                    <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Clearance <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bx bxs-file-blank"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalClearances }}</h6>
+                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+          
+                            </div>
+                          </div>
+                        </div>
+          
+                      </div>
+                    </div>
+                    <!-- End Clearance Card -->
+          
+                    <!-- Permit Card -->
+                    <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Permit <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bx bxs-file"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalBusinessPermits }}</h6>
+                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+          
+                            </div>
+                          </div>
+                        </div>
+          
+                      </div>
+                    </div>
+                    <!-- End Permit Card -->
+          
+                    <!-- Blotter Card -->
+                    <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Blotter <span>| Total</span></h5>
+          
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bx bxs-note"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{ $totalBlotters }}</h6>
+                              <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+          
+                            </div>
+                          </div>
+                        </div>
+          
+                      </div>
+                    </div>
+                    <!-- End Blotter Card -->  
+
+                    <!-- Add more cards for other age groups as needed -->
+                    <!-- Documents Issuance  Reports -->
+                    <div class="card mt-4 mb-4">
+                        <div class="card-body">
+                            <div class="titleCard">
+                                <h4 id="chartHeading">Document Reports | Today</h4>
+                            </div>
+                        
+                            <!-- Dropdown for Data Selection -->
+                            <div class="dropdown">
+                                <button id="dropdownButton" class="dots-icon">⋮</button>
+                                <div class="dropdown-content" id="dataDropdownRef">
+                                    <a href="#" id="todayData">Today Data</a>
+                                    <a href="#" id="monthlyData">Monthly Data</a>
+                                    <a href="#" id="yearlyData">Yearly Data</a>
+                                </div>
+                            </div>
+                        
+                            <!-- Line Chart -->
+                            <canvas id="frontServiceChart"></canvas>
+                        </div>
+                    </div>                    
+                    <!-- End Reports -->
+                  </div>
+                </div>
+          
+                <!-- Right side columns -->
+                <div class="col-lg-4">
+        
+                <!-- Private Announcement -->
+                <div class="card">
+                    <div class="card-body pb-0">
+                    <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                    <div class="news" id="schedules-container">
+        
+                    </div><!-- End sidebar recent posts-->
+        
+                    </div>
+                </div>
+                <!-- End Private Announcement -->
+        
+                <!-- Public Announcement -->
+                <div class="card">
+                    <div class="card-body pb-0">
+                    <h5 class="card-title">Public Announcement <span id="currentMonthSpan">| Today</span></h5>
+                    <div class="news" id="publicSchedules-container">
+
+                    </div>
+                    <!-- End sidebar recent posts-->
+                    </div>
+                </div>
+                <!-- End Public Announcement -->
+                </div>
+                <!-- End Right side columns -->
+            </section>
+        </div>
+    </main>
+    @include('layouts.footerSecretary')
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        $(document).on('click', '.update_employee', function (e) {
-    e.preventDefault();
-    var employee_id = $('#e_id').val();
+    document.addEventListener('DOMContentLoaded', function() {
+        const filter = "{{ $filter }}";  
 
-    var formData = new FormData();
-    formData.append('fname', $('#emp_fname').val());
-    formData.append('lname', $('#emp_lname').val());
-    formData.append('email', $('#emp_email').val());
-    formData.append('password', $('#emp_password').val());
-    formData.append('address', $('#emp_address').val());
-    formData.append('contact', $('#emp_contact').val());
-    formData.append('position', $('#emp_position').val());
-    if ($('#e_profile')[0].files.length > 0) {
-        formData.append('picture', $('#e_profile')[0].files[0]); // Append the file only if selected
-    }
-    
-    $.ajax({
-        type: "POST",
-        url: "/update-employee/" + employee_id,
-        data: formData,
-        dataType: "json",
-        contentType: false, // Needed for FormData
-        processData: false, // Needed for FormData
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            console.log(response);
-            if(response.status == 400) {
-                alert("Validation Error");
-            } else if(response.status == 404) {
-                alert("Employee Not Found");
-            } else {
-                alert("Success");
-                document.querySelector('.editEmployeeAccount').style.display = 'none';
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("An error occurred. Check the console for details.");
+        // Data from the backend
+        const todayBlotters = @json($todayBlotters);
+        const todayCertificates = @json($todayCertificates);
+        const todayClearances = @json($todayClearances);
+        const todayBusinessPermits = @json($todayBusinessPermits);
+
+        const monthlyBlotters = @json($monthlyBlotters);
+        const monthlyCertificates = @json($monthlyCertificates);
+        const monthlyClearances = @json($monthlyClearances);
+        const monthlyBusinessPermits = @json($monthlyBusinessPermits);
+
+        const yearlyData = @json($yearlyData); 
+
+        // Function to toggle dropdown visibility
+        function toggleDropdownRef() {
+            const dropdown = document.getElementById('dataDropdownRef');
+            dropdown.classList.toggle('show');
         }
-    });
-});
 
-function openEditEmpForm(employee) {
-    // Now you have the employee object directly
-    console.log(employee);
+        // Function to update chart data based on selected filter
+        function updateChartData(filter) {
+            let labels = [];
+            let blottersData = [];
+            let certificatesData = [];
+            let clearancesData = [];
+            let businessPermitsData = [];
 
-    $.ajax({
-        type: "GET",
-        url: "/edit-employee/" + employee.em_id,
-        success: function(response) {
-            console.log(response);
-            if(response.status == 404) {
-                alert("Employee Not Found");
-            } else {
-                $('#e_path').val(response.LoggedUserInfo.em_picture);
-                $('#emp_fname').val(response.LoggedUserInfo.em_fname);
-                $('#emp_lname').val(response.LoggedUserInfo.em_lname);
-                $('#emp_email').val(response.LoggedUserInfo.em_email);
-                $('#emp_address').val(response.LoggedUserInfo.em_address);
-                $('#emp_contact').val(response.LoggedUserInfo.em_contact);
-                $('#emp_position').val(response.LoggedUserInfo.em_position);
-                $('#emp_profilePreview').attr('src', '/storage/' + response.LoggedUserInfo.em_picture);
-                $('#e_id').val(employee.em_id);
-
-                $('.editEmployeeAccount').css('display', 'flex'); // Show the edit form container with flex display
+            if (filter === 'today') {
+                labels = ['8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM'];
+                blottersData = todayBlotters;
+                certificatesData = todayCertificates;
+                clearancesData = todayClearances;
+                businessPermitsData = todayBusinessPermits;
             }
-        },
-        error: function(xhr, status, error) {
-            console.log(xhr.responseText);
+            else if (filter === 'monthly') {
+                // Ensure we are using the correct labels (months)
+                labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                blottersData = monthlyBlotters;
+                certificatesData = monthlyCertificates;
+                clearancesData = monthlyClearances;
+                businessPermitsData = monthlyBusinessPermits;
+            }
+            else if (filter === 'yearly') {
+                labels = yearlyData.map(data => data.year);
+                blottersData = yearlyData.map(data => data.blotters);
+                certificatesData = yearlyData.map(data => data.certificates);
+                clearancesData = yearlyData.map(data => data.clearances);
+                businessPermitsData = yearlyData.map(data => data.businessPermits);
+            }
+
+            // Check if data is available for the current filter
+            if (blottersData.length === 0 || certificatesData.length === 0 || clearancesData.length === 0 || businessPermitsData.length === 0) {
+                console.warn('No data available for ' + filter);
+                return; // Exit if there's no data to show
+            }
+
+            // Update the chart
+            myChart.data.labels = labels;
+            myChart.data.datasets[0].data = blottersData;
+            myChart.data.datasets[1].data = certificatesData;
+            myChart.data.datasets[2].data = clearancesData;
+            myChart.data.datasets[3].data = businessPermitsData;
+            myChart.update();
         }
+
+
+        // Function to update the heading text based on selected filter
+        function updateHeadingText(filter) {
+            const heading = document.getElementById('chartHeading');
+            if (filter === 'today') {
+                heading.innerHTML = 'Document Reports | Today';
+            } else if (filter === 'monthly') {
+                heading.innerHTML = 'Document Reports | Monthly Data';
+            } else if (filter === 'yearly') {
+                heading.innerHTML = 'Document Reports | Yearly Data';
+            }
+        }
+
+        // Initialize the chart with default data (Today)
+        const ctx = document.getElementById('frontServiceChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],  // Labels will be updated dynamically
+                datasets: [
+                    {
+                        label: 'Blotters',
+                        data: [],
+                        borderColor: '#4154f1',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Certificates',
+                        data: [],
+                        borderColor: '#2eca6a',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Clearances',
+                        data: [],
+                        borderColor: '#ff771d',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Business Permits',
+                        data: [],
+                        borderColor: '#ff4560',
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return tooltipItems[0].label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time / Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Number of Documents'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Load the chart data based on the default filter (today)
+        updateChartData('today'); // Default filter is 'today'
+
+        // Event listeners for the filter selection
+        document.getElementById('todayData').addEventListener('click', function() {
+            updateChartData('today');
+        });
+
+        document.getElementById('monthlyData').addEventListener('click', function() {
+            updateChartData('monthly');
+        });
+
+        document.getElementById('yearlyData').addEventListener('click', function() {
+            updateChartData('yearly');
+        });
+
+        // Attach the dropdown toggle event listener to the button
+        const dropdownButton = document.getElementById('dropdownButton');
+        dropdownButton.addEventListener('click', toggleDropdownRef);
     });
-}
 
-function closeEditEmpForm() {
-    $('.editEmployeeAccount').css('display', 'none'); // Hide the edit form container
-}
 
-// PARA DISPLAY PICTURES INIG PILI
-document.getElementById('e_profile').addEventListener('change', function() {
-    var file = this.files[0];
-    if (file) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            document.getElementById('emp_profilePreview').src = event.target.result;
-        };
-        reader.readAsDataURL(file);
+    window.onclick = function(event) {
+        if (!event.target.matches('.dots-icon')) {
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
     }
-});
     </script>
-</div>
-@endsection
+    
+</body>
+
 

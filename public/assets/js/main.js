@@ -578,6 +578,9 @@ $(function(){
   $("#certificate").on('submit', function(e){
       e.preventDefault();
 
+      // Get CSRF token from meta tag
+      var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
       $.ajax({
           url: $(this).attr('action'),
           method: $(this).attr('method'),
@@ -588,6 +591,9 @@ $(function(){
           beforeSend: function(){
               // Clear any previous error messages
               $(document).find('span.error-text').text('');
+          },
+          headers: {
+              'X-CSRF-TOKEN': csrfToken // Add CSRF token in headers
           },
           success: function(data){
               if (data.status == 0) {
@@ -607,7 +613,7 @@ $(function(){
                           ${data.msg} 
                           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                       </div>`;
-                  
+
                   $('#alert-container3').append(alertHtml);
 
                   // Remove alert after 1 second
@@ -625,7 +631,7 @@ $(function(){
                       Failed to submit request. Please try again. 
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>`;
-              
+
               $('#alert-container3').append(alertHtml);
 
               setTimeout(() => {
