@@ -475,16 +475,17 @@
                                 <div class="cell_plate b_top bg_gr custom_height7">
                                     <div class="pad_left_hep">
                                         <span class="justify_m"><b>CLIENT ID:</b>&nbsp;&nbsp;<input type="text" class="b_bottom width_fix_l bg_gr" readonly></span>
-                                        <span class="justify_m"><b>PHILHEALTH NO.:</b>&nbsp;&nbsp;<input type="text" class="b_bottom width_fix_l bg_gr" readonly></span>
+                                        <span class="justify_m"><b>PHILHEALTH NO.:</b>&nbsp;&nbsp;<input type="text" class="b_bottom width_fix_l bg_gr" value="{{ $fp->fp_phNum }}" readonly></span>
                                         <span class="justify_m">
                                             <b>NHTS?</b>
-                                            <input type="radio" name="test3" value="" class="radio"><b>Yes</b>
-                                            <input type="radio" name="test3" value="" class="radio"><b>No</b>
+                                            <input type="radio" name="nhts" class="radio" value="Yes" {{ $fp->fp_nhts == 'Yes' ? 'checked' : '' }} disabled><b>Yes</b>
+                                            <input type="radio" name="nhts" class="radio" value="No" {{ $fp->fp_nhts == 'No' ? 'checked' : '' }} disabled><b>No</b>
                                         </span>
+                                        
                                         <span class="justify_m">
                                             <b>Pantawid Pamilya Pilipino Program (4Ps):</b>
-                                            <input type="radio" name="test3" value="" class="radio"><b>Yes</b>
-                                            <input type="radio" name="test3" value="" class="radio"><b>No</b>
+                                            <input type="radio" name="fp4ps" class="radio" value="Yes" {{ $fp->fp_4ps == 'Yes' ? 'checked' : '' }} disabled><b>Yes</b>
+                                            <input type="radio" name="fp4ps" class="radio" value="No" {{ $fp->fp_4ps == 'No' ? 'checked' : '' }} disabled><b>No</b>
                                         </span>
                                     </div>
                                 </div>
@@ -529,7 +530,7 @@
                                             <b>Educ Attain.</b>
                                         </div>
                                         <div class="inp_bar">
-                                            <input type="text" class="form-control" readonly>
+                                            <input type="text" class="form-control" value="{{ $fp->client->res_educ ?? '' }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -584,7 +585,7 @@
                                             <b>Religion:</b>
                                         </div>
                                         <div class="inp_bar">
-                                            <input type="text" class="form-control" readonly>
+                                            <input type="text" class="form-control" value="{{ $fp->client->res_religion ?? '' }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -1113,7 +1114,7 @@
                                         </div>
                                         <div class="cellp_50 pad_left">
                                             <div class="flexer_c">
-                                                <span class="justify_m">Blood pressure:&nbsp;&nbsp;<input type="text" value="{{ $fp->fp_peBp ?? '' }}" readonly class="b_bottom width_fix_s">&nbsp;mmHg</span>
+                                                <span class="justify_m">Blood pressure:&nbsp;&nbsp;<input type="text" value="{{ $fp->fp_peBp ?? '' }}" readonly class="b_bottom width_fix_s" style="width: 70px!important;">&nbsp;mmHg</span>
                                                 <span class="justify_m">Pulse rate:&nbsp;&nbsp;<input type="text" value="{{ $fp->fp_pePr ?? '' }}" readonly  class="b_bottom width_fix_s">&nbsp;/min</span>
                                                 <b>EXTREMITIES</b>
                                                     <span class="justify_m"><input type="checkbox" {{ in_array('Normal', $checkboxExtr ?? []) ? 'checked' : '' }} disabled> normal</span>
@@ -1189,6 +1190,7 @@
                             </div>
                         </div>
                     </form>
+                
                 </div>
                 
                 

@@ -53,7 +53,16 @@
     .purpose1:hover {
         transform: scale(1.05);
     }
+
+    table.dataTable.stripe tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .card {
+        padding: 10px;
+    }
 </style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <body>
     @include('layouts.headerSecretary')
 
@@ -65,9 +74,23 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#certificateModal">Add Certificate</button> 
                 </div>
             </div>
+
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <select id="status-filter" class="form-select">
+                        <option value="">All</option>
+                        <option value="pending" selected>Pending</option>
+                        <option value="processed">Processed</option>
+                        <option value="ready to pick up">Ready To Pick Up</option>
+                        <option value="rejected">Reject</option>
+                        <option value="completed">Completed</option>
+                        <option value="Archived">Archived</option>
+                    </select>  
+                </div>
+            </div> 
             <div class="card">
-                <div class="card-body">                        
-                    <table class="table table-striped datatable">
+                <div class="card-body">          
+                    <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -76,11 +99,14 @@
                                 <th>Purok</th>
                                 <th>Purpose</th>
                                 <th>Status</th>
+                                <th>Pick Up Date</th>
+                                <th>Type</th>
                                 <th>Action</th>
+                                <th style="display: none;">Id</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($certificates as $certificate)
+                            @foreach($certificates as $index => $certificate)
                                 @php
                                     // Calculate age
                                     $birthdate = \Carbon\Carbon::parse($certificate->res_bdate);
@@ -88,40 +114,100 @@
                     
                                     // Concatenate full name
                                     $fullName = $certificate->res_fname . ' ' . $certificate->res_mname . ' ' . $certificate->res_lname;
-                                    if ($certificate->res_suffix !== 'null') {
+                                    if ($certificate->res_suffix !== 'N/A') {
                                         $fullName .= ' ' . $certificate->res_suffix;
                                     }
                                 @endphp
                                 <tr>
-                                    <td>{{ $certificate->id }}</td>
+                                    <td>{{ $index + 1 }}</td>
                                     <td>{{ $fullName }}</td>
                                     <td>{{ $age }}</td>
                                     <td>{{ $certificate->res_purok }}</td>
                                     <td>{{ $certificate->cert_purpose }}</td>
                                     <td>{{ $certificate->certStatus }}</td>
+                                    <td>{{ $certificate->cert_pickUpDate }}</td>
+                                    <td>{{ $certificate->cert_type }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Actions
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><button type="button" class="dropdown-item" onclick="openViewModal({{ $certificate->id }})">View</button></li>
+                                            {{-- Backup --}}
+                                                {{-- <li><button type="button" class="dropdown-item" onclick="openViewModal({{ $certificate->id }})">View</button></li>
+                                            
                                                 @if($certificate->certStatus === 'processed')
-                                                <li><button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'ready to pick up')">Ready</button><li>
-                                                @elseif($certificate->certStatus !== 'ready to pick up' && $certificate->certStatus !== 'rejected' && $certificate->certStatus !== 'cancelled')
-                                                <li><button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }})">Print</button><li>
-                                                <li><button type="button" class="dropdown-item" onclick="showRejectForm({{ $certificate->id }})">Reject</button><li>
+                                                    <li><button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'ready to pick up')">Ready</button></li>
+                                                @elseif($certificate->certStatus !== 'ready to pick up' && $certificate->certStatus !== 'rejected' && $certificate->certStatus !== 'Archived')
+                                                    <li><button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }}, '{{ $certificate->cert_type }}')">Print</button></li>                                        
+                                                    <li><button type="button" class="dropdown-item" onclick="showRejectForm({{ $certificate->id }})">Reject</button></li>
                                                 @elseif($certificate->certStatus == 'ready to pick up')
-                                                <li><button type="button" class="dropdown-item" onclick="sendEmail('{{ $certificate->res_email }}', '{{ $certificate->res_fname }}', '{{ $certificate->res_lname }}')">Send</button><li>
+                                                    <li><button type="button" class="dropdown-item" onclick="sendEmail('{{ $certificate->res_email }}', '{{ $certificate->res_fname }}', '{{ $certificate->res_lname }}')">Send Email</button></li>
+                                                    <li><button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'completed')">Completed</button></li>
+                                                @elseif(strtolower(trim($certificate->certStatus)) == 'archived')
+                                                    <!-- Show only "View" and "Pending" options if status is 'Archived' -->
+                                                    <li><button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'pending')">Pending</button></li>
                                                 @endif
-                                                <li><button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'Archived')">Archive</button><li>
+                                            
+                                                <!-- "Archive" option, which can be shown for any other status -->
+                                                @if($certificate->certStatus !== 'Archived')
+                                                    <li><button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'Archived')">Archive</button></li>
+                                                @endif --}}
+                                            {{-- Main --}}
+                                                <li>
+                                                    <button type="button" class="dropdown-item" onclick="openViewModal({{ $certificate->id }})">View</button>
+                                                </li>
+                                                
+                                                @if($certificate->certStatus === 'processed')
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'ready to pick up')">Ready</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }}, '{{ $certificate->cert_type }}')">Print</button>
+                                                    </li>
+                                                @elseif($certificate->certStatus === 'completed')
+                                                    <!-- Show only "View" and "Update" buttons for completed status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'pending')">Update</button>
+                                                    </li>
+                                                @elseif($certificate->certStatus !== 'ready to pick up' && $certificate->certStatus !== 'rejected' && $certificate->certStatus !== 'Archived')
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }}, '{{ $certificate->cert_type }}')">Print</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="showRejectForm({{ $certificate->id }})">Reject</button>
+                                                    </li>
+                                                @elseif($certificate->certStatus == 'ready to pick up')
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="sendEmail('{{ $certificate->res_email }}', '{{ $certificate->res_fname }}', '{{ $certificate->res_lname }}')">Send Email</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'completed')">Completed</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }}, '{{ $certificate->cert_type }}')">Print</button>
+                                                    </li>
+                                                @elseif(strtolower(trim($certificate->certStatus)) == 'archived')
+                                                    <!-- Show only "View" and "Pending" options if status is 'Archived' -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'pending')">Pending</button>
+                                                    </li>
+                                                @endif
+                                                
+                                                <!-- "Archive" option, which can be shown for any other status -->
+                                                @if($certificate->certStatus !== 'Archived')
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'Archived')">Archive</button>
+                                                    </li>
+                                                @endif                                            
                                             </ul>
                                         </div>
                                     </td>
+                                    <td style="display: none;">{{ $certificate->id }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
+                    </table>    
                 </div>
             </div>
         </main>
@@ -551,13 +637,14 @@
                       <div class="col-md-6">
                         <label for="suffix3" class="form-label">Suffix (Leave It If None)</label>
                         <select name="suffix3" id="suffix3" class="form-control">
-                          <option value="">N/A</option>
-                          <option value="1">I</option>
-                          <option value="2">II</option>
-                          <option value="3">III</option>
-                          <option value="4">IV</option>
-                          <option value="5">V</option>
-                          <option value="Jr.">Jr.</option>
+                            <option value="N/A">N/A</option>
+                            <option value="I">I</option>
+                            <option value="II">II</option>
+                            <option value="III">III</option>
+                            <option value="IV">IV</option>
+                            <option value="V">V</option>
+                            <option value="Jr.">Jr.</option>
+                            <option value="Sr.">Sr.</option>
                         </select>
                         <span class="text-danger error-text suffix3_error"></span>
                       </div>
@@ -568,6 +655,17 @@
                       </div>
           
                       <!-- Purpose Section -->
+                      <div class="col-md-6">
+                        <label for="certType" class="form-label">Type</label>
+                        <select id="certType" name="certType" class="form-select" aria-label="Default select example">
+                            <option value="" selected disabled>Select Type</option>
+                            <option value="Indigency">Indigency</option>
+                            <option value="Certification">Certification</option>
+                            <option value="First Time Job Seeker">First Time Job Seeker</option>
+                            <option value="Good Moral">Good Moral</option>
+                        </select>
+                        <span class="text-danger error-text certType_error"></span>
+                      </div>
                       <div class="col-md-6">
                         <label for="purposeCertificate3" class="form-label">Purpose</label>
                         <input type="text" class="form-control" id="purposeCertificate3" name="purposeCertificate3">
@@ -595,7 +693,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeCertificateForm()">Close</button>
-                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
               </div>
@@ -604,39 +702,42 @@
         {{-- END OF FOR WALK-IN --}}
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const purposeContainer = new bootstrap.Modal(document.getElementById('purposeExtralargeModal'));
+        document.addEventListener('DOMContentLoaded', function () {
+            // const purposeContainer = new bootstrap.Modal(document.getElementById('purposeExtralargeModal'));
             const purposeInput = document.getElementById('certificateId');
 
-            window.showPurposeContainer = function(certificateId) {
+            window.showPurposeContainer = function (certificateId, certType) {
                 purposeInput.value = certificateId;
-                purposeContainer.show();  // Use Bootstrap's method to show the modal
+
+                // Call the redirect function immediately based on the certificate type
+                redirectBasedOnType(certType, certificateId);
             };
 
-            window.redirectToPurpose = function(purpose) {
-                const certificateId = purposeInput.value;
-                const url = `/dashboards/secretariesDb/certIndigency?id=${certificateId}`;
-                window.location.href = url;
-            };
+            function redirectBasedOnType(certType, certificateId) {
+                let url;
+                switch (certType.toLowerCase()) {
+                    case 'indigency':
+                        url = `/dashboards/secretariesDb/certIndigency?id=${certificateId}`;
+                        break;
+                    case 'certification':
+                        url = `/dashboards/secretariesDb/certification?id=${certificateId}`;
+                        break;
+                    case 'first time job seeker':
+                        url = `/dashboards/secretariesDb/brgyCertification?id=${certificateId}`;
+                        break;
+                    case 'good moral':
+                        url = `/dashboards/secretariesDb/goodMoral?id=${certificateId}`;
+                        break;
+                    default:
+                        alert('Unknown certificate type');
+                        return;
+                }
 
-            window.redirectToPurposeCertification = function(purpose) {
-                const certificateId = purposeInput.value;
-                const url = `/dashboards/secretariesDb/certification?id=${certificateId}`;
+                // Redirect to the determined URL
                 window.location.href = url;
-            };
-
-            window.redirectToPurposeBrgyCertification = function(purpose) {
-                const certificateId = purposeInput.value;
-                const url = `/dashboards/secretariesDb/brgyCertification?id=${certificateId}`;
-                window.location.href = url;
-            };
-
-            window.redirectToPurposegoodMoral = function(purpose) {
-                const certificateId = purposeInput.value;
-                const url = `/dashboards/secretariesDb/goodMoral?id=${certificateId}`;
-                window.location.href = url;
-            };
+            }
         });
+
 
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -645,8 +746,29 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
     @include('layouts.footerSecretary')
     <script>
+    $(document).ready(function() {
+        // Initialize DataTable with striped rows (default)
+        var table = $('#example').DataTable({
+            stripeClasses: ['even', 'odd'], // Optional: applies even/odd classes for striped rows
+            order: [[6, 'asc']],  // Order by the 'created_at' column (index 4) in descending order
+        });
+
+        // Apply the default "Pending" filter on the status column
+        table.column(5) // Assuming the 'Status' column is the 6th column (index 5)
+            .search($('#status-filter').val())
+            .draw();
+
+        // Update filter when the select option changes
+        $('#status-filter').on('change', function() {
+            table.column(5)
+                .search(this.value)
+                .draw();
+        });
+    });
+    
     function openViewModal(id) {
         $.ajax({
             url: `/certificate/${id}`,

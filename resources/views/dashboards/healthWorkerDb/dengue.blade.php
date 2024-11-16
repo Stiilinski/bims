@@ -1001,7 +1001,7 @@
                                         <div class="col-md-4 pt-3">
                                             <input type="hidden" name="edit_dengueId" id="edit_dengueId">
                                             <label for="edit_dengueFullName" class="form-label">Patient Full Name</label>
-                                            <select id="edit_dengueFullName" class="form-control" name="edit_dengueFullName" style="width: 100%" onchange="updateResidentDetails(this)">
+                                            <select id="edit_dengueFullName" class="form-control" name="edit_dengueFullName" style="width: 100%" onchange="edit_updateResidentDetails(this)">
                                                 <option value="">Select...</option>
                                                 @foreach($residents as $resident)
                                                     <option value="{{ $resident->res_id }}">
@@ -1639,13 +1639,23 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    // Initialize resident data from PHP
-    var residentData = @json($residents);
-</script>
 <script>
 // ***********************************************************
-    //PATIENT SELECT
+    
+const residentData = {
+        @foreach($residents as $resident)
+            "{{ $resident->res_id }}": {
+                res_address: "{{ addslashes($resident->res_address) }}",
+                res_bdate: "{{ $resident->res_bdate }}",
+                res_sex: "{{ $resident->res_sex }}",
+                res_contact: "{{ $resident->res_contact }}",
+                res_occupation: "{{ $resident->res_occupation }}",
+                res_civil: "{{ $resident->res_civil }}"
+            },
+        @endforeach
+    };
+
+//PATIENT SELECT
     $(document).ready(function () {
         $('#dengueFullName').selectize({
             sortField: 'text'
@@ -1689,6 +1699,36 @@
             document.getElementById('dengueSex').value = '';
             document.getElementById('dengueStatus').value = '';
             document.getElementById('dengueOcc').value = '';
+        }
+    }
+
+    function edit_updateResidentDetails(selectElement) {
+        const selectedId = selectElement.value;
+
+        if (selectedId) {
+            const residentInfo = residentData[selectedId];
+
+            if (residentInfo) {
+                document.getElementById('edit_dengueAddress').value = residentInfo.res_address;
+                document.getElementById('edit_dengueDOB').value = residentInfo.res_bdate;
+
+                // Calculate age from the birth date
+                const birthDate = new Date(residentInfo.res_bdate);
+                const age = calculateAge(birthDate);
+                document.getElementById('edit_dengueAge').value = age;
+
+                document.getElementById('edit_dengueSex').value = residentInfo.res_sex;
+                document.getElementById('edit_dengueStatus').value = residentInfo.res_civil;
+                document.getElementById('edit_dengueOcc').value = residentInfo.res_occupation;
+            }
+        } else {
+            // Clear fields if no resident is selected
+            document.getElementById('edit_dengueAddress').value = '';
+            document.getElementById('edit_dengueDOB').value = '';
+            document.getElementById('edit_dengueAge').value = '';
+            document.getElementById('edit_dengueSex').value = '';
+            document.getElementById('edit_dengueStatus').value = '';
+            document.getElementById('edit_dengueOcc').value = '';
         }
     }
 

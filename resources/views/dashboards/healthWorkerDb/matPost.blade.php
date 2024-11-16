@@ -187,7 +187,6 @@
         </div>
         <div class="btnArea">
             <div class="btn-container">
-                <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i>Print</button>
                 <button class="btn btn-primary post-partum-btn" data-bs-toggle="modal" data-bs-target="#modalPost">Post-Partum</button>
                 <button class="btn btn-primary birth-btn" data-bs-toggle="modal" data-bs-target="#modalDel">Birth</button>  
             </div>

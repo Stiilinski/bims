@@ -53,7 +53,16 @@
     .purpose1:hover {
         transform: scale(1.05);
     }
+
+    table.dataTable.stripe tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .card {
+        padding: 10px;
+    }
 </style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <body>
     @include('layouts.headerSecretary')
 
@@ -65,9 +74,22 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#certificateModal">Add Certificate</button> 
                 </div>
             </div>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <select id="status-filter" class="form-select">
+                        <option value="">All</option>
+                        <option value="pending" selected>Pending</option>
+                        <option value="processed">Processed</option>
+                        <option value="ready to pick up">Ready To Pick Up</option>
+                        <option value="rejected">Reject</option>
+                        <option value="completed">Completed</option>
+                        <option value="Archive">Archived</option>
+                    </select>  
+                </div>
+            </div> 
             <div class="card">
-                <div class="card-body">                        
-                    <table class="table table-striped datatable">
+                <div class="card-body">          
+                    <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -76,6 +98,7 @@
                                 <th>Purok</th>
                                 <th>Status</th>
                                 <th>Purpose</th>
+                                <th style="display: none;"></th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -87,7 +110,7 @@
                                     $age = $birthdate->age;
                                     // Concatenate full name
                                     $fullName = $clearances->res_fname . ' ' . $clearances->res_mname . ' ' . $clearances->res_lname;
-                                    if ($clearances->res_suffix !== 'null') {
+                                    if ($clearances->res_suffix !== 'N/A') {
                                         $fullName .= ' ' . $clearances->res_suffix;
                                     }
                                 @endphp
@@ -98,23 +121,69 @@
                                     <td>{{ $clearances->res_purok }}</td>
                                     <td>{{ $clearances->bcl_status }}</td>
                                     <td>{{ $clearances->bcl_purpose }}</td>
+                                    <td style="display: none;">{{ $clearances->created_at }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Actions
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><button type="button" class="dropdown-item" onclick="openViewModal({{ $clearances->bcl_id }})">View</button></li>
-                                                <li><button class="dropdown-item" type="button" onclick="openEditModal({{ $clearances->bcl_id }})">Edit</button></li>
-                                                @if($clearances->bcl_status === 'processed')
-                                                    <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'ready to pick up')">Pickup-Ready</button>
-                                                @elseif($clearances->bcl_status !== 'ready to pick up' && $clearances->bcl_status !== 'rejected' && $clearances->bcl_status !== 'cancelled')
-                                                    <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $clearances->bcl_id }})">Print</button>
-                                                    <button type="button" class="dropdown-item" onclick="showRejectForm({{ $clearances->bcl_id }})">Reject</button>
-                                                @elseif($clearances->bcl_status == 'ready to pick up')
-                                                    <button type="button" class="dropdown-item btnview" onclick="sendEmail('{{ $clearances->res_email }}', '{{ $clearances->res_fname }}', '{{ $clearances->res_lname }}')">Send</button>
-                                                @endif
-                                                <li><button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'Archive')">Archive</button></li>
+                                                <li>
+                                                    <button type="button" class="dropdown-item" onclick="openViewModal({{ $clearances->bcl_id }})">View</button>
+                                                </li>
+                                                
+                                                @if($clearances->bcl_status === 'pending')
+                                                    <!-- Actions for 'pending' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $clearances->bcl_id }})">Print</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="showRejectForm({{ $clearances->bcl_id }})">Reject</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif($clearances->bcl_status === 'processed')
+                                                    <!-- Actions for 'processed' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $clearances->bcl_id }})">Print</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'ready to pick up')">Ready</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif($clearances->bcl_status === 'ready to pick up')
+                                                    <!-- Actions for 'ready to pick up' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $clearances->bcl_id }})">Print</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="sendEmail('{{ $clearances->res_email }}', '{{ $clearances->res_fname }}', '{{ $clearances->res_lname }}')">Send Email</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'completed')">Completed</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif($clearances->bcl_status === 'rejected')
+                                                    <!-- Actions for 'rejected' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif($clearances->bcl_status === 'completed')
+                                                    <!-- Actions for 'completed' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif(strtolower(trim($clearances->bcl_status)) === 'archived')
+                                                    <!-- Actions for 'archived' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'pending')">Pending</button>
+                                                    </li>
+                                                @endif                                                
                                             </ul>
                                         </div>
                                     </td>
@@ -513,14 +582,14 @@
                             <div class="col-md-6">
                                 <label for="suffix1" class="form-label">Suffix (Leave It If None)</label>
                                 <select name="suffix1" id="suffix1"  class="form-control">
-                                    <option value="">N/A</option>
-                                    <option value="1">I</option>
-                                    <option value="2">II</option>
-                                    <option value="3">III</option>
-                                    <option value="4">IV</option>
-                                    <option value="5">V</option>
-                                    <option value="jr">Jr.</option>
-                                    <option value="sr">Sr.</option>
+                                    <option value="N/A">N/A</option>
+                                    <option value="I">I</option>
+                                    <option value="II">II</option>
+                                    <option value="III">III</option>
+                                    <option value="IV">IV</option>
+                                    <option value="V">V</option>
+                                    <option value="Jr.">Jr.</option>
+                                    <option value="Sr.">Sr.</option>
                                 </select>
                                 <span class="text-danger error-text suffix1_error"></span>
                             </div>
@@ -553,7 +622,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save changes</button>
+                          <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                       </form>
                 </div>
@@ -569,6 +638,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     @include('layouts.footerSecretary')
     <script>
+    $(document).ready(function() {
+        // Initialize DataTable with striped rows (default)
+        var table = $('#example').DataTable({
+            stripeClasses: ['even', 'odd'], // Optional: applies even/odd classes for striped rows
+            order: [[6, 'desc']],  // Order by the 'created_at' column (index 4) in descending order
+        });
+
+        // Apply the default "Pending" filter on the status column
+        table.column(4) // Assuming the 'Status' column is the 6th column (index 5)
+            .search($('#status-filter').val())
+            .draw();
+
+        // Update filter when the select option changes
+        $('#status-filter').on('change', function() {
+            table.column(4)
+                .search(this.value)
+                .draw();
+        });
+    });
+
     function openViewModal(id) {
         $.ajax({
             url: `/clearance/${id}`,

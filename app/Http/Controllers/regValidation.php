@@ -86,15 +86,15 @@ class regValidation extends Controller
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
 
         // Fetch the required counts
-        $totalPopulation = resident_tbl::count();
+        $totalPopulation = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->count();
         $totalMale = resident_tbl::where('res_sex', 'Male')->count();
         $totalFemale = resident_tbl::where('res_sex', 'Female')->count();
         $totalVoters = resident_tbl::where('res_voters', 'Yes')->count();
         $totalNonVoters = resident_tbl::where('res_voters', 'No')->count();
-        $totalBlotters = blotter_tbl::count();
-        $totalCertificates = brgyCertificate_tbl::count();
-        $totalBusinessPermits = businessBrgyClearance_tbl::count();
-        $totalClearances = brgyClearance_tbl::count();
+        $totalBlotters = blotter_tbl::where('blotter_status', 'pending')->count();
+        $totalCertificates = brgyCertificate_tbl::where('certStatus', 'pending')->count();
+        $totalBusinessPermits = businessBrgyClearance_tbl::where('bc_status', 'pending')->count();
+        $totalClearances = brgyClearance_tbl::where('bcl_status', 'pending')->count();
 
         // Determine the filter type
         $filter = $request->query('filter', 'today');
@@ -109,8 +109,7 @@ class regValidation extends Controller
         $monthlyClearances = [];
         $monthlyBusinessPermits = [];
         $yearlyData = [];
-         // Determine the filter type
-         $filter = $request->query('filter', 'today');
+
         // Get the current date and time in Manila time zone
         $manilaTime = new \DateTimeZone('Asia/Manila');
         $currentDate = new \DateTime('now', $manilaTime);
@@ -225,7 +224,6 @@ class regValidation extends Controller
         header('Pragma: no-cache');
         header('Expires: 0');
 
-        // Pass the data to the view
         return view('dashboards/dbSecretary', $data);
     }
 
@@ -403,7 +401,7 @@ class regValidation extends Controller
     public function saveResidents(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'profile' => 'required|image|max:2048',
+            'profile' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'household' => 'required',
             'dateRegister' => 'required|date',
             'firstName' => 'required|string',
@@ -422,8 +420,8 @@ class regValidation extends Controller
             'living' => 'required',
             'sitio' => 'required',
             'voters' => 'required',
-            'email' => 'required|email|unique:resident_tbls,res_email', 
-            'contact' => 'required|numeric|digits:11',
+            'email' => 'required', 
+            'contact' => 'required',
             'citizens' => 'required|string',
             'address' => 'required|string',
             'occupation' => 'required|string'
@@ -520,9 +518,9 @@ class regValidation extends Controller
             'edit_religion' => 'nullable|string',
             'edit_civilStatus' => 'required|string',    // make civilStatus required
             'edit_voters' => 'required|string',
-            'edit_email' => 'nullable|email',
-            'edit_contact' => 'nullable|numeric|digits:11',
-            'edit_otherContact' => 'nullable|numeric|digits:11',
+            'edit_email' => 'nullable|',
+            'edit_contact' => 'nullable',
+            'edit_otherContact' => 'nullable',
             'edit_citizens' => 'nullable|string',
             'edit_address' => 'required|string',       // make address required
             'edit_occupation' => 'nullable|string',
@@ -640,6 +638,7 @@ class regValidation extends Controller
                         }
                     }
                 ],
+                'certType' => 'required|string',
                 'purposeCertificate3' => 'required|string',
                 'dateIssued3' => 'required|date',
                 'pickUp3' => 'required|date'
@@ -649,7 +648,7 @@ class regValidation extends Controller
                 'lName3.exists' => 'Last Name Not Found',
                 'suffix3.exists' => 'Suffix Not Found',
                 'bDate3.exists' => 'BirthDate Not Same As Your Registered BirthDate',
-                
+                'certType.required' => 'Certificate Type Field Required',
                 'bDate3.required' => 'Birthdate Field Required',
                 'fName3.required' => 'First Name Field Required',
                 'mName3.required' => 'Middle Name Field Required',
@@ -690,6 +689,7 @@ class regValidation extends Controller
             $certificate = new brgyCertificate_tbl;
             $certificate->res_id = $residentID;
             $certificate->cert_transactionCode = $request->input('tcode3');
+            $certificate->cert_type = $request->input('certType');
             $certificate->cert_purpose = $request->input('purposeCertificate3');
             $certificate->cert_dateIssued = $request->input('dateIssued3');
             $certificate->cert_pickUpDate = $request->input('pickUp3');
@@ -909,7 +909,7 @@ class regValidation extends Controller
                 'fName1' => 'required|string|exists:resident_tbls,res_fname',
                 'mName1' => 'required|string|exists:resident_tbls,res_mname',
                 'lName1' => 'required|string|exists:resident_tbls,res_lname',
-                'suffix1' => 'nullable|string|exists:resident_tbls,res_suffix',
+                'suffix1' => 'required|string|exists:resident_tbls,res_suffix',
                 'bDate1' => 'required|date|exists:resident_tbls,res_bdate',
                 'tcode1' => [
                     'required',
@@ -950,12 +950,13 @@ class regValidation extends Controller
                 'res_mname' => $request->input('mName1'),
                 'res_lname' => $request->input('lName1'),
                 'res_bdate' => $request->input('bDate1'),
+                'res_suffix' => $request->input('suffix1'),
             ];
 
             // Add the suffix to the search criteria if it's provided
-            if ($request->filled('suffix1')) {
-                $searchCriteria['res_suffix'] = $request->input('suffix1');
-            }
+            // if ($request->filled('suffix1')) {
+            //     $searchCriteria['res_suffix'] = $request->input('suffix1');
+            // }
 
             // Retrieve the resident ID based on the provided name and suffix (if applicable)
             $resident = resident_tbl::where($searchCriteria)->first();
@@ -1004,6 +1005,8 @@ class regValidation extends Controller
                     'brgy_certificate_tbls.cert_pickUpDate',
                     'brgy_certificate_tbls.certStatus',
                     'brgy_certificate_tbls.certReason',
+                    'brgy_certificate_tbls.cert_type',
+                    'brgy_certificate_tbls.created_at',
                     'resident_tbls.res_id',
                     'resident_tbls.res_fname',
                     'resident_tbls.res_mname',
@@ -1046,6 +1049,7 @@ class regValidation extends Controller
                     'brgy_clearance_tbls.bcl_pickUpDate',
                     'brgy_clearance_tbls.bcl_status',
                     'brgy_clearance_tbls.bcl_reason',
+                    'brgy_clearance_tbls.created_at',
                     'resident_tbls.res_id',
                     'resident_tbls.res_fname',
                     'resident_tbls.res_mname',
@@ -1079,6 +1083,7 @@ class regValidation extends Controller
                     'business_brgy_clearance_tbls.bc_pickUpDate',
                     'business_brgy_clearance_tbls.bc_status',
                     'business_brgy_clearance_tbls.bc_reason',
+                    'business_brgy_clearance_tbls.created_at',
                     'resident_tbls.res_id',
                     'resident_tbls.res_fname',
                     'resident_tbls.res_mname',
@@ -1138,13 +1143,10 @@ class regValidation extends Controller
             $validator = Validator::make($request->all(), [
                 'certNum' => 'required|string',
                 'puOr' => 'required|string',
-                'amountPaid' => 'required|numeric',
                 'dates' => 'required|date'
             ], [
                 'certNum.required' => 'Certificate Number is Required',
                 'puOr.required' => 'O.R. Number is Required',
-                'amountPaid.required' => 'Amount Paid is Required',
-                'amountPaid.numeric' => 'Amount Paid Must Be a Number',
                 'dates.required' => 'Date Field is Required',
             ]);
 
@@ -1167,7 +1169,6 @@ class regValidation extends Controller
                 $transaction->blotter_id = null;
                 $transaction->tr_residenceCertNum = $request->input('certNum');
                 $transaction->tr_orNum = $request->input('puOr');
-                $transaction->tr_amountPaid = $request->input('amountPaid');
                 $transaction->tr_date = $request->input('dates');
 
                 if (!$transaction->save()) {
@@ -1400,13 +1401,10 @@ class regValidation extends Controller
             $validator = Validator::make($request->all(), [
                 'certNum' => 'required|string',
                 'puOr' => 'required|string',
-                'amountPaid' => 'required|numeric',
                 'dates' => 'required|date'
             ], [
                 'certNum.required' => 'Certificate Number is Required',
                 'puOr.required' => 'O.R. Number is Required',
-                'amountPaid.required' => 'Amount Paid is Required',
-                'amountPaid.numeric' => 'Amount Paid Must Be a Number',
                 'dates.required' => 'Date Field is Required',
             ]);
 
@@ -1686,13 +1684,10 @@ class regValidation extends Controller
             $validator = Validator::make($request->all(), [
                 'certNum' => 'required|string',
                 'puOr' => 'required|string',
-                'amountPaid' => 'required|numeric',
                 'dates' => 'required|date'
             ], [
                 'certNum.required' => 'Certificate Number is Required',
                 'puOr.required' => 'O.R. Number is Required',
-                'amountPaid.required' => 'Amount Paid is Required',
-                'amountPaid.numeric' => 'Amount Paid Must Be a Number',
                 'dates.required' => 'Date Field is Required',
             ]);
 
@@ -2653,32 +2648,83 @@ class regValidation extends Controller
     //FOR TREASURER
     public function dbTreasurer()
     {
-        // Fetch the logged-in user's information
-        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
-
-        // Fetch the required counts
-        $totalPopulation = resident_tbl::count();
-        $totalMale = resident_tbl::where('res_sex', 'Male')->count();
-        $totalFemale = resident_tbl::where('res_sex', 'Female')->count();
-        $totalVoters = resident_tbl::where('res_voters', 'Yes')->count();
-        $totalNonVoters = resident_tbl::where('res_voters', 'No')->count();
-        $totalBlotters = blotter_tbl::count();
-        $totalCertificates = brgyCertificate_tbl::count();
-        $totalBusinessPermits = businessBrgyClearance_tbl::count();
-        $totalClearances = BrgyClearance_tbl::count();
-
-        // Merge all the data into a single array
         $data = [
-            'LoggedUserInfo' => $loggedUserInfo,
-            'totalPopulation' => $totalPopulation,
-            'totalMale' => $totalMale,
-            'totalFemale' => $totalFemale,
-            'totalVoters' => $totalVoters,
-            'totalNonVoters' => $totalNonVoters,
-            'totalBlotters' => $totalBlotters,
-            'totalCertificates' => $totalCertificates,
-            'totalBusinessPermits' => $totalBusinessPermits,
-            'totalClearances' => $totalClearances,
+            'LoggedUserInfo' => employee_tbl::where('em_id', '=', session('LoggedUser'))->first(),
+            'certificates' => brgyCertificate_tbl::join('resident_tbls', 'brgy_certificate_tbls.res_id', '=', 'resident_tbls.res_id')
+                ->select(
+                    'brgy_certificate_tbls.id',
+                    'brgy_certificate_tbls.cert_transactionCode',
+                    'brgy_certificate_tbls.cert_purpose',
+                    'brgy_certificate_tbls.cert_dateIssued',
+                    'brgy_certificate_tbls.cert_pickUpDate',
+                    'brgy_certificate_tbls.certStatus',
+                    'brgy_certificate_tbls.certReason',
+                    'resident_tbls.res_id',
+                    'resident_tbls.res_fname',
+                    'resident_tbls.res_mname',
+                    'resident_tbls.res_lname',
+                    'resident_tbls.res_suffix',
+                    'resident_tbls.res_bdate',
+                    'resident_tbls.res_purok'
+                )
+                ->get(),
+            'residents' => resident_tbl::all(),
+            'transactions' => transaction_tbl::leftJoin('brgy_certificate_tbls', 'transaction_tbls.cert_id', '=', 'brgy_certificate_tbls.id')
+                ->leftJoin('brgy_clearance_tbls', 'transaction_tbls.bcl_id', '=', 'brgy_clearance_tbls.bcl_id')
+                ->leftJoin('business_brgy_clearance_tbls', 'transaction_tbls.business_id', '=', 'business_brgy_clearance_tbls.id')
+                ->leftJoin('blotter_tbls', 'transaction_tbls.blotter_id', '=', 'blotter_tbls.blotter_id')
+                ->leftJoin('resident_tbls', function($join) {
+                    $join->on('brgy_certificate_tbls.res_id', '=', 'resident_tbls.res_id')
+                         ->orOn('brgy_clearance_tbls.res_id', '=', 'resident_tbls.res_id')
+                         ->orOn('business_brgy_clearance_tbls.res_id', '=', 'resident_tbls.res_id')
+                         ->orOn('blotter_tbls.res_id', '=', 'resident_tbls.res_id');
+                })
+                ->select(
+                    'transaction_tbls.tr_id',
+                    'transaction_tbls.cert_id',
+                    'transaction_tbls.bcl_id',
+                    'transaction_tbls.business_id',
+                    'transaction_tbls.blotter_id',
+                    'transaction_tbls.tr_residenceCertNum',
+                    'transaction_tbls.tr_orNum',
+                    'transaction_tbls.tr_amountPaid',
+                    'transaction_tbls.created_at',
+                    'brgy_certificate_tbls.cert_transactionCode',
+                    'brgy_certificate_tbls.cert_purpose',
+                    'brgy_certificate_tbls.cert_dateIssued',
+                    'brgy_certificate_tbls.cert_pickUpDate',
+                    'brgy_certificate_tbls.certStatus',
+                    'brgy_clearance_tbls.bcl_transactionCode',
+                    'brgy_clearance_tbls.bcl_purpose',
+                    'brgy_clearance_tbls.bcl_dateIssued',
+                    'brgy_clearance_tbls.bcl_pickUpDate',
+                    'brgy_clearance_tbls.bcl_status',
+                    'business_brgy_clearance_tbls.bc_transactionCode',
+                    'business_brgy_clearance_tbls.bc_businessName',
+                    'business_brgy_clearance_tbls.bc_businessAddress',
+                    'business_brgy_clearance_tbls.bc_businessType',
+                    'business_brgy_clearance_tbls.bc_businessNature',
+                    'business_brgy_clearance_tbls.bc_dateIssued',
+                    'business_brgy_clearance_tbls.bc_pickUpDate',
+                    'business_brgy_clearance_tbls.bc_status',
+                    'blotter_tbls.blotter_transactionCode',
+                    'blotter_tbls.blotter_respondents',
+                    'blotter_tbls.blotter_brgyCaseNum',
+                    'blotter_tbls.blotter_for',
+                    'blotter_tbls.blotter_complaint',
+                    'blotter_tbls.blotter_resolution',
+                    'blotter_tbls.blotter_complaintMade',
+                    'blotter_tbls.blotter_filedDate',
+                    'blotter_tbls.blotter_status',
+                    'resident_tbls.res_id',
+                    'resident_tbls.res_fname',
+                    'resident_tbls.res_mname',
+                    'resident_tbls.res_lname',
+                    'resident_tbls.res_suffix',
+                    'resident_tbls.res_bdate',
+                    'resident_tbls.res_purok'
+                )
+                ->get()
         ];
 
         // Set headers for no-cache
@@ -2761,7 +2807,7 @@ class regValidation extends Controller
                 )
                 ->whereDate('transaction_tbls.tr_date', $currentDate) // Filter transactions by current date
                 ->where(function($query) {
-                    $query->where('brgy_certificate_tbls.certStatus', 'ready to pick up')
+                    $query->where('brgy_certificate_tbls.certStatus', 'completed')
                         ->orWhere('brgy_clearance_tbls.bcl_status', 'ready to pick up')
                         ->orWhere('business_brgy_clearance_tbls.bc_status', 'ready to pick up');
                 })
@@ -3663,7 +3709,7 @@ class regValidation extends Controller
         $validator = Validator::make($request->all(), [
             'inputDate' => 'required|date',
             'inputPatientName' => 'required',
-            'inputBp' => 'required|numeric',
+            'inputBp' => 'required',
             'inputTemp' => 'required|numeric',
             'inputHeight' => 'required|numeric',
             'inputWeight' => 'required|numeric',
@@ -3688,7 +3734,6 @@ class regValidation extends Controller
             'inputDate.date' => 'The Date must be DD/MM/YYYY.',
             'inputPatientName.required' => 'The Patient name is required.',
             'inputBp.required' => 'The BP field is required.',
-            'inputBp.numeric' => 'The input must be a number.',
             'inputTemp.required' => 'The Temperature field is required.',
             'inputTemp.numeric' => 'The Temperature must be a number.',
             'inputHeight.required' => 'The Height is required.',
@@ -4004,7 +4049,6 @@ class regValidation extends Controller
     {
         $validator = Validator::make($request->all(), [
             'inputEmp' => 'required|string',
-            'inputNdc' => 'required|string',
             'inputProd' => 'required|string',
             'inputDesc' => 'required|string',
             'inputUnit' => 'required|string',
@@ -4013,10 +4057,7 @@ class regValidation extends Controller
             'inputTotalCount' => 'numeric',
             'inputDatePurchase' => 'required|date',
             'inputDateExpired' => 'required|date',
-            'inputRemarks' => 'required|string',
         ], [
-            'inputNdc.required' => 'The NDC field is mandatory.',
-            'inputNdc.string' => 'The NDC must be a string.',
             'inputProd.required' => 'The product name is required.',
             'inputProd.string' => 'The product name must be a string.',
             'inputDesc.required' => 'The description is required.',
@@ -4029,8 +4070,6 @@ class regValidation extends Controller
             'inputDatePurchase.date' => 'The purchase date must be a valid date.',
             'inputDateExpired.required' => 'The expiration date is required.',
             'inputDateExpired.date' => 'The expiration date must be a valid date.',
-            'inputRemarks.required' => 'Remarks are required.',
-            'inputRemarks.string' => 'Remarks must be a string.',
         ]);
 
         if ($validator->fails()) 
@@ -4041,7 +4080,6 @@ class regValidation extends Controller
         {
             $medicine = new medicine_tbl;
             $medicine->em_id = $request->inputEmp;
-            $medicine->med_ndc = $request->inputNdc;
             $medicine->med_prod = $request->inputProd;
             $medicine->med_desc = $request->inputDesc;
             $medicine->med_unit = $request->inputUnit;
@@ -4788,24 +4826,22 @@ class regValidation extends Controller
     public function dstbInput(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'inputDiagnosingFac' => 'required|string',
-            'inputNtpCode' => 'required|string',
-            'inputProvinceHuc' => 'required|string',
-            'inputRegion' => 'required|string',
+            'inputDiagnosingFac' => 'nullable|string',
+            'inputNtpCode' => 'nullable|string',
+            'inputProvinceHuc' => 'nullable|string',
+            'inputRegion' => 'nullable|string',
             
             'inputPatient' => 'required|exists:resident_tbls,res_id',
-            'inputOtherNum' => 'required|string',
-            'inputPhilHealth' => 'required|string',
-            'inputPermAdd' => 'required|string',
+            'inputPhilHealth' => 'nullable|string',
         
             'inputRefEmp' => 'required|exists:employee_tbls,em_id', 
-            'inputRefLoc' => 'required|string',
+            'inputRefLoc' => 'nullable|string',
             'refferedBy' => 'nullable|array',
             'screeningMode' => 'nullable|array',
-            'dateScreening' => 'required|date',
+            'dateScreening' => 'nullable|date',
         
-            'testName' => 'array',
-            'testName.*' => 'string',
+            'testName' => 'nullable|array',
+            'testName.*' => 'nullable|string',
             'othersDetails' => 'nullable|string',
             'dateTestXpert' => 'nullable|date',
             'dateTestSmear' => 'nullable|date',
@@ -4839,84 +4875,8 @@ class regValidation extends Controller
             'registration' => 'nullable|array',
             'registration.*' => 'nullable|string',
         ], [
-            'inputDiagnosingFac.required' => 'The diagnosing facility is required.',
-            'inputDiagnosingFac.string' => 'The diagnosing facility must be a string.',
-            
-            'inputNtpCode.required' => 'The NTP code is required.',
-            'inputNtpCode.string' => 'The NTP code must be a string.',
-        
-            'inputProvinceHuc.required' => 'The province/HUC is required.',
-            'inputProvinceHuc.string' => 'The province/HUC must be a string.',
-        
-            'inputRegion.required' => 'The region is required.',
-            'inputRegion.string' => 'The region must be a string.',
-        
-            'inputPatient.required' => 'The patient must be selected.',
-            'inputPatient.exists' => 'The selected patient does not exist.',
-        
-            'inputOtherNum.required' => 'Other number is required.',
-            'inputOtherNum.string' => 'Other number must be a string.',
-
-            'inputPermAdd.required' => 'Permanent Address is Required.',
-            'inputPermAdd.string' => 'Permanent Address must be a string.',
-        
-            'inputPhilHealth.required' => 'PhilHealth number is required.',
-            'inputPhilHealth.string' => 'PhilHealth number must be a string.',
-        
-            'inputRefEmp.required' => 'Reference employee is required.',
-            'inputRefEmp.exists' => 'The selected reference employee does not exist.',
-        
-            'inputRefLoc.required' => 'Reference location is required.',
-            'inputRefLoc.string' => 'Reference location must be a string.',
-        
-            'refferedBy.required' => 'Referred by field is required.',
-            'refferedBy.string' => 'Referred by must be a string.',
-        
-            'screeningMode.required' => 'Screening mode is required.',
-            'screeningMode.string' => 'Screening mode must be a string.',
-        
-            'dateScreening.required' => 'Screening date is required.',
-            'dateScreening.date' => 'Screening date must be a valid date.',
-        
-            'testName.array' => 'Test names must be an array.',
-            'testName.*.string' => 'Each test name must be a string.',
-        
-            'othersDetails.string' => 'Other details must be a string.',
-        
-            'dateTestXpert.date' => 'Xpert test date must be a valid date.',
-            'dateTestSmear.date' => 'Smear test date must be a valid date.',
-            'dateTestChest.date' => 'Chest test date must be a valid date.',
-            'dateTestTuborculin.date' => 'Tuberculin test date must be a valid date.',
-            'dateTestOther.date' => 'Other test date must be a valid date.',
-        
-            'resultTestXpert.string' => 'Xpert test result must be a string.',
-            'resultTestSmear.string' => 'Smear test result must be a string.',
-            'resultTestChest.string' => 'Chest test result must be a string.',
-            'resultTestTuborculin.string' => 'Tuberculin test result must be a string.',
-            'resultTestOther.string' => 'Other test result must be a string.',
-        
-            'tuberculosis.string' => 'Tuberculosis field must be a string.',
-            'dateDiagnosis.date' => 'Diagnosis date must be a valid date.',
-            'tbCaseNum.string' => 'TB case number must be a string.',
-            'dateNotif.date' => 'Notification date must be a valid date.',
-            'attendingPhysician.string' => 'Attending physician must be a string.',
-            
-            'refferedToName.string' => 'Referred to name must be a string.',
-            'refferedToAddress.string' => 'Referred to address must be a string.',
-            'refferedToFcode.string' => 'Facility code must be a string.',
-            'refferedToProvHuc.string' => 'Province/HUC must be a string.',
-            'refferedToRegion.string' => 'Region must be a string.',
-        
-            'Bacteriological.string' => 'Bacteriological status must be a string.',
-            'pulmonarySite.string' => 'Pulmonary site must be a string.',
-            'pulmonarySiteSpecifc.string' => 'Pulmonary site text must be a string.',
-        
-            'drugResistence.array' => 'Drug resistance must be an array.',
-            'drugResistence.*.string' => 'Each drug resistance entry must be a string.',
-            
-            'other_drug_resistant_tb_text.string' => 'Other drug-resistant TB text must be a string.',
-            'registration.array' => 'Registration group must be an array.',
-            'registration.*.string' => 'Each registration group entry must be a string.',
+            'string' => 'This Field Must Contain Letters/Words.',
+            'date' => 'Date must be a valid date.',
         ]); 
 
         if ($validator->fails()) {
@@ -4929,9 +4889,8 @@ class regValidation extends Controller
             $dstb->dstb_inputRegion = $request->inputRegion;
 
             $dstb->res_id = $request->inputPatient;
-            $dstb->dstb_inputOtherNum = $request->inputOtherNum;
             $dstb->dstb_inputPhilHealth = $request->inputPhilHealth;
-            $dstb->dstb_permAdd = $request->inputPermAdd;
+
 
             $dstb->em_id = $request->inputRefEmp;
             $dstb->dstb_inputRefLoc = $request->inputRefLoc;
@@ -5011,8 +4970,6 @@ class regValidation extends Controller
             $dstb->dstb_inputProvinceHuc = $request->Edit_inputProvinceHuc;
             $dstb->dstb_inputRegion = $request->Edit_inputRegion;
 
-            $dstb->dstb_permAdd = $request->Edit_inputPermAdd;
-            $dstb->dstb_inputOtherNum = $request->Edit_inputOtherNum;
             $dstb->dstb_inputPhilHealth = $request->Edit_inputPhilHealth;
 
             $dstb->dstb_inputRefLoc = $request->edit_inputRefLoc;
@@ -5234,6 +5191,9 @@ class regValidation extends Controller
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             $fp = new fp_tbl;
+            $fp->fp_phNum = $request->fpPhNum;
+            $fp->fp_nhts = $request->fpNhts;
+            $fp->fp_4ps = $request->fp4Ps;
             $fp->fp_clientId = $request->inputClient;
             $fp->fp_spouseId = $request->inputSpouse;
             $fp->fp_NoLivChild = $request->fpLiveChild;
@@ -5343,6 +5303,7 @@ class regValidation extends Controller
             $fp->fp_id = $request->fp_id;
 
             // TextBox
+                $fp->fp_phNum = $request->edit_fpPhNum;
                 $fp->fp_clientId = $request->edit_inputClient;
                 $fp->fp_spouseId = $request->edit_inputSpouse;
                 $fp->em_id = $request->edit_em_id;
@@ -5390,6 +5351,14 @@ class regValidation extends Controller
                 $fp->fp_pelCc = json_decode($request->edit_fpPelExIudCerCon, true);
                 $fp->fp_pelUp = json_decode($request->edit_fpPelExIudUtPo, true);
             // Radio
+                if ($request->filled('edit_fpNhts')) {
+                    $fp->fp_nhts = $request->edit_fpNhts;
+                }
+
+                if ($request->filled('edit_fp4Ps')) {
+                    $fp->fp_4ps = $request->edit_fp4Ps;
+                }
+
                 if ($request->filled('edit_children')) {
                     $fp->fp_planMoreChild = $request->edit_children;
                 }
@@ -6199,7 +6168,7 @@ class regValidation extends Controller
             'destrictTransaction' => 'required|string', 
             'destrictDateConsult' => 'required|date', 
             'destrictTimeConsult' => 'required|string', 
-            'destrictBloodPressure' => 'required|numeric', 
+            'destrictBloodPressure' => 'required', 
             'destrictTemp' => 'required|numeric', 
             'destrictHeight' => 'required|numeric',
             'destrictWeight' => 'required|numeric',
@@ -6226,14 +6195,14 @@ class regValidation extends Controller
             $destrict->des_refFrom = $request->destrictRefFrom;
             $destrict->des_refTo = $request->destrictRefTo;
             $destrict->des_refReason = $request->destrictReasonRef;
-            $destrict->des_refBy = $request->destrictRefBy;
+            $destrict->em_id = $request->destrictRefBy;
             $destrict->des_natVisit = $request->destrictNatVis;
             $destrict->des_signSymp = isset($request->destrictTypeCon) ? json_encode($request->destrictTypeCon) : null;
             $destrict->des_complaint = $request->destrictChiefComp;
             $destrict->des_diagnosis = $request->destrictDiagnosis;
             $destrict->des_medTreatment = $request->destrictMedication;
             $destrict->des_labFindings = $request->destrictLaboratory;
-            $destrict->em_id = $request->destrictHealthCare;
+            $destrict->des_refBy = $request->destrictHealthCare;
             $destrict->des_perfLabTest = $request->destrictLabTest;
             $destrict->des_status = 'Completed';
             
@@ -6387,7 +6356,6 @@ class regValidation extends Controller
             'maternalCaesarian' => 'required',
             'maternalHemorr' => 'required',
             'maternalAbruptio' => 'required',
-            'maternalOthers' => 'required',
 
             'maternalTb' => 'required',
             'maternalHeart' => 'required',
@@ -7161,17 +7129,23 @@ class regValidation extends Controller
             $currentYear = Carbon::now()->year;
 
             $maternal = maternal_tbl::with(['maiden', 'husband'])->where('mat_id', $id)->first();
-
-            // $vacForm = vaccineTaken_tbl::with('epi')->where('epi_id', $id)->whereYear('created_at', $currentYear)->orderBy('created_at', 'desc')->get();
-            
+            $post = postpartum_tbl::where('mat_id', $id)->get(); 
+            $post2 = $post->skip(1)->first();
+            $ante = antepartum_tbl::where('mat_id', $id)->get();
+            $delBirth = delbirth_tbl::where('mat_id', $id)->first();
             $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
             $resident = resident_tbl::all();
 
+            $checkboxRisk = json_decode($maternal->mat_riskFactor, true);
             $data = [
                 'LoggedUserInfo' => $loggedUserInfo,
                 'residents' => $resident,
                 'maternal' => $maternal,
-                // 'vacForm' => $vacForm,
+                'post' => $post,
+                'post2' => $post2,
+                'ante' => $ante,
+                'checkboxRisk' => $checkboxRisk,
+                'delBirth' => $delBirth,
             ];
 
             if (!$maternal) {

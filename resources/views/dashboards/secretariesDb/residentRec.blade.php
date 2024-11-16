@@ -119,14 +119,15 @@
                             <th>Voters Status</th>
                             <th>Purok</th>
                             <th>Action</th>
+                            <th style="display: none;">Id</th>
                         </tr>
                     </thead>
                     <tbody>
                         
-                        @foreach($residents as $resident)
+                        @foreach($residents as $index => $resident)
                         <tr>
-                            <td>{{ $resident->res_id }}</td>
-                            <td>{{ $resident->res_lname }}, {{ $resident->res_fname }} {{ substr($resident->res_mname, 0, 1) }}.</td>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $resident->res_lname }}, {{ $resident->res_fname }} {{ substr($resident->res_mname, 0, 1) }}. {{ $resident->res_suffix == 'N/A' ? '' : $resident->res_suffix }}</td>
                             <td>{{ app('App\Http\Controllers\regValidation')->calculateAges($resident->res_bdate) }}</td>
                             <td>{{ $resident->res_civil }}</td>
                             <td>{{ $resident->res_sex }}</td>
@@ -146,6 +147,7 @@
                                     </ul>
                                 </div>
                             </td>
+                            <td style="display: none;">{{ $resident->res_id  }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -177,7 +179,7 @@
                                         
                                         <div class="col-md-12">
                                             <label for="household" class="form-label1">Household Number</label>
-                                            <input type="number" class="form-control" id="household" name="household">
+                                            <input type="text" class="form-control" id="household" name="household">
                                             <span class="text-danger error-text household_error"></span>
                                         </div> 
         
@@ -214,7 +216,7 @@
                                     <div class="col-md-3">
                                         <label for="suffix">Suffix</label>
                                         <select id="suffix" class="form-select" name="suffix">
-                                            <option value="" disabled selected>Select Suffix</option>
+                                            <option value="N/A">N/A</option>
                                             <option value="I">I</option>
                                             <option value="II">II</option>
                                             <option value="III">III</option>
@@ -253,6 +255,7 @@
                                         <label for="education">Educational Attainment</label> 
                                         <select id="education" class="form-select" name="education">
                                             <option value="" disabled selected>Select Educational Attainment</option>
+                                            <option value="N/A">N/A</option>
                                             <option value="No Formal Education">No Formal Education</option>
                                             <option value="Some Elementary">Some Elementary</option>
                                             <option value="Elementary Graduate">Elementary Graduate</option>
@@ -413,7 +416,7 @@
                                         
                                         <div class="col-md-12">
                                             <label for="edit_household" class="form-label1">Household Number</label>
-                                            <input type="number" class="form-control" id="edit_household" name="edit_household">
+                                            <input type="text" class="form-control" id="edit_household" name="edit_household">
                                             <span class="text-danger error-text edit_household_error"></span>
                                         </div> 
         
@@ -450,7 +453,7 @@
                                     <div class="col-md-3">
                                         <label for="edit_suffix">Suffix</label>
                                         <select id="edit_suffix" class="form-select" name="edit_suffix">
-                                            <option value="" disabled selected>Select Suffix</option>
+                                            <option value="N/A">N/A</option>
                                             <option value="I">I</option>
                                             <option value="II">II</option>
                                             <option value="III">III</option>
@@ -489,6 +492,7 @@
                                         <label for="edit_education">Educational Attainment</label> 
                                         <select id="edit_education" class="form-select" name="edit_education">
                                             <option value="" disabled selected>Select Educational Attainment</option>
+                                            <option value="N/A">N/A</option>
                                             <option value="No Formal Education">No Formal Education</option>
                                             <option value="Some Elementary">Some Elementary</option>
                                             <option value="Elementary Graduate">Elementary Graduate</option>
@@ -716,6 +720,9 @@
                                     setTimeout(() => {
                                         $('.alert').alert('close'); // Close alert after 1 second
                                     }, 1000);
+                                    setTimeout(() => {
+                                        location.reload(); 
+                                    }, 2000);
                                 }
                             },
                             error: function(xhr) {

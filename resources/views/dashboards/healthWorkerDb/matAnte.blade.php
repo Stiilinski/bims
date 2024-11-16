@@ -186,7 +186,6 @@
               </nav>
         </div>
         <div class="btnArea">
-            <button type="button" class="btn btn-primary"><i class="bi bi-printer-fill"></i> Print</button>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">New Record</button>  
         </div>
     </div>
@@ -300,7 +299,7 @@
                                 <div class="col-md-4">
                                     <label for="apHt" class="col-sm-8 col-form-label">HT</label>
                                     <div class="col-sm-12">
-                                        <input type="number" class="form-control" id="apHt" name="apHt">
+                                        <input type="text" class="form-control" id="apHt" name="apHt">
                                     </div>
                                     <span class="text-danger error-text apHt_error"></span>
                                 </div>
@@ -308,7 +307,7 @@
                                 <div class="col-md-4">
                                     <label for="apWt" class="col-sm-8 col-form-label">WT</label>
                                     <div class="col-sm-12">
-                                        <input type="number" class="form-control" id="apWt" name="apWt">
+                                        <input type="text" class="form-control" id="apWt" name="apWt">
                                     </div>
                                     <span class="text-danger error-text apWt_error"></span>
                                 </div>
@@ -324,7 +323,7 @@
                                 <div class="col-md-4">
                                     <label for="apFundal" class="col-sm-8 col-form-label">FUNDAL HT</label>
                                     <div class="col-sm-12">
-                                        <input type="number" class="form-control" id="apFundal" name="apFundal">
+                                        <input type="text" class="form-control" id="apFundal" name="apFundal">
                                     </div>
                                     <span class="text-danger error-text apFundal_error"></span>
                                 </div>
@@ -332,7 +331,7 @@
                                 <div class="col-md-4">
                                     <label for="apFhb" class="col-sm-8 col-form-label">FHB</label>
                                     <div class="col-sm-12">
-                                        <input type="number" class="form-control" id="apFhb" name="apFhb">
+                                        <input type="text" class="form-control" id="apFhb" name="apFhb">
                                     </div>
                                     <span class="text-danger error-text apFhb_error"></span>
                                 </div>

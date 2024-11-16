@@ -116,13 +116,13 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/medicine') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@medicineRecord') }}">
                     <i class="bi bi-circle"></i>
-                    <span>Input Medecines</span>
+                    <span>Input Medicines</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/medRelease') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@medRelease') }}">
                     <i class="bi bi-circle"></i>
-                    <span>Release Medicine Records</span>
+                    <span>Release Medicines Records</span>
                 </a>
             </li>
         </ul>

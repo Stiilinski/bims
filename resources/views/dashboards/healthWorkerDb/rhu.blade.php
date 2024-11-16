@@ -500,7 +500,7 @@
                                         <div class="col-md-4 pt-2">
                                             <input type="hidden" name="edit_referId" id="edit_referId">
                                             <label for="edit_rhuFullName" class="form-label">Patient Full Name</label>
-                                            <select id="edit_rhuFullName" class="form-control" name="edit_rhuFullName" onchange="updateResidentDetails(this)">
+                                            <select id="edit_rhuFullName" class="form-control" name="edit_rhuFullName" onchange="edit_updateResidentDetails(this)">
                                                 <option value="">Select...</option>
                                                 @foreach($residents as $resident)
                                                     <option value="{{ $resident->res_id }}">
@@ -755,12 +755,21 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    // Initialize resident data from PHP
-    var residentData = @json($residents);
-</script>
 <script>
 //CLIENT SELECT
+const residentData = {
+        @foreach($residents as $resident)
+            "{{ $resident->res_id }}": {
+                res_address: "{{ addslashes($resident->res_address) }}",
+                res_bdate: "{{ $resident->res_bdate }}",
+                res_sex: "{{ $resident->res_sex }}",
+                res_contact: "{{ $resident->res_contact }}",
+                res_educ: "{{ $resident->res_educ }}",
+                res_civil: "{{ $resident->res_civil }}"
+            },
+        @endforeach
+    };
+
     $(document).ready(function () {
         $('#rhuFullName').selectize({
             sortField: 'text'
@@ -794,7 +803,7 @@
 
                 document.getElementById('referGender').value = residentInfo.res_sex;
                 document.getElementById('referCivil').value = residentInfo.res_civil;
-                // document.getElementById('referEa').value = residentInfo.res_occupation;
+                document.getElementById('referEa').value = residentInfo.res_educ;
             }
         } else {
             // Clear fields if no resident is selected
@@ -803,7 +812,37 @@
             document.getElementById('referAge').value = '';
             document.getElementById('referGender').value = '';
             document.getElementById('referCivil').value = '';
-            // document.getElementById('rhuOcc').value = '';
+            document.getElementById('referEa').value = '';
+        }
+    }
+
+    function edit_updateResidentDetails(selectElement) {
+        const selectedId = selectElement.value;
+
+        if (selectedId) {
+            const residentInfo = residentData[selectedId];
+
+            if (residentInfo) {
+                document.getElementById('edit_referAddress').value = residentInfo.res_address;
+                document.getElementById('edit_referDob').value = residentInfo.res_bdate;
+
+                // Calculate age from the birth date
+                const birthDate = new Date(residentInfo.res_bdate);
+                const age = calculateAge(birthDate);
+                document.getElementById('edit_referAge').value = age;
+
+                document.getElementById('edit_referGender').value = residentInfo.res_sex;
+                document.getElementById('edit_referCivil').value = residentInfo.res_civil;
+                document.getElementById('edit_referEa').value = residentInfo.res_educ;
+            }
+        } else {
+            // Clear fields if no resident is selected
+            document.getElementById('edit_referAddress').value = '';
+            document.getElementById('edit_referDob').value = '';
+            document.getElementById('edit_referAge').value = '';
+            document.getElementById('edit_referGender').value = '';
+            document.getElementById('edit_referCivil').value = '';
+            document.getElementById('edit_referEa').value = '';
         }
     }
 

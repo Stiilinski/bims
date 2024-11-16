@@ -1588,6 +1588,8 @@
                 res_bdate: "{{ $resident->res_bdate }}",
                 res_sex: "{{ $resident->res_sex }}",
                 res_contact: "{{ $resident->res_contact }}",
+                res_tempAddress: "{{ $resident->res_tempAddress }}",
+                res_otherContact: "{{ $resident->res_otherContact }}",
                 res_citizen: "{{ $resident->res_citizen }}"
             },
         @endforeach
@@ -1610,7 +1612,8 @@
             const residentInfo = residentData[selectedId];
 
             if (residentInfo) {
-                document.getElementById('inputCurAdd').value = residentInfo.res_address;
+                document.getElementById('inputPermAdd').value = residentInfo.res_address;
+                document.getElementById('inputCurAdd').value = residentInfo.res_tempAddress;
                 document.getElementById('inputDob').value = residentInfo.res_bdate;
 
                 // Calculate age from the birth date
@@ -1620,15 +1623,18 @@
 
                 document.getElementById('inputSex').value = residentInfo.res_sex;
                 document.getElementById('inputConNum').value = residentInfo.res_contact;
+                document.getElementById('inputOtherNum').value = residentInfo.res_otherContact;
                 document.getElementById('inputNat').value = residentInfo.res_citizen;
             }
         } else {
             // Clear fields if no resident is selected
+            document.getElementById('inputPermAdd').value = '';
             document.getElementById('inputCurAdd').value = '';
             document.getElementById('inputDob').value = '';
             document.getElementById('inputAge').value = '';
             document.getElementById('inputSex').value = '';
             document.getElementById('inputConNum').value = '';
+            document.getElementById('inputOtherNum').value = '';
             document.getElementById('inputNat').value = '';
         }
     }

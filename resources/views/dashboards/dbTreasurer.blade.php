@@ -1,463 +1,227 @@
-@extends('layouts.dblayout')
+@include('layouts.headTreasurer')
+<style>
+    .container {
+        max-width: 100%!important;
+        margin-top: 80px; 
+        padding-bottom:10px; 
+    }
 
-@section('style')
-    <link rel="stylesheet" href="/css/dbCaptain.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
+    .toggle-sidebar-btn {
+        display: none;
+    }
 
-@section('content')
-<div class="container">
-    <div class="containerCon">
-        <div class="sideBar">
-            <div class="sLogoPic">
-                <img src="/images/logo.png" class="logo" alt="brgy logo">
-                <h2 class="systemName">BIM SYSTEM</h2>
-            </div>
+    .pagetitle {
+        display: flex;
+        justify-content: space-between
+    }
+    table.dataTable.stripe tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
 
-            <div class="profNameCon" onclick="toggleDropdown()">
-                @if($LoggedUserInfo)
-                    <div class="profilePart">
-                        <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
-                    </div>
+    .card {
+        padding: 10px;
+    }
 
-                    <div class="namePart">
-                        <h4 class="profName">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
-                        <input type="hidden" name="idVal" value="{{ $LoggedUserInfo['em_id']}}">
-                        <h5 class="position">{{ $LoggedUserInfo['em_position']}}</h5>
-                    </div>
+    @media print {
+        /* Set page orientation to landscape */
+        @page {
+            size: portrait;
+            margin: 0mm; /* Set margins */
+        }
 
-                    <div class="optionPartBtn">
-                        <h6>&#9660;</h6>
-                    </div>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensure padding/border doesn't add extra space */
+        }
 
-                    <div class="optionPart dropdown-content" id="dropdownContent">
-                        <button type="button" value="{{ $LoggedUserInfo['em_id'] }}" class="changeProf editProfile" onclick='openEditEmpForm(@json($LoggedUserInfo))'>Change Profile</button>
-                        <a href="{{ route('regValidation.logout') }}">Logout</a>
-                    </div>
-                @else
-                    <p>You are not logged in.</p>
-                @endif
-            </div>
+        /* Ensure the body and all child elements are visible during printing */
+        body {
+            visibility: visible !important;
+            background-color: #FFF;
+            margin: 0;
+            padding: 0;
+        }
 
-            <div class="navBar">
-                <a href="{{ action('App\Http\Controllers\regValidation@dbTreasurer') }}"><div class="secDashboard">
-                    <button class="btnSecDashboard act"><span class="dashb"> <i class='bx bxs-home'></i>Dashboard</span></button>
-                </div></a>
+        /* Hide unnecessary elements like page title, buttons, and other non-printable content */
+        #header, .pagetitle {
+            display: none !important; /* Hide page title and button area */
+        }
 
-                <a href="{{ action('App\Http\Controllers\regValidation@transactionTreasurer') }}"><div class="resRecord">
-                    <button class="btnResRecord"><span class="resR"> <i class='bx bx-group'></i>Transactions</span></button>
-                </div></a>
-            </div>
-        </div>
+        .card-title, .nav {
+            display: none !important;
+        }
 
+        /* Make sure the card is visible and takes up the full page */
+        .card {
+            width: 1200px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: visible !important;
+            background-color: #fff;
+            box-shadow: none;
+            display: block;
+            padding: 0; /* Adjust padding to prevent clipping */
+            box-sizing: border-box;
+            margin-top: 4px;
+        }
 
-        <div class="contentCon">
-            <div class="contentHeader">
-                <div class="fnamePart">
-                    <h4 class="profNames">{{ $LoggedUserInfo['em_fname'] . ' ' . $LoggedUserInfo['em_lname'] }}</h4>
-                </div>
+        .card-body * {
+            background-color: #fff;
+        }
+        
+        .rightsContainer, .leftsContainer {
+            height: 1120px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+@include('layouts.headerTreasurer')
+<body>
+    <div id="container" class="container">
 
-                <div class="profPart">
-                    <img src="/storage/{{ $LoggedUserInfo['em_picture']}}" class="profilePicEmp" alt="employee profile">
-                </div>
-            </div>
-
-            <div class="mainContentCon">
-                <div class="innerContent">
-                    <div class="navTitle">DASHBOARD</div>
-                    <hr>
-                    <div class="cardBoard">
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showYearlyGraph('population')">
-                            <div class="card-body">
-                                <h5 class="card-title">POPULATION</h5>
-                                <p class="card-text">{{ $totalPopulation }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showYearlyGraph('male')">
-                            <div class="card-body">
-                                <h5 class="card-title">MALE</h5>
-                                <p class="card-text">{{ $totalMale }}</p>
-                            </div>
-                        </div>
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showYearlyGraph('female')">
-                            <div class="card-body">
-                                <h5 class="card-title">FEMALE</h5>
-                                <p class="card-text">{{ $totalFemale }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showYearlyGraph('voters')">
-                            <div class="card-body">
-                                <h5 class="card-title">VOTERS</h5>
-                                <p class="card-text">{{ $totalVoters }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showYearlyGraph('nonvoters')">
-                            <div class="card-body">
-                                <h5 class="card-title">NON VOTERS</h5>
-                                <p class="card-text">{{ $totalNonVoters }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showMonthlyGraph('blotter')">
-                            <div class="card-body">
-                                <h5 class="card-title">BLOTTER</h5>
-                                <p class="card-text">{{ $totalBlotters }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showMonthlyGraph('certificate')">
-                            <div class="card-body">
-                                <h5 class="card-title">CERTIFICATE</h5>
-                                <p class="card-text">{{ $totalCertificates }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showMonthlyGraph('business')">
-                            <div class="card-body">
-                                <h5 class="card-title">BUSINESS PERMIT</h5>
-                                <p class="card-text">{{ $totalBusinessPermits }}</p>
-                            </div>
-                        </div>
-            
-                        <div class="card" style="width: 20rem; height: 140px;" onclick="showMonthlyGraph('clearance')">
-                            <div class="card-body">
-                                <h5 class="card-title">BARANGAY CLEARANCE</h5>
-                                <p class="card-text">{{ $totalClearances }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="pagetitle">
+            <h1>Transaction</h1>
+            <div class="btnArea">
+                <button type="button" class="btn btn-primary" id="print"><i class="bi bi-printer-fill"></i> Print</button>
             </div>
         </div>
-
-        <div class="modal fade" id="graphModal" tabindex="-1" aria-labelledby="graphModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="graphModalLabel">Graph</h5>
-                       
-                            <span aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <canvas id="graphCanvas"></canvas>
-                    </div>
+    
+        <section class="section dashboard">
+        <div class="row">
+    
+          <!-- Left side columns -->
+          <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body" style="width: 100%!important;">
+                    <table id="example" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="display: none;">ID</th>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Document Type</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                                <th>Amount Paid</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $totalRevenue = 0;
+                            @endphp
+                            @foreach($transactions as $transaction)
+                                @php
+                                    // Calculate age
+                                    $birthdate = \Carbon\Carbon::parse($transaction->res_bdate);
+                                    $age = $birthdate->age;
+                                    // Concatenate full name
+                                    $fullName = $transaction->res_fname . ' ' . $transaction->res_mname . ' ' . $transaction->res_lname;
+                                    if ($transaction->res_suffix !== 'N/A') {
+                                        $fullName .= ' ' . $transaction->res_suffix;
+                                    }
+                                    // Determine document type and status
+                                    if (!is_null($transaction->cert_id) && $transaction->certStatus === 'completed') {
+                                        $documentType = 'Certification';
+                                        $documentStatus = $transaction->certStatus;
+                                        $price = 25.00;
+                                    } elseif (!is_null($transaction->bcl_id) && $transaction->bcl_status === 'completed') {
+                                        $documentType = 'Barangay Clearance';
+                                        $documentStatus = $transaction->bcl_status;
+                                        $price = 25.00;
+                                    } elseif (!is_null($transaction->business_id) && $transaction->bc_status === 'completed') {
+                                        $documentType = 'Business Permit';
+                                        $documentStatus = $transaction->bc_status;
+                                        $price = 30.00;
+                                    } elseif (!is_null($transaction->blotter_id)) {
+                                        $documentType = 'Blotter/Complaint';
+                                        $documentStatus = $transaction->blotter_status;
+                                        $price = 0.00; // Set appropriate price for this document type
+                                    } else {
+                                        $documentType = 'Unknown';
+                                        $documentStatus = 'Unknown';
+                                        $price = 0.00; // Default price for unknown type
+                                    }
+                                    // Accumulate total revenue if the status is "ready to pick up"
+                                    if ($documentStatus === 'completed') {
+                                        $totalRevenue += $transaction->tr_amountPaid;
+                                    }
+                                @endphp
+                                @if($documentStatus === 'completed')
+                                    <tr>
+                                        <td>{{ $transaction->tr_id }}</td>
+                                        <td>{{ $fullName }}</td>
+                                        <td>{{ $documentType }}</td>
+                                        <td>{{ $transaction->created_at }}</td>
+                                        <td>{{ number_format($price, 2) }}</td>
+                                        <td>{{ $transaction->tr_amountPaid }}</td>
+                                        <td>{{ $documentStatus }}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-
-
-        <div class="editEmployeeAccount">
-            <div class="editEmployeeAccountCon">
-                <div class="headerEditTitle">
-                    <span>Edit Employee</span>
-                    <span><i class='bx bx-x' onclick="closeEditEmpForm()"></i></span>
+          </div>
+    
+    
+    
+            <!-- Right side columns -->
+            <div class="col-lg-4">
+    
+              <!-- Private Announcement -->
+              <div class="card">
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                  <div class="news" id="schedules-container">
+    
+                  </div><!-- End sidebar recent posts-->
+    
                 </div>
-
-                <form class="editEmployeeForms" id="e_empForm" autocomplete="off" enctype="multipart/form-data">
-                    @csrf
-                    <div class="emp_leftInput">    
-                        <div class="emp_avatarcon">
-                            <img id="emp_profilePreview" class="e_avatar" alt="Profile Image">
-                            <input type="hidden" name="e_id" id="e_id">
-                            <input type="text" name="e_path" id="e_path" readonly>
-                            
-                            <div class="mb-3">
-                                <label for="e_profile" class="form-label1">Profile Picture</label>
-                                <input type="file" class="form-control" id="e_profile" name="picture" aria-describedby="inputGroupFileediton03" aria-label="Upload">
-                                <span class="text-danger error-text profile_error"></span>
-                            </div>  
-                        </div>
-                    </div>
-                    
-                    <div class="emp_rightInput">
-                        <div class="emp_fnameParts">
-                            <label for="emp_fname">First Name</label>
-                            <input type="text" class="form-control" name="fname" id="emp_fname" placeholder="Enter Firstname">
-                            <span class="text-danger error-text firstName_error"></span>
-                        </div>
-
-                        <div class="emp_lnamePart">
-                            <label for="emp_lname">Last Name</label>
-                            <input type="text" class="form-control" name="lname" id="emp_lname" placeholder="Enter Lastname">
-                            <span class="text-danger error-text lastName_error"></span>
-                        </div>
-
-            
-            
-                        <div class="emp_accountPart">
-                            <div class="emp_emailPart">
-                                <label for="emp_email">Email</label>
-                                <input type="text" class="form-control" name="email" id="emp_email">
-                                <span class="text-danger error-text email_error"></span>
-                            </div>
-
-                            <div class="emp_passwordPart">
-                                <label for="emp_password">Password</label>
-                                <input type="password" class="form-control" id="emp_password" name="password" placeholder="Enter Password">
-                                <span class="text-danger error-text password_error"></span>
-                            </div>
-
-                            <div class="emp_addressPart">
-                                <label for="emp_address">Address</label>
-                                <input type="text" class="form-control" name="address" id="emp_address">
-                                <span class="text-danger error-text address_error"></span>
-                            </div>
-
-                            <div class="emp_contactPart">
-                                <label for="emp_contact">Contact</label>
-                                <input type="text" class="form-control" name="contact" id="emp_contact">
-                                <span class="text-danger error-text contact_error"></span>
-                            </div>
-
-                            <div class="emp_positionPart">
-                                <label for="emp_position">Position</label>
-                                <input type="text" class="form-control" name="position" id="emp_position" readonly>
-                                <span class="text-danger error-text position_error"></span>
-                            </div>                            
-                        </div>
-            
-            
-                        <div class="buttonPart">
-                            <button type="button" class="btn btn-primary" onclick="closeEditEmpForm()">Cancel</button>
-                            <button type="button" class="btn btn-primary update_employee">Update</button>
-                        </div>
-            
-                    </div>
-                </form>
+              </div>
+              <!-- End Private Announcement -->
+    
+              <!-- Public Announcement -->
+              <div class="card">
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Public Announcement <span id="currentMonthSpan">| Today</span></h5>
+                  <div class="news" id="publicSchedules-container">
+    
+                  </div><!-- End sidebar recent posts-->
+    
+                </div>
+              </div>
+              <!-- End Public Announcement -->
+    
             </div>
-        </div>
-
-
+            <!-- End Right side columns -->
+            </section>
     </div>
-    
-    <br>
-    <br>
-    <div class="footer">Copyright</div>
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    @include('layouts.footerTreasurer')
+    <script>
+        const printBtn = document.getElementById('print');
+        printBtn.addEventListener('click', function() {
+            window.print();
+        });
 
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Include Chart.js library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-let chartInstance = null;
-
-// Function to show yearly graph
-function showYearlyGraph(type) {
-    // Fetch data via AJAX
-    $.ajax({
-        url: `/dashboard/yearly-data/${type}`, // Adjust URL based on your Laravel route
-        method: 'GET',
-        success: function(data) {
-            // Destroy existing chart instance if it exists
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-
-            // Create new Chart.js instance for yearly data
-            const ctx = document.getElementById('graphCanvas').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'bar', // Assuming yearly data is always displayed as bar chart
-                data: {
-                    labels: ['Last Year', 'Current Year'],
-                    datasets: [{
-                        label: 'Last Year',
-                        data: [data.lastYear[0], 0], // Assuming data.lastYear is a single value
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: 'Current Year',
-                        data: [0, data.currentYear[0]], // Assuming data.currentYear is a single value
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
+        $(document).ready(function() {
+            // Initialize DataTable with striped rows (default)
+            var table = $('#example').DataTable({
+                stripeClasses: ['even', 'odd'], // Optional: applies even/odd classes for striped rows
+                order: [[3, 'desc']],  // Order by the 'created_at' column (index 4) in descending order
             });
-
-            // Show the modal after chart is created
-            $('#graphModal').modal('show');
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-            // Handle error scenario (e.g., show error message)
-        }
-    });
-}
-
-// Function to show monthly graph
-function showMonthlyGraph(type) {
-    // Fetch data via AJAX for monthly data
-    $.ajax({
-        url: `/dashboard/monthly-data/${type}`, // Adjust URL based on your Laravel route
-        method: 'GET',
-        success: function(data) {
-            // Destroy existing chart instance if it exists
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-
-            // Create new Chart.js instance for monthly data
-            const ctx = document.getElementById('graphCanvas').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'bar', // Assuming monthly data is displayed as bar chart
-                data: {
-                    labels: getMonthlyLabels(), // Function to get monthly labels
-                    datasets: [{
-                        label: 'Current Year', // Label for the current year data
-                        data: data.currentYear, // Assuming data.currentYear is an array of monthly data
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // Show the modal after chart is created
-            $('#graphModal').modal('show');
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-            // Handle error scenario (e.g., show error message)
-        }
-    });
-}
-
-// Function to get monthly labels (e.g., Jan, Feb, Mar, ...)
-function getMonthlyLabels() {
-    // Replace with your logic to generate monthly labels (e.g., array of month names)
-    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-}
+        });
+    </script>
+</body>
 
 
-
-
-
-
-
-
-
-$(document).on('click', '.update_employee', function (e) {
-    e.preventDefault();
-    var employee_id = $('#e_id').val();
-
-    var formData = new FormData();
-    formData.append('fname', $('#emp_fname').val());
-    formData.append('lname', $('#emp_lname').val());
-    formData.append('email', $('#emp_email').val());
-    formData.append('password', $('#emp_password').val());
-    formData.append('address', $('#emp_address').val());
-    formData.append('contact', $('#emp_contact').val());
-    formData.append('position', $('#emp_position').val());
-    if ($('#e_profile')[0].files.length > 0) {
-        formData.append('picture', $('#e_profile')[0].files[0]); // Append the file only if selected
-    }
-    
-    $.ajax({
-        type: "POST",
-        url: "/update-employee/" + employee_id,
-        data: formData,
-        dataType: "json",
-        contentType: false, // Needed for FormData
-        processData: false, // Needed for FormData
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            console.log(response);
-            if(response.status == 400) {
-                alert("Validation Error");
-            } else if(response.status == 404) {
-                alert("Employee Not Found");
-            } else {
-                alert("Success");
-                document.querySelector('.editEmployeeAccount').style.display = 'none';
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("An error occurred. Check the console for details.");
-        }
-    });
-});
-
-function openEditEmpForm(employee) {
-    // Now you have the employee object directly
-    console.log(employee);
-
-    $.ajax({
-        type: "GET",
-        url: "/edit-employee/" + employee.em_id,
-        success: function(response) {
-            console.log(response);
-            if(response.status == 404) {
-                alert("Employee Not Found");
-            } else {
-                $('#e_path').val(response.LoggedUserInfo.em_picture);
-                $('#emp_fname').val(response.LoggedUserInfo.em_fname);
-                $('#emp_lname').val(response.LoggedUserInfo.em_lname);
-                $('#emp_email').val(response.LoggedUserInfo.em_email);
-                $('#emp_address').val(response.LoggedUserInfo.em_address);
-                $('#emp_contact').val(response.LoggedUserInfo.em_contact);
-                $('#emp_position').val(response.LoggedUserInfo.em_position);
-                $('#emp_profilePreview').attr('src', '/storage/' + response.LoggedUserInfo.em_picture);
-                $('#e_id').val(employee.em_id);
-
-                $('.editEmployeeAccount').css('display', 'flex'); // Show the edit form container with flex display
-            }
-        },
-        error: function(xhr, status, error) {
-            console.log(xhr.responseText);
-        }
-    });
-}
-
-function closeEditEmpForm() {
-    $('.editEmployeeAccount').css('display', 'none'); // Hide the edit form container
-}
-
-// PARA DISPLAY PICTURES INIG PILI
-document.getElementById('e_profile').addEventListener('change', function() {
-    var file = this.files[0];
-    if (file) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            document.getElementById('emp_profilePreview').src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
-</script>
-
-
-
-    
-    
-</div>
-@endsection
 

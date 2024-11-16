@@ -53,7 +53,16 @@
     .purpose1:hover {
         transform: scale(1.05);
     }
+
+    table.dataTable.stripe tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .card {
+        padding: 10px;
+    }
 </style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <body>
     @include('layouts.headerSecretary')
 
@@ -65,9 +74,22 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#certificateModal">Add Permit</button> 
                 </div>
             </div>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <select id="status-filter" class="form-select">
+                        <option value="">All</option>
+                        <option value="pending" selected>Pending</option>
+                        <option value="processed">Processed</option>
+                        <option value="ready to pick up">Ready To Pick Up</option>
+                        <option value="rejected">Reject</option>
+                        <option value="completed">Completed</option>
+                        <option value="Archive">Archived</option>
+                    </select>  
+                </div>
+            </div> 
             <div class="card">
-                <div class="card-body">                        
-                    <table class="table table-striped datatable">
+                <div class="card-body">          
+                    <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -78,6 +100,7 @@
                                 <th>Business Address</th>
                                 <th>Pick Up Date</th>
                                 <th>Status</th>
+                                <th style="display: none;"></th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -89,7 +112,7 @@
                                     $age = $birthdate->age;
                                     // Concatenate full name
                                     $fullName = $permit->res_fname . ' ' . $permit->res_mname . ' ' . $permit->res_lname;
-                                    if ($permit->res_suffix !== 'null') {
+                                    if ($permit->res_suffix !== 'N/A') {
                                         $fullName .= ' ' . $permit->res_suffix;
                                     }
                                 @endphp
@@ -102,6 +125,7 @@
                                     <td>{{ $permit->bc_businessAddress}}</td>
                                     <td>{{ $permit->bc_pickUpDate}}</td>
                                     <td>{{ $permit->bc_status}}</td>
+                                    <td style="display: none;">{{ $permit->created_at }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -109,15 +133,34 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <button type="button" class="dropdown-item" onclick="openViewModal({{ $permit->id }})">View</button>
-                                                @if($permit->bc_status === 'processed')
-                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'ready to pick up')">Ready</button>
-                                                @elseif($permit->bc_status !== 'ready to pick up' && $permit->bc_status !== 'rejected' && $permit->bc_status !== 'cancelled')
-                                                <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $permit->id }})">Print</button>
+
+                                                @if($permit->bc_status === 'pending')
+                                                    <!-- Actions for 'pending' status -->
+                                                    <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $permit->id }})">Print</button>
                                                     <button type="button" class="dropdown-item" onclick="showRejectForm({{ $permit->id }})">Reject</button>
-                                                @elseif($permit->bc_status == 'ready to pick up')
-                                                    <button type="button" class="dropdown-item btnview" onclick="sendEmail('{{ $permit->res_email }}', '{{ $permit->res_fname }}', '{{ $permit->res_lname }}')">Send</button>
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
+                                                @elseif($permit->bc_status === 'processed')
+                                                    <!-- Actions for 'processed' status -->
+                                                    <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $permit->id }})">Print</button>
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'ready to pick up')">Ready</button>
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
+                                                @elseif($permit->bc_status === 'ready to pick up')
+                                                    <!-- Actions for 'ready to pick up' status -->
+                                                    <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $permit->id }})">Print</button>
+                                                    <button type="button" class="dropdown-item btnview" onclick="sendEmail('{{ $permit->res_email }}', '{{ $permit->res_fname }}', '{{ $permit->res_lname }}')">Send Email</button>
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'completed')">Completed</button>
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
+                                                @elseif($permit->bc_status === 'rejected')
+                                                    <!-- Actions for 'rejected' status -->
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
+                                                @elseif($permit->bc_status === 'completed')
+                                                    <!-- Actions for 'completed' status -->
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
+                                                @elseif(strtolower(trim($permit->bc_status)) === 'archive')
+                                                    <!-- Actions for 'archived' status -->
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'pending')">Pending</button>
                                                 @endif
-                                                <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'Archive')">Archive</button>
+                                                
                                             </ul>
                                         </div>
                                     </td>
@@ -474,13 +517,14 @@
                             <div class="col-md-6">
                                 <label for="suffix2" class="form-label">Suffix (Leave It If None)</label>
                                 <select name="suffix2" id="suffix2" class="form-control">
-                                    <option value="">N/A</option>
-                                    <option value="1">I</option>
-                                    <option value="2">II</option>
-                                    <option value="3">III</option>
-                                    <option value="4">IV</option>
-                                    <option value="5">V</option>
+                                    <option value="N/A">N/A</option>
+                                    <option value="I">I</option>
+                                    <option value="II">II</option>
+                                    <option value="III">III</option>
+                                    <option value="IV">IV</option>
+                                    <option value="V">V</option>
                                     <option value="Jr.">Jr.</option>
+                                    <option value="Sr.">Sr.</option>
                                 </select>
                                 <span class="text-danger error-text suffix2_error"></span>
                             </div>
@@ -528,7 +572,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                           </div>
                     </form>
                 </div>
@@ -546,6 +590,26 @@
 
     @include('layouts.footerSecretary')
     <script>
+        $(document).ready(function() {
+            // Initialize DataTable with striped rows (default)
+            var table = $('#example').DataTable({
+                stripeClasses: ['even', 'odd'], // Optional: applies even/odd classes for striped rows
+                order: [[8, 'desc']],  // Order by the 'created_at' column (index 4) in descending order
+            });
+
+            // Apply the default "Pending" filter on the status column
+            table.column(7) // Assuming the 'Status' column is the 6th column (index 5)
+                .search($('#status-filter').val())
+                .draw();
+
+            // Update filter when the select option changes
+            $('#status-filter').on('change', function() {
+                table.column(7)
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
         function openViewModal(id) {
             $.ajax({
                 url: `/permit/${id}`,

@@ -941,14 +941,14 @@
                         <div class="col-md-6">
                             <label for="suffix1" class="form-label">Suffix (Leave It If None)</label>
                             <select name="suffix1" id="suffix1"  class="form-control">
-                                <option value="">N/A</option>
-                                <option value="1">I</option>
-                                <option value="2">II</option>
-                                <option value="3">III</option>
-                                <option value="4">IV</option>
-                                <option value="5">V</option>
-                                <option value="jr">Jr.</option>
-                                <option value="sr">Sr.</option>
+                              <option value="N/A">N/A</option>
+                              <option value="I">I</option>
+                              <option value="II">II</option>
+                              <option value="III">III</option>
+                              <option value="IV">IV</option>
+                              <option value="V">V</option>
+                              <option value="Jr.">Jr.</option>
+                              <option value="Sr.">Sr.</option>
                             </select>
                             <span class="text-danger error-text suffix1_error"></span>
                         </div>
@@ -1022,13 +1022,14 @@
                           <div class="col-md-6">
                               <label for="suffix2" class="form-label">Suffix (Leave It If None)</label>
                               <select name="suffix2" id="suffix2" class="form-control">
-                                  <option value="">N/A</option>
-                                  <option value="1">I</option>
-                                  <option value="2">II</option>
-                                  <option value="3">III</option>
-                                  <option value="4">IV</option>
-                                  <option value="5">V</option>
-                                  <option value="Jr.">Jr.</option>
+                                <option value="N/A">N/A</option>
+                                <option value="I">I</option>
+                                <option value="II">II</option>
+                                <option value="III">III</option>
+                                <option value="IV">IV</option>
+                                <option value="V">V</option>
+                                <option value="Jr.">Jr.</option>
+                                <option value="Sr.">Sr.</option>
                               </select>
                               <span class="text-danger error-text suffix2_error"></span>
                           </div>
@@ -1118,13 +1119,14 @@
                           <div class="col-md-6">
                             <label for="suffix4" class="form-label">Suffix (Leave It If None)</label>
                             <select name="suffix4" id="suffix4"  class="form-control">
-                                <option value="">N/A</option>
-                                <option value="1">I</option>
-                                <option value="2">II</option>
-                                <option value="3">III</option>
-                                <option value="4">IV</option>
-                                <option value="5">V</option>
-                                <option value="Jr.">Jr.</option>
+                              <option value="N/A">N/A</option>
+                              <option value="I">I</option>
+                              <option value="II">II</option>
+                              <option value="III">III</option>
+                              <option value="IV">IV</option>
+                              <option value="V">V</option>
+                              <option value="Jr.">Jr.</option>
+                              <option value="Sr.">Sr.</option>
                             </select>
                             <span class="text-danger error-text suffix4_error"></span>
                           </div>
@@ -1202,13 +1204,14 @@
                                 <div class="col-md-6">
                                     <label for="suffix3" class="form-label">Suffix (Leave It If None)</label>
                                     <select name="suffix3" id="suffix3"  class="form-control">
-                                        <option value="">N/A</option>
-                                        <option value="1">I</option>
-                                        <option value="2">II</option>
-                                        <option value="3">III</option>
-                                        <option value="4">IV</option>
-                                        <option value="5">V</option>
-                                        <option value="Jr.">Jr.</option>
+                                      <option value="N/A">N/A</option>
+                                      <option value="I">I</option>
+                                      <option value="II">II</option>
+                                      <option value="III">III</option>
+                                      <option value="IV">IV</option>
+                                      <option value="V">V</option>
+                                      <option value="Jr.">Jr.</option>
+                                      <option value="Sr.">Sr.</option>
                                     </select>
                                     <span class="text-danger error-text suffix3_error"></span>
                                 </div>

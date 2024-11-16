@@ -642,14 +642,14 @@
                                 <div class="row g-3">
 
                                     <div class="col-md-12">
-                                        <label for="destrictRefFrom" class="col-sm-12 col-form-label">Reffered From</label>
+                                        <label for="destrictRefFrom" class="col-sm-12 col-form-label">Referred From</label>
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" id="destrictRefFrom" name="destrictRefFrom">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label for="destrictRefTo" class="col-sm-12 col-form-label">Reffered To</label>
+                                        <label for="destrictRefTo" class="col-sm-12 col-form-label">Referred To</label>
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" id="destrictRefTo" name="destrictRefTo">
                                         </div>
@@ -663,9 +663,9 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label for="destrictRefBy" class="col-sm-12 col-form-label">Reffered By</label>
+                                        <label for="destrictRefBy" class="col-sm-12 col-form-label">Referred By</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="form-control" id="destrictRefBy" name="destrictRefBy">
+                                            <input type="text" class="form-control" id="destrictRefBy" name="destrictRefBy" value="{{ $LoggedUserInfo['em_id'] }}">
                                         </div>
                                     </div>
                                 </div>
@@ -802,7 +802,7 @@
                                 <div class="col-md-6">
                                     <label for="destrictHealthCare" class="col-sm-12 col-form-label">Name of Health Care Provider</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="destrictHealthCare" name="destrictHealthCare" value="{{ $LoggedUserInfo['em_id'] }}">
+                                        <input type="text" class="form-control" id="destrictHealthCare" name="destrictHealthCare">
                                     </div>
                                 </div>
 
@@ -918,7 +918,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">   {{--MUST HAVE AM OR PM VALIDATION--}}
+                                            <div class="col-md-6">   
                                                 <label for="edit_destrictTimeConsult" class="col-sm-8 col-form-label">Consultation Time</label>
                                                 <div class="col-sm-12">
                                                     <input type="time" class="form-control" id="edit_destrictTimeConsult" name="edit_destrictTimeConsult">
@@ -975,14 +975,14 @@
                                 <div class="row g-3">
 
                                     <div class="col-md-12">
-                                        <label for="edit_destrictRefFrom" class="col-sm-12 col-form-label">Reffered From</label>
+                                        <label for="edit_destrictRefFrom" class="col-sm-12 col-form-label">Referred From</label>
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" id="edit_destrictRefFrom" name="edit_destrictRefFrom">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label for="edit_destrictRefTo" class="col-sm-12 col-form-label">Reffered To</label>
+                                        <label for="edit_destrictRefTo" class="col-sm-12 col-form-label">Referred To</label>
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" id="edit_destrictRefTo" name="edit_destrictRefTo">
                                         </div>
@@ -996,9 +996,9 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label for="edit_destrictRefBy" class="col-sm-12 col-form-label">Reffered By</label>
+                                        <label for="edit_destrictHealthCare" class="col-sm-12 col-form-label">Referred By</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="form-control" id="edit_destrictRefBy" name="edit_destrictRefBy">
+                                            <input type="text" class="form-control" id="edit_destrictHealthCare" name="edit_destrictHealthCare" value="{{ $LoggedUserInfo['em_id'] }}">
                                         </div>
                                     </div>
                                 </div>
@@ -1133,9 +1133,9 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label for="edit_destrictHealthCare" class="col-sm-12 col-form-label">Name of Health Care Provider</label>
+                                    <label for="edit_destrictRefBy" class="col-sm-12 col-form-label">Name of Health Care Provider</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="edit_destrictHealthCare" name="edit_destrictHealthCare" value="{{ $LoggedUserInfo['em_id'] }}">
+                                        <input type="text" class="form-control" id="edit_destrictRefBy" name="edit_destrictRefBy">
                                     </div>
                                 </div>
 
@@ -1181,11 +1181,20 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    // Initialize resident data from PHP
-    var residentData = @json($residents);
-</script>
 <script>
+    const residentData = {
+        @foreach($residents as $resident)
+            "{{ $resident->res_id }}": {
+                res_address: "{{ addslashes($resident->res_address) }}",
+                res_bdate: "{{ $resident->res_bdate }}",
+                res_sex: "{{ $resident->res_sex }}",
+                res_contact: "{{ $resident->res_contact }}",
+                res_occupation: "{{ $resident->res_occupation }}",
+                res_civil: "{{ $resident->res_civil }}"
+            },
+        @endforeach
+    };
+
     //Patient Name
     $(document).ready(function () {
         $('#desFullName').selectize({

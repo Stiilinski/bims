@@ -9,35 +9,35 @@
       </li>
     
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/secretariesDb/residentRec') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@residentsRec') }}">
+        <a class="nav-link {{ Request::is('dashboards/secretariesDb/residentRec*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@residentsRec') }}">
           <i class="bx bx-group"></i>
           <span>Resident Record</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/secretariesDb/certification') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@barangayCert') }}">
+        <a class="nav-link {{ Request::is('dashboards/secretariesDb/dBCert*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@barangayCert') }}">
           <i class="bx bxs-certification"></i>
           <span>Certifications</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/secretariesDb/brgyclearance') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@barangayClearance') }}">
+        <a class="nav-link {{ Request::is('dashboards/secretariesDb/dbBrgyClearance*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@barangayClearance') }}">
           <i class="bx bx-file"></i>
           <span>BRGY. Clearance</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/blotter') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dbBlotter') }}">
+        <a class="nav-link {{ Request::is('dashboards/secretariesDb/dbBlotter*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@dbBlotter') }}">
           <i class="bx bx-folder-open"></i>
           <span>Blotter</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('dashboards/healthWorkerDb/businesspermit') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@businessPermit') }}">
+        <a class="nav-link {{ Request::is('dashboards/secretariesDb/dbBusinessPermit*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@businessPermit') }}">
           <i class="bx bxs-book-open"></i>
           <span>Business Permit</span>
         </a>

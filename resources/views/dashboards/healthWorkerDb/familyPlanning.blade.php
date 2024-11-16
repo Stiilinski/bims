@@ -145,7 +145,6 @@
 
     .columnCon {
         width: 100%;
-        border: #dee2e6 solid 1px;
         padding: 10px;
         display: flex;
         gap: 10px;
@@ -347,6 +346,45 @@
                             <div class="inputArea">
                                 <div class="rowFirst columnGroup familyPlaningCon"> 
                                     <div class="columnCon">
+                                        <div class="column mb-3">
+                                            <label for="fpPhNum" class="col-sm-12 col-form-label">PhilHealth Number</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control shortField" id="fpPhNum" name="fpPhNum">
+                                            </div>
+                                        </div>
+
+                                        <fieldset class="column mb-3" style="padding: 10px;">
+                                            <legend class="col-form-label col-sm-12 pt-0">NHTS</legend>
+                                            <div class="col-sm-12">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="fpNhts" id="fpNhtsYes" value="Yes">
+                                                    <label class="form-check-label" for="fpNhtsYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="fpNhts" id="fpNhtsNo" value="No">
+                                                    <label class="form-check-label" for="fpNhtsNo">No</label>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger error-text fpNhts_error"></span>
+                                        </fieldset>
+
+                                        <fieldset class="column mb-3" style="padding: 10px;">
+                                            <legend class="col-form-label col-sm-12 pt-0">4P's</legend>
+                                            <div class="col-sm-12">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="fp4Ps" id="fp4PsYes" value="Yes">
+                                                    <label class="form-check-label" for="fp4PsYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="fp4Ps" id="fp4PsNo" value="No">
+                                                    <label class="form-check-label" for="fp4PsNo">No</label>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger error-text fp4Ps_error"></span>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="columnCon">
                                         <input type="hidden" class="form-control" id="em_id" name="em_id" value="<?php echo $LoggedUserInfo['em_id'] ?>" readonly>
                                         <div class="column mb-3 pt-2">
                                             <label for="inputClient" class="form-label">Name of Client</label>
@@ -371,7 +409,7 @@
                                         <div class="column mb-3">
                                             <label for="fpAge" class="col-sm-5 col-form-label">Age</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control briefField" id="fpAge" name="fpAge" readonly>
+                                                <input type="text" class="form-control" id="fpAge" name="fpAge" readonly>
                                             </div>
                                         </div>
 
@@ -1560,6 +1598,45 @@
                             <div class="inputArea">
                                 <div class="rowFirst columnGroup familyPlaningCon"> 
                                     <div class="columnCon">
+                                        <div class="column mb-3">
+                                            <label for="edit_fpPhNum" class="col-sm-12 col-form-label">PhilHealth Number</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control shortField" id="edit_fpPhNum" name="edit_fpPhNum">
+                                            </div>
+                                        </div>
+
+                                        <fieldset class="column mb-3" style="padding: 10px;">
+                                            <legend class="col-form-label col-sm-12 pt-0">NHTS</legend>
+                                            <div class="col-sm-12">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="edit_fpNhts" id="edit_fpNhtsYes" value="Yes">
+                                                    <label class="form-check-label" for="edit_fpNhtsYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="edit_fpNhts" id="edit_fpNhtsNo" value="No">
+                                                    <label class="form-check-label" for="edit_fpNhtsNo">No</label>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger error-text edit_fpNhts_error"></span>
+                                        </fieldset>
+
+                                        <fieldset class="column mb-3" style="padding: 10px;">
+                                            <legend class="col-form-label col-sm-12 pt-0">4P's</legend>
+                                            <div class="col-sm-12">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="edit_fp4Ps" id="edit_fp4PsYes" value="Yes">
+                                                    <label class="form-check-label" for="edit_fp4PsYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="edit_fp4Ps" id="edit_fp4PsNo" value="No">
+                                                    <label class="form-check-label" for="edit_fp4PsNo">No</label>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger error-text edit_fpNhts_error"></span>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="columnCon">
                                         <input type="hidden" class="form-control" id="edit_em_id" name="edit_em_id" value="<?php echo $LoggedUserInfo['em_id'] ?>" readonly>
                                         <input type="hidden" class="form-control" id="edit_fp_id" name="edit_fp_id" readonly>
                                         <div class="column mb-3 pt-2">
@@ -1579,13 +1656,6 @@
                                             <label for="edit_fpDob" class="col-sm-5 col-form-label">Date of Birth</label>
                                             <div class="col-sm-12">
                                                 <input type="date" class="form-control shortField" id="edit_fpDob" name="edit_fpDob"> <!-- Example value -->
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="column mb-3">
-                                            <label for="edit_fpAge" class="col-sm-5 col-form-label">Age</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control briefField" id="edit_fpAge" name="edit_fpAge" readonly>
                                             </div>
                                         </div>
 
@@ -1650,13 +1720,6 @@
                                             <label for="edit_fpSpouseDob" class="col-sm-5 col-form-label">Date of Birth</label>
                                             <div class="col-sm-12">
                                                 <input type="date" class="form-control shortField" id="edit_fpSpouseDob" name="edit_fpSpouseDob">
-                                            </div>
-                                        </div>
-
-                                        <div class="column mb-3">
-                                            <label for="edit_fpSpouseAge" class="col-sm-5 col-form-label">Age</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control briefField" id="edit_fpSpouseAge" name="edit_fpSpouseAge">
                                             </div>
                                         </div>
 
@@ -2981,8 +3044,8 @@
                 res_occupation: "{{ $resident->res_occupation }}",
                 res_contact: "{{ $resident->res_contact }}",
                 res_civil: "{{ $resident->res_civil }}",
-                res_education: "{{ $resident->res_education ?? '' }}", // Assuming education field exists
-                res_religion: "{{ $resident->res_religion ?? '' }}" // Assuming religion field exists
+                res_educ: "{{ $resident->res_educ ?? '' }}",
+                res_religion: "{{ $resident->res_religion ?? '' }}" 
             },
         @endforeach
     };
@@ -2997,6 +3060,7 @@
         return age;
     }
 
+
     function updateResidentDetails(selectElement) {
         const selectedId = selectElement.value;
 
@@ -3006,19 +3070,21 @@
             if (residentInfo) {
                 document.getElementById('fpAdd').value = residentInfo.res_address;
                 document.getElementById('fpDob').value = residentInfo.res_bdate;
+                document.getElementById('fpOcc').value = residentInfo.res_occupation;
+                document.getElementById('fpCn').value = residentInfo.res_contact;
+                document.getElementById('fpCs').value = residentInfo.res_civil;
+                document.getElementById('fpEa').value = residentInfo.res_educ;
+                document.getElementById('fpReligion').value = residentInfo.res_religion;
 
                 // Calculate age from the birth date
                 const birthDate = new Date(residentInfo.res_bdate);
                 const age = calculateAge(birthDate);
                 document.getElementById('fpAge').value = age;
 
-                document.getElementById('fpOcc').value = residentInfo.res_occupation;
-                document.getElementById('fpCn').value = residentInfo.res_contact;
-                document.getElementById('fpCs').value = residentInfo.res_civil;
-                document.getElementById('fpEa').value = residentInfo.res_education;
-                document.getElementById('fpReligion').value = residentInfo.res_religion;
+  
             }
-        } else {
+        } 
+        else {
             // Clear fields if no resident is selected
             document.getElementById('fpAdd').value = '';
             document.getElementById('fpDob').value = '';
@@ -3053,35 +3119,6 @@
             document.getElementById('fpSpouseAge').value = '';
             document.getElementById('fpSpouseOcc').value = '';
         }
-    }
-
-    function calculateAge() {
-        const dob = new Date(document.getElementById('edit_fpDob').value);
-        const dobSpouse = new Date(document.getElementById('edit_fpSpouseDob').value);
-        const today = new Date();
-
-        // Function to calculate age from a given date
-        function getAge(birthDate) {
-            if (!isNaN(birthDate)) {
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDifference = today.getMonth() - birthDate.getMonth();
-
-                // Adjust age if the birthday hasn't occurred yet this year
-                if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                return age;
-            }
-            return ''; // Return empty string if the date is invalid
-        }
-
-        // Calculate ages
-        const age = getAge(dob);
-        const spouseAge = getAge(dobSpouse);
-
-        // Set the values in the respective input fields
-        document.getElementById('edit_fpAge').value = age;
-        document.getElementById('edit_fpSpouseAge').value = spouseAge;
     }
 
     // Calculate age on date change
@@ -3167,6 +3204,7 @@
         });
     });
 
+
     //eDIT Form
     function openEditModal(fp_id) {
         $.ajax({
@@ -3176,6 +3214,30 @@
                 if (response.status === 1) 
                 {
                     $('#edit_fp_id').val(response.data.fp_id);
+
+
+                        $('#edit_fpPhNum').val(response.data.fp_phNum);
+
+                        let nhts = response.data.fp_nhts;
+                            $('#edit_fp4PsYes').prop('checked', false);
+                            $('#edit_fp4PsNo').prop('checked', false);
+                            if (nhts === 'Yes') {
+                                $('#edit_fp4PsYes').prop('checked', true);
+                            } 
+                            else if (nhts === 'No') {
+                                $('#edit_fp4PsNo').prop('checked', true);
+                            }
+
+                        let fp4ps = response.data.fp_4ps;
+                            $('#edit_fpNhtsYes').prop('checked', false);
+                            $('#edit_fpNhtsNo').prop('checked', false);
+                            if (fp4ps === 'Yes') {
+                                $('#edit_fpNhtsYes').prop('checked', true);
+                            } 
+                            else if (fp4ps === 'No') {
+                                $('#edit_fpNhtsNo').prop('checked', true);
+                            }
+
                     //Client info
                         let fullName = `${response.data.client.res_lname}, ${response.data.client.res_fname} ${response.data.client.res_mname ?? ''} ${response.data.client.res_suffix ?? ''}`;
                         $('#edit_inputClient').val(response.data.client.res_id);
@@ -3186,6 +3248,8 @@
                         $('#edit_fpCn').val(response.data.client.res_contact);
                         $('#edit_fpCs').val(response.data.client.res_civil);
                         // $('#edit_fpReligion').val(response.data.client.res_citizen);
+
+
 
                     //Spouse Info
                         let fullNameSpouse = `${response.data.spouse.res_lname}, ${response.data.spouse.res_fname} ${response.data.spouse.res_mname ?? ''} ${response.data.spouse.res_suffix ?? ''}`;
@@ -3801,8 +3865,6 @@
                             }
                         $('#edit_fpStatus').val(response.data.fp_status);
 
-                    // Open the modal
-                        calculateAge();
                         $('#editFpModal').modal('show');
                 } 
                 else 
@@ -3826,6 +3888,7 @@
         var formData = new FormData();
         // TextBoxes
             // Personal Info
+                formData.append('edit_fpPhNum', $('#edit_fpPhNum').val());
                 formData.append('edit_inputClient', $('#edit_inputClient').val());
                 formData.append('edit_inputSpouse', $('#edit_inputSpouse').val());
                 formData.append('edit_em_id', $('#edit_em_id').val());
@@ -4014,6 +4077,16 @@
 
         // FOR RADIO BUTTONS
             // Personal Info
+                var nhts = $('input[name="edit_fpNhts"]:checked').val();
+                    if (nhts) {
+                        formData.append('edit_fpNhts', nhts); 
+                    }
+
+                var fp4ps = $('input[name="edit_fp4Ps"]:checked').val();
+                    if (fp4ps) {
+                        formData.append('edit_fp4Ps', fp4ps); 
+                    }
+
                 var upChildren = $('input[name="edit_children"]:checked').val();
                     if (upChildren) {
                         formData.append('edit_children', upChildren); 

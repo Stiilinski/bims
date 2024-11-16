@@ -555,12 +555,6 @@
                     </div>
                 
                     <div class="col-md-12">
-                        <label for="amountPaid">Amount Paid</label>
-                        <input type="number" name="amountPaid" id="amountPaid" class="form-control">
-                        <span class="error-text amountPaid_error"></span>
-                    </div>
-                
-                    <div class="col-md-12">
                         <label for="dates">Date</label>
                         <input type="date" name="dates" id="dates" class="form-control">
                         <span class="error-text dates_error"></span>

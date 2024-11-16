@@ -136,14 +136,15 @@
             font-size: 12px;
         }
 
-        .datatable th:nth-child(14),
-        .datatable td:nth-child(14){
+        .datatable th:nth-child(13),
+        .datatable td:nth-child(13){
             display: none !important;
         }
 
         .card-body * {
             visibility: visible;
-            background-color: #fff
+            background-color: #fff;
+            font-size: 12px!important;
         }
 
         .datatable-top *{
@@ -201,7 +202,6 @@
                     <tr>
                         <th scope="col" style="display: none;">ID</th>
                         <th scope="col">Item No.</th>
-                        <th scope="col">NDC</th>
                         <th scope="col">Product/Service Name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Quantity</th>
@@ -220,7 +220,6 @@
                         <tr>
                             <td style="display: none;">{{ $medicines->med_id }}</td>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $medicines->med_ndc }}</td>
                             <td>{{ $medicines->med_prod}}</td>
                             <td>{{ $medicines->med_desc }}</td>
                             <td>{{ $medicines->med_qtBox }}</td>
@@ -268,14 +267,6 @@
             <div class="modal-body">
                 <div class="personalInfo">
                     <div class="row g-3"> 
-                        <div class="col-md-6">
-                            <label for="inputNdc" class="col-sm-5 col-form-label">NDC</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputNdc" name="inputNdc">
-                                <span class="text-danger error-text inputNdc_error"></span>
-                            </div>
-                        </div>
-
                         <div class="col-md-6">
                             <label for="inputProd" class="col-sm-5 col-form-label">Product/Service Name</label>
                             <div class="col-sm-10">
@@ -386,10 +377,6 @@
                         <input type="hidden" id="med_id" name="med_id">
                         <input type="hidden" id="editEm_id" name="editEm_id" value="{{ $LoggedUserInfo['em_id']}}">
                         <div class="mb-3">
-                            <label for="edit_med_ndc" class="form-label">NDC</label>
-                            <input type="text" class="form-control" id="edit_med_ndc" name="med_ndc">
-                        </div>
-                        <div class="mb-3">
                             <label for="edit_med_prod" class="form-label">Product Name</label>
                             <input type="text" class="form-control" id="edit_med_prod" name="med_prod">
                         </div>
@@ -445,6 +432,7 @@
     <!-- End For Edit Medicine-->
   
 
+    
 </main><!-- End #main -->
 
   @include('layouts.footerHealthWorkers')
@@ -605,21 +593,19 @@
         // Get the current row data
         var row = $(this).closest('tr');
         var med_id = row.find('td:eq(0)').text();
-        var med_ndc = row.find('td:eq(2)').text();
-        var med_prod = row.find('td:eq(3)').text();
-        var med_desc = row.find('td:eq(4)').text();
-        var med_qtBox = row.find('td:eq(5)').text();
-        var med_unit = row.find('td:eq(6)').text();
-        var med_qtPerUnit = row.find('td:eq(7)').text();
-        var med_count = row.find('td:eq(8)').text();
-        var med_datePurchases = row.find('td:eq(9)').text();
-        var med_dateExpiration = row.find('td:eq(10)').text();
-        var med_remarks = row.find('td:eq(11)').text();
-        var med_status = row.find('td:eq(12)').text();
+        var med_prod = row.find('td:eq(2)').text();
+        var med_desc = row.find('td:eq(3)').text();
+        var med_qtBox = row.find('td:eq(4)').text();
+        var med_unit = row.find('td:eq(5)').text();
+        var med_qtPerUnit = row.find('td:eq(6)').text();
+        var med_count = row.find('td:eq(7)').text();
+        var med_datePurchases = row.find('td:eq(8)').text();
+        var med_dateExpiration = row.find('td:eq(9)').text();
+        var med_remarks = row.find('td:eq(10)').text();
+        var med_status = row.find('td:eq(11)').text();
 
         // Populate the modal fields with the selected data
         $('#med_id').val(med_id);
-        $('#edit_med_ndc').val(med_ndc);
         $('#edit_med_prod').val(med_prod);
         $('#edit_med_desc').val(med_desc);
         $('#edit_med_qtBox').val(med_qtBox);

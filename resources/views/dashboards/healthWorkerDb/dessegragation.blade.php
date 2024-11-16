@@ -113,7 +113,8 @@
         <h1>Dissagragation of Sex & Age</h1>
         <div class="btnArea">
             <select id="purokSelect" class="form-select" aria-label="Default select example">
-                <option value="Tugas" selected>Tugas</option>
+                <option value="" selected disabled>Select Purok</option>
+                <option value="Tugas">Tugas</option>
                 <option value="Tambis">Tambis</option>
                 <option value="Mahogany">Mahogany</option>
                 <option value="Guyabano">Guyabano</option>
