@@ -119,6 +119,7 @@
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" type="button" href="{{ route('editEvent1', ['sched_id' => $event->sched_id]) }}">View</a></li>
                                                 <li><button class="dropdown-item" type="button" onclick="updateEventStatus({{ $event->sched_id }}, 'Archived')">Archive</button></li>
+                                                <li><button class="dropdown-item" type="button" onclick="updateEventStatus({{ $event->sched_id }}, 'Accepted')">Accepted</button></li>
                                             </ul>
                                         </div>
                                     </td>

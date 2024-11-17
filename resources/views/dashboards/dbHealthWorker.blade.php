@@ -231,23 +231,23 @@
                     </div>
 
                     {{-- GRAPH --}}
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="titleCard">
-                            <h4>Population as of {{ date('Y') }}</h4>
-                          </div>
-                          <!-- Line Chart -->
-                          <div class="dropdown">
-                            <button class="dots-icon" onclick="toggleDropdown()">⋮</button>
-                            <div class="dropdown-content" id="dataDropdown">
-                                <a href="#" onclick="loadYearlyData()">Yearly Data</a>
-                                <a href="#" onclick="loadMonthlyData()">Monthly Data</a>
+                        <div class="card">
+                            <div class="card-body">
+                            <div class="titleCard">
+                                <h4>Population as of {{ date('Y') }}</h4>
                             </div>
-                          </div>
-                          <canvas id="wholePopulationChart"></canvas>
-                          <!-- End Line Chart -->
+                            <!-- Line Chart -->
+                            <div class="dropdown">
+                                <button class="dots-icon" onclick="toggleDropdown()">⋮</button>
+                                <div class="dropdown-content" id="dataDropdown">
+                                    <a href="#" onclick="loadYearlyData()">Yearly Data</a>
+                                    <a href="#" onclick="loadMonthlyData()">Monthly Data</a>
+                                </div>
+                            </div>
+                            <canvas id="wholePopulationChart"></canvas>
+                            <!-- End Line Chart -->
+                            </div>
                         </div>
-                      </div>
 
                 </div>
               {{-- HEALTH --}}

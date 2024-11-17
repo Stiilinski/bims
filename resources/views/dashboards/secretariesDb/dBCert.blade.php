@@ -83,6 +83,7 @@
                         <option value="processed">Processed</option>
                         <option value="ready to pick up">Ready To Pick Up</option>
                         <option value="rejected">Reject</option>
+                        <option value="cancelled">Cancelled</option>
                         <option value="completed">Completed</option>
                         <option value="Archived">Archived</option>
                     </select>  
@@ -170,7 +171,7 @@
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'pending')">Update</button>
                                                     </li>
-                                                @elseif($certificate->certStatus !== 'ready to pick up' && $certificate->certStatus !== 'rejected' && $certificate->certStatus !== 'Archived')
+                                                @elseif($certificate->certStatus !== 'ready to pick up' && $certificate->certStatus !== 'rejected' && $certificate->certStatus !== 'Archived' && $certificate->certStatus !== 'cancelled')
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }}, '{{ $certificate->cert_type }}')">Print</button>
                                                     </li>

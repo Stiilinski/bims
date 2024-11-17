@@ -53,6 +53,12 @@
     .stretched-link {
       cursor: pointer;
     }
+
+    .schedule-img {
+      height: 200px;
+      object-fit: cover;
+      width: 100%; /* Ensures the image scales with the container */
+    }
   </style>
   {{-- <link href="assets/css/style.css" rel="stylesheet"> --}}
     </head>
@@ -74,29 +80,40 @@
                 <li><a href="#events">Events</a></li>
                 <li><a href="#officials">Officials</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="#transaction">Trace Transaction</a></li>
                 <li class="dropdown">
                   <a href="#"
-                    ><span>Dropdown</span>
+                    ><span>Ordinances and Resolution</span>
                     <i class="bi bi-chevron-down toggle-dropdown"></i
                   ></a>
                   <ul>
-                    <li><a href="#">Search Transaction</a></li>
                     <li class="dropdown">
                       <a href="#"
-                        ><span>Deep Dropdown</span>
+                        ><span>Ordinances</span>
                         <i class="bi bi-chevron-down toggle-dropdown"></i
                       ></a>
                       <ul>
-                        <li><a href="#">Deep Dropdown 1</a></li>
-                        <li><a href="#">Deep Dropdown 2</a></li>
-                        <li><a href="#">Deep Dropdown 3</a></li>
-                        <li><a href="#">Deep Dropdown 4</a></li>
-                        <li><a href="#">Deep Dropdown 5</a></li>
+                        <li><a href="https://drive.google.com/file/d/1gSUWIPPmytMVuN7Vhlnw31imcl8LeJ0s/view?usp=sharing">Ordinance 1</a></li>
+                        <li><a href="https://drive.google.com/file/d/1iCuoyc-yFVWbMGFbU_PaUQpBG71ztRW9/view?usp=sharing">Ordinance 2</a></li>
                       </ul>
                     </li>
-                    <li><a href="#">Dropdown 2</a></li>
-                    <li><a href="#">Dropdown 3</a></li>
-                    <li><a href="#">Dropdown 4</a></li>
+                    <li class="dropdown">
+                      <a href="#"
+                        ><span>Resolutions</span>
+                        <i class="bi bi-chevron-down toggle-dropdown"></i
+                      ></a>
+                      <ul>
+                        <li><a href="https://drive.google.com/file/d/1SYisXqyULBzkVc-YbkX_XqWluxF2JU2m/view?usp=sharing">Resolution 2</a></li>
+                        <li><a href="https://drive.google.com/file/d/17i-QqaXkuz307dgHPiBYwO3N7jckFUV-/view?usp=sharing">Resolution 3</a></li>
+                        <li><a href="https://drive.google.com/file/d/1H0AsFTlBEyTtoLsYcA_UaBWg7pVg56qI/view?usp=sharing">Resolution 4</a></li>
+                        <li><a href="https://drive.google.com/file/d/1onDG7EyOhneM1_dnM4P7Dw0Z2OqcvUJf/view?usp=sharing">Resolution 5</a></li>
+                        <li><a href="https://drive.google.com/file/d/1ZusbIxvK8M3mjChHmIiANwr9NT1K7t51/view?usp=sharing">Resolution 6</a></li>
+                        <li><a href="https://drive.google.com/file/d/1WpMGIw2wQt8xR2kYKEzhMz48hSeXBJAN/view?usp=sharing">Resolution 7</a></li>
+                        <li><a href="https://drive.google.com/file/d/1tHwQ3t4JCPqXZI6MkpPqQw6hDRXyA7Vg/view?usp=sharing">Resolution 8</a></li>
+                        <li><a href="https://drive.google.com/file/d/1s5NKYNzxP_fnTMJYpSk7t1cyFpFPbmKB/view?usp=sharing">Resolution 9</a></li>
+                        <li><a href="https://drive.google.com/file/d/1M0CHEBPIJDMwBY-0kBwK6-GoZXRJkGjM/view?usp=sharing">Resolution 10</a></li>
+                      </ul>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -314,104 +331,79 @@
     
           <!-- Events Section -->
           <section id="events" class="portfolio section">
-            <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-              <h2>Events</h2>
+                <h2>Events</h2>
             </div>
-            <!-- End Section Title -->
-    
             <div class="container">
-              <div
-                class="isotope-layout"
-                data-default-filter="*"
-                data-layout="masonry"
-                data-sort="original-order"
-              >
-                <ul
-                  class="portfolio-filters isotope-filters"
-                  data-aos="fade-up"
-                  data-aos-delay="100"
-                >
-                  <li data-filter="*" class="filter-active">All</li>
-                  <li data-filter=".filter-today">Today</li>
-                  <li data-filter=".filter-week">This Week</li>
-                  <li data-filter=".filter-month">This Month</li>
-                </ul>
-                <!-- End Events Filters -->
-    
-                <div
-                  class="row gy-4 isotope-container"
-                  data-aos="fade-up"
-                  data-aos-delay="200"
-                >
-                  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-month">
-                    <a href="assets/img/events/ev-1.jpg" data-glightbox="title: Feeding Program <br> Date: January 1, 2000; description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.;" class="glightbox preview-link">
-                      <img src="assets/img/events/ev-1.jpg" class="img-fluid" alt=""/>
-                    </a>
-                    <div class="portfolio-info">
-                      <h4>Feeding Program</h4>
-                      <p>Date: January 1, 2000</p>
-                    </div>
+                <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+                    <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+                        <li data-filter="*" class="filter-active">This Month</li>
+                        <li data-filter=".filter-today">Today</li>
+                        <li data-filter=".filter-week">This Upcoming Week</li>
+                    </ul>
+        
+                    <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+                      @foreach($schedules as $schedule)
+                          @php
+                              $scheduleDate = \Carbon\Carbon::parse($schedule->sched_date);
+                              $currentDate = \Carbon\Carbon::now();
+                              $currentYear = $currentDate->year;
+                              $currentMonth = $currentDate->month;
+                      
+                              // Start of today and end of today for the 'Today' filter
+                              $startOfToday = $currentDate->copy()->startOfDay();
+                              $endOfToday = $currentDate->copy()->endOfDay();
+                      
+                              // Start of the current week (week starts from Sunday)
+                              $startOfWeek = $currentDate->copy()->startOfWeek()->startOfDay();
+                              $endOfWeek = $currentDate->copy()->endOfWeek()->endOfDay();
+                      
+                              // Start and end of the current month (ignoring time)
+                              $startOfMonth = $currentDate->copy()->startOfMonth()->startOfDay();
+                              $endOfMonth = $currentDate->copy()->endOfMonth()->endOfDay();
+                      
+                              // Today to the next 7 days for 'This Week' filter
+                              $sevenDaysFromNow = $currentDate->copy()->addDays(7)->endOfDay();
+                          @endphp
+                      
+                          @if ($scheduleDate->year === $currentYear && $scheduleDate->month === $currentMonth) <!-- Display only events from the current year -->
+                              @php
+                                  // Initialize filter class variable
+                                  $filterClass = '';
+                      
+                                  // Check if it's today
+                                  if ($scheduleDate->isToday()) {
+                                      $filterClass = 'filter-today'; // Today filter
+                                  }
+                                  // Check if it's within the next 7 days (This Week filter)
+                                  elseif ($scheduleDate->between($startOfToday, $sevenDaysFromNow)) {
+                                      $filterClass = 'filter-week'; // This Week filter (from today onwards, 7 days forward)
+                                  }
+                                  // Check if it's within the current month (but only if it's not already covered by Today or This Week)
+                                  elseif ($scheduleDate->year === $currentYear && $scheduleDate->month === $currentMonth) {
+                                    if ($filterClass === '') {  // Only apply "This Month" filter if no other filter was set
+                                        $filterClass = 'filter-month'; // This Month filter
+                                    }
+                                  }
+                              @endphp
+                      
+                              <!-- Render the portfolio item with the appropriate filter class -->
+                              <div class="col-lg-4 col-md-6 portfolio-item isotope-item {{ $filterClass }}">
+                                  <a href="/{{ str_replace('public/', '', $schedule->sched_picture) }}" 
+                                      data-glightbox="title: {{ $schedule->sched_title }} <br> Date: {{ $scheduleDate->format('F j, Y') }}; description: {{ $schedule->sched_description }}"
+                                      class="glightbox preview-link">
+                                      <img src="{{ asset(str_replace('public/', '', $schedule->sched_picture)) }}" 
+                                          class="img-fluid" alt="" style="height: 200px; width:400px; object-fit: cover;"/>
+                                  </a>
+                                  <div class="portfolio-info">
+                                      <h4>{{ $schedule->sched_title }}</h4>
+                                      <p>Date: {{ $scheduleDate->format('F j, Y') }}</p>
+                                  </div>
+                              </div>
+                          @endif
+                      @endforeach
                   </div>
-                  <!-- End Events Item -->
-
-                  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-week">
-                    <a href="assets/img/events/ev-2.jpg" data-glightbox="title: Libreng Tuli <br> Date: January 1, 2000; description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.;" class="glightbox preview-link">
-                      <img src="assets/img/events/ev-2.jpg" class="img-fluid" alt=""/>
-                    </a>
-                    <div class="portfolio-info">
-                    <h4>Libreng Tuli</h4>
-                    <p>Date: January 1, 2000</p>
-                  </div>
-                  </div>
-                  <!-- End Events Item -->
-    
-                  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-week">
-                    <a href="assets/img/events/ev-3.jpg" data-glightbox="title: Meeting <br> Date: January 1, 2000; description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.;" class="glightbox preview-link">
-                      <img src="assets/img/events/ev-3.jpg" class="img-fluid" alt=""/>
-                    </a>
-                    <div class="portfolio-info">
-                      <h4>Meeting</h4>
-                      <p>Date: January 1, 2000</p>
-                    </div>
-                  </div>
-                  <!-- End Events Item -->
-    
-                  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-today">
-                    <a href="assets/img/events/ev-4.jpg" data-glightbox="title: Parade <br> Date: January 1, 2000; description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.;" class="glightbox preview-link">
-                      <img src="assets/img/events/ev-4.jpg" class="img-fluid" alt=""/>
-                    </a>
-                    <div class="portfolio-info">
-                      <h4>Parade</h4>
-                      <p>Date: January 1, 2000</p>
-                    </div>
-                  </div>
-                  <!-- End Events Item -->
-    
-                  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-month">
-                    <a href="assets/img/events/ev-5.jpg" data-glightbox="title: Fiesta <br> Date: January 1, 2000; description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.;" class="glightbox preview-link">
-                      <img src="assets/img/events/ev-5.jpg" class="img-fluid" alt=""/>
-                    </a>
-                    <div class="portfolio-info">
-                      <h4>Fiesta</h4>
-                      <p>Date: January 1, 2000</p>
-                    </div>
-                  </div>
-                  <!-- End Events Item -->
-    
-                  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-month">
-                    <a href="assets/img/events/ev-6.jpg" data-glightbox="title: Christmas Eve <br> Date: January 1, 2000; description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.;" class="glightbox preview-link">
-                      <img src="assets/img/events/ev-6.jpg" class="img-fluid" alt=""/>
-                    </a>
-                    <div class="portfolio-info">
-                      <h4>Christmas Eve</h4>
-                      <p>Date: January 1, 2000</p>
-                    </div>
-                  </div>
-                  <!-- End Events Item -->
                 </div>
-                <!-- End Events Container -->
-              </div>
             </div>
           </section>
           <!-- /Events Section -->
@@ -437,381 +429,955 @@
           <!-- /Blogs Section -->
     
           <!-- Team Section -->
-          <section id="officials" class="team section">
-            <!-- Section Title -->
-            <div class="container section-title" data-aos="fade-up">
-              <h2>OFFICIALS</h2>
-            </div>
-            <!-- End Section Title -->
-    
-            <div class="container">
-              <div class="row gy-4">
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-1.png"
-                        class="img-fluid"
-                        alt=""
-                      />
+          <section id="officials" class="testimonials section">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+              <div class="swiper init-swiper">
+                <script type="application/json" class="swiper-config">
+                  {
+                    "loop": true,
+                    "speed": 600,
+                    "autoplay": {
+                      "delay": 4000
+                    },
+                    "slidesPerView": "auto",
+                    "pagination": {
+                      "el": ".swiper-pagination",
+                      "type": "bullets",
+                      "clickable": true
+                    }
+                  }
+                </script>
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                      <div class="team section">
+                        <!-- Section Title -->
+                        <div class="container section-title" data-aos="fade-up">
+                          <h2>OFFICIALS</h2>
+                        </div>
+                        <!-- End Section Title -->              
+                        <div class="container">
+                          <div class="row gy-4">
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-1.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Janjan Castañares</h4>
+                                  <span>Punong Barangay</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-2.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Jhunniel Esmeña</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-3.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Audie Desuyo</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-4.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Rolito Tarega</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-5.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Aldwin Getuaban</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-6.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Quitos Ruiz</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-7.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Mario Parages</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                              <div class="team-member d-flex align-items-start">
+                                <div class="pic">
+                                  <img
+                                    src="assets/img/officials/off-8.png"
+                                    class="img-fluid"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="member-info">
+                                  <h4>Amelito Abatayo</h4>
+                                  <span>Barangay Kagawad</span>
+                                  <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Team Member -->
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+                  <div class="swiper-slide">
+                    <div class="team section">
+                      <!-- Section Title -->
+                      <div class="container section-title" data-aos="fade-up">
+                        <h2>SK OFFICIALS</h2>
+                      </div>
+                      <!-- End Section Title -->
+              
+                      <div class="container">
+                        <div class="row gy-4">
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-1.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Jenniebert Padayao</h4>
+                                <span>SK Chairman</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-2.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Jackie Plaresan</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-3.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Jefferson Pugoy</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-4.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Susen Sanchez</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-5.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>RJ Quinio</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-6.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Mie Ann Rosalita</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-7.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Dave Randolf Zafra</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/skoff/sk-8.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Angel May Borinaga</h4>
+                                <span>SK Kagawad</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+                        </div>
+                      </div>
                     </div>
-                    <div class="member-info">
-                      <h4>Janjan Castañares</h4>
-                      <span>Punong Barangay</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
+                  </div>
+
+                  <div class="swiper-slide">
+                    <div class="team section">
+                      <!-- Section Title -->
+                      <div class="container section-title" data-aos="fade-up">
+                        <h2>HEALTH RELATED OFFICIALS</h2>
+                      </div>
+                      <!-- End Section Title -->
+              
+                      <div class="container">
+                        <div class="row gy-4">
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp9.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Maria Michelle A. Villarin</h4>
+                                <span>Barangay Nutrition Scholar</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp12.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Virgie P. Lopez</h4>
+                                <span>Barangay Health Worker</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Charlotte C. Sellote</h4>
+                                <span>Barangay Health Worker</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Rubbie T. Balansag</h4>
+                                <span>Barangay Health Worker</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp11.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Lovely E. Mesitas</h4>
+                                <span>Barangay Health Worker</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp8.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Joan B. Coca</h4>
+                                <span>Barangay Health Worker</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp7.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Jennifer O. Arroyo</h4>
+                                <span>Barangay Health Worker</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="swiper-slide">
+                    <div class="team section">
+                      <!-- Section Title -->
+                      <div class="container section-title" data-aos="fade-up">
+                        <h2>BARANGAY TANODS</h2>
+                      </div>
+                      <!-- End Section Title -->
+              
+                      <div class="container">
+                        <div class="row gy-4">
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp4.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Jan Philip A. Tarega</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp3.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Dariel P. Alivo</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp10.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Richard Rays A Encina</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp1.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Alberto B. Mangubat</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Kieth Ivan C. Oberes</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp5.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Marjun P. Aulestia</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Marlon T. Unabia</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Marloun C. Lapay</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Deogracias Pardillo</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Alven Abendan</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Ram Panimdim</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>George Lacia</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+
+                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/BARANGAY WARD II.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Rosaleo Boholst</h4>
+                                <span>Tanod</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="swiper-slide">
+                    <div class="team section">
+                      <!-- Section Title -->
+                      <div class="container section-title" data-aos="fade-up">
+                        <h2>BARANGAY OFFICERS</h2>
+                      </div>
+                      <!-- End Section Title -->
+              
+                      <div class="container">
+                        <div class="row gy-4">
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp14.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Gracebell M. Flores</h4>
+                                <span>Brgy. Secretary</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp13.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Lianne Grace C. Padayao</h4>
+                                <span>Brgy. Treasurer</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+              
+                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="team-member d-flex align-items-start">
+                              <div class="pic">
+                                <img
+                                  src="assets/img/ppofficials/pp2.png"
+                                  class="img-fluid"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="member-info">
+                                <h4>Cherrybille A. Encina</h4>
+                                <span>Focal Person</span>
+                                <div class="social">
+                                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                                  <a href=""><i class="bi bi-facebook"></i></a>
+                                  <a href=""><i class="bi bi-instagram"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Team Member -->
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-2.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Jhunniel Esmeña</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-3.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Audie Desuyo</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-4.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Rolito Tarega</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-5.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Aldwin Getuaban</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-6.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Quitos Ruiz</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-7.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Mario Parages</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/officials/off-8.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Amelito Abatayo</h4>
-                      <span>Barangay Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
+                <div class="swiper-pagination"></div>
               </div>
-            </div>
-          </section>
-          <!-- /Team Section -->
-    
-          <!-- Team Section -->
-          <section id="skoff" class="team section">
-            <!-- Section Title -->
-            <div class="container section-title" data-aos="fade-up">
-              <h2>SK OFFICIALS</h2>
-            </div>
-            <!-- End Section Title -->
-    
-            <div class="container">
-              <div class="row gy-4">
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-1.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Jenniebert Padayao</h4>
-                      <span>SK Chairman</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-2.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Jackie Plaresan</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-3.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Jefferson Pugoy</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-4.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Susen Sanchez</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-5.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>RJ Quinio</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-6.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Mie Ann Rosalita</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-7.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Dave Randolf Zafra</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-    
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                  <div class="team-member d-flex align-items-start">
-                    <div class="pic">
-                      <img
-                        src="assets/img/skoff/sk-8.png"
-                        class="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div class="member-info">
-                      <h4>Angel May Borinaga</h4>
-                      <span>SK Kagawad</span>
-                      <div class="social">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Team Member -->
-              </div>
+
             </div>
           </section>
           <!-- /Team Section -->
@@ -886,9 +1452,35 @@
             </div>
           </section>
           <!-- /Contact Section -->
+
+          {{-- Trace Transation --}}
+          <section id="transaction" class="testimonials section">
+            <div class="container d-flex" style="gap:15px; flex-direction:column;">
+              <div class="container section-title" data-aos="fade-up">
+                <h2>TRACK REQUESTED TRANSACTION</h2>
+              </div>
+              <div class="greetings">
+                  <span class="trackDesc">Please input your unique transaction code below to check the current status and progress of your request. This code will provide you with real-time updates on the processing of your transaction. Thank you for choosing our service, and we look forward to assisting you further!</span>
+              </div>
+              <div class="traces">
+                  <form action="{{ route('traceTransaction') }}" method="post" class="traceCon d-flex" style="flex-direction: column; gap:20px;">
+                      @csrf
+                      <div class="row g-3"></div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" id="transactionCode" name="transactionCode" placeholder="Input Transaction Code Here...">
+                        </div>
+                        <div class="col-md-2">
+                          <button type="submit" class="btn btn-primary" style="background-color: #f25af0">SEARCH</button>
+                        </div>
+                  </form>
+              </div>
+              <div id="resultContainer"></div>
+            </div>
+          </section>
+          {{-- /Trace Transaction --}}
         </main>
     
-        <footer id="footer" class="footer">
+        <footer id="footer" class="footer section light-background">
           <div class="container copyright text-center mt-4">
             <p>
               © <span>Copyright</span> <strong class="px-1 sitename">2024</strong>
@@ -1312,6 +1904,210 @@
               document.getElementById('tcode3').value = generateTrackingCode();
               document.getElementById('tcode4').value = generateTrackingCode();
             });
+
+            // Trace Tansaction
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('.traceCon').addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent the default form submission
+
+                    const transactionCode = document.getElementById('transactionCode').value;
+                    const token = document.querySelector('input[name="_token"]').value;
+
+                    fetch('{{ route('traceTransaction') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({ transactionCode: transactionCode })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Response Data:', data); // Log the response data for debugging
+
+                        // Handle the response data
+                        let resultContainer = document.getElementById('resultContainer');
+                        resultContainer.innerHTML = ''; // Clear previous results
+
+                        if (data.result) {
+                            let tableHTML = '';
+                            if (data.type === 'blotter') {
+                                tableHTML = `
+                                    <table id="myTable" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Complainants</th>
+                                                <th>Respondents</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                ${data.result.blotter_status === 'pending' ? '<th>Action</th>' : ''}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${data.result.blotter_id}</td>
+                                                <td>${data.result.res_fname} ${data.result.res_mname} ${data.result.res_lname}</td>
+                                                <td>${data.result.blotter_respondents}</td>
+                                                <td>${data.result.blotter_complaintMade}</td>
+                                                <td>${data.result.blotter_status}</td>
+                                                ${data.result.blotter_status === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelBlotter(${data.result.blotter_id})">Cancel</button></td>` : ''}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `;
+                            } else if (data.type === 'certificate') {
+                                tableHTML = `
+                                    <table id="myTable" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Full Name</th>
+                                                <th>Age</th>
+                                                <th>Purok</th>
+                                                <th>Type</th>
+                                                <th>Purpose</th>
+                                                <th>Status</th>
+                                                ${data.result.certStatus === 'pending' ? '<th>Action</th>' : ''}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${data.result.id}</td>
+                                                <td>${data.result.res_fname} ${data.result.res_mname} ${data.result.res_lname}</td>
+                                                <td>${calculateAge(data.result.res_bdate)}</td>
+                                                <td>${data.result.res_purok}</td>
+                                                <td>${data.result.cert_type}</td>
+                                                <td>${data.result.cert_purpose}</td>
+                                                <td>${data.result.certStatus}</td>
+                                                ${data.result.certStatus === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelCertificate(${data.result.id})">Cancel</button></td>` : ''}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `;
+                            } else if (data.type === 'clearance') {
+                                tableHTML = `
+                                    <table id="myTable" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Full Name</th>
+                                                <th>Age</th>
+                                                <th>Purok</th>
+                                                <th>Status</th>
+                                                <th>Purpose</th>
+                                                ${data.result.bcl_status === 'pending' ? '<th>Action</th>' : ''}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${data.result.bcl_id}</td>
+                                                <td>${data.result.res_fname} ${data.result.res_mname} ${data.result.res_lname}</td>
+                                                <td>${calculateAge(data.result.res_bdate)}</td>
+                                                <td>${data.result.res_purok}</td>
+                                                <td>${data.result.bcl_status}</td>
+                                                <td>${data.result.bcl_purpose}</td>
+                                                ${data.result.bcl_status === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelClearance(${data.result.bcl_id})">Cancel</button></td>` : ''}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `;
+                            } else if (data.type === 'business') {
+                                tableHTML = `
+                                    <table id="myTable" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Full Name</th>
+                                                <th>Age</th>
+                                                <th>Purok</th>
+                                                <th>Business Name</th>
+                                                <th>Business Address</th>
+                                                <th>Pick Up Date</th>
+                                                <th>Status</th>
+                                                ${data.result.bc_status === 'pending' ? '<th>Action</th>' : ''}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${data.result.id}</td>
+                                                <td>${data.result.res_fname} ${data.result.res_mname} ${data.result.res_lname}</td>
+                                                <td>${calculateAge(data.result.res_bdate)}</td>
+                                                <td>${data.result.res_purok}</td>
+                                                <td>${data.result.bc_businessName}</td>
+                                                <td>${data.result.bc_businessAddress}</td>
+                                                <td>${data.result.bc_pickUpDate}</td>
+                                                <td>${data.result.bc_status}</td>
+                                                ${data.result.bc_status === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelBusiness(${data.result.id})">Cancel</button></td>` : ''}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `;
+                            }
+                            resultContainer.innerHTML = tableHTML;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching transaction data:', error);
+                    });
+                });
+
+                function calculateAge(birthdate) {
+                    const birthDate = new Date(birthdate);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDifference = today.getMonth() - birthDate.getMonth();
+                    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    return age;
+                }
+
+                window.cancelBlotter = function(id) {
+                    sendCancellationRequest('{{ route('cancelBlotter') }}', id);
+                };
+
+                window.cancelCertificate = function(id) {
+                    sendCancellationRequest('{{ route('cancelCertificate') }}', id);
+                };
+
+                window.cancelClearance = function(id) {
+                    sendCancellationRequest('{{ route('cancelClearance') }}', id);
+                };
+
+                window.cancelBusiness = function(id) {
+                    sendCancellationRequest('{{ route('cancelBusiness') }}', id);
+                };
+
+                function sendCancellationRequest(url, id) {
+                    const token = document.querySelector('input[name="_token"]').value;
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({ id: id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.message) {
+                            alert(data.message);
+                            // Optionally, refresh the data or update the UI to reflect the change
+                        } else if (data.error) {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error cancelling transaction:', error);
+                    });
+                }
+            });
+
+            
+
         </script>
       </body>
 </html>

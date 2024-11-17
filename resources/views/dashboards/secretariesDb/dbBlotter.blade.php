@@ -83,6 +83,7 @@
                         <option value="ready to pick up">Ready To Pick Up</option>
                         <option value="rejected">Reject</option>
                         <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
                         <option value="Archive">Archived</option>
                     </select>  
                 </div>
@@ -163,6 +164,10 @@
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $complaints->blotter_id }}, 'completed')">Completed</button>
                                                     </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $complaints->blotter_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif($complaints->blotter_status === 'cancelled')
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $complaints->blotter_id }}, 'archive')">Archive</button>
                                                     </li>
@@ -421,6 +426,11 @@
                                 <hr>
                                 
                                 <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label for="edit_Transaction1">Transaction Code</label>
+                                        <input type="text" class="form-control" name="edit_Transaction1" id="edit_Transaction1" placeholder="Enter Firstname">
+                                        <span class="text-danger error-text edit_Transaction1_error"></span>
+                                    </div>
                                     <div class="col-md-6">
                                         <label for="edit_Transaction">Respondent's Name</label>
                                         <input type="text" class="form-control" name="edit_Transaction" id="edit_Transaction" placeholder="Enter Firstname">
@@ -623,6 +633,7 @@
                     const residentData = response.data.resident;  // Access the 'resident' object
                     const certDate = response.data;
 
+                    $('#edit_Transaction1').val(certDate.blotter_transactionCode);
                     $('#edit_Transaction').val(certDate.blotter_respondents);
                     $('#edit_Purpose').val(certDate.blotter_complaint);
                     $('#edit_dIssued').val(certDate.blotter_resolution);

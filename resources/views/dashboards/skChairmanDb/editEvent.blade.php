@@ -140,8 +140,7 @@
                                     <div class="col-md-12">
                                         <label for="inputType" class="col-sm-5 col-form-label">Schedule Type</label>
                                         <div class="col-sm-12">
-                                            <select name="inputType" id="inputType" class="form-select" disabled>
-                                                <option value="" disabled>Select Category</option>
+                                            <select name="inputType" id="inputType" class="form-select">
                                                 <option value="Public" {{ $event->sched_type == 'Public' ? 'selected' : '' }}>Public</option>
                                                 <option value="Private" {{ $event->sched_type == 'Private' ? 'selected' : '' }}>Private</option>
                                             </select>
@@ -151,10 +150,11 @@
                                     <div class="col-md-12">
                                         <label for="inputStatus" class="col-sm-5 col-form-label">Status</label>
                                         <div class="col-sm-12">
-                                            <select name="inputStatus" id="inputStatus" class="form-select" disabled>
+                                            <select name="inputStatus" id="inputStatus" class="form-select">
                                                 <option value="" disabled>Select Status</option>
                                                 <option value="Archived" {{ $event->sched_status == 'Archived' ? 'selected' : '' }}>Archived</option>
                                                 <option value="Pending Event" {{ $event->sched_status == 'Pending Event' ? 'selected' : '' }}>Pending Event</option>
+                                                <option value="Accepted" {{ $event->sched_status == 'Accepted' ? 'selected' : '' }}>Accepted</option>
                                             </select>
                                         </div>
                                     </div>
@@ -168,6 +168,7 @@
                                     </div>
 
                                     <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                             </form>

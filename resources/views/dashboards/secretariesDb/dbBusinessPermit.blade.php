@@ -83,6 +83,7 @@
                         <option value="ready to pick up">Ready To Pick Up</option>
                         <option value="rejected">Reject</option>
                         <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
                         <option value="Archive">Archived</option>
                     </select>  
                 </div>
@@ -152,6 +153,9 @@
                                                     <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
                                                 @elseif($permit->bc_status === 'rejected')
                                                     <!-- Actions for 'rejected' status -->
+                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
+                                                @elseif($permit->bc_status === 'cancelled')
+                                                    <!-- Actions for 'completed' status -->
                                                     <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
                                                 @elseif($permit->bc_status === 'completed')
                                                     <!-- Actions for 'completed' status -->
@@ -397,34 +401,41 @@
                                 <hr>
                                 
                                 <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label for="edit_Type1">Transaction Code</label>
+                                        <input type="text" class="form-control" name="edit_Type1" id="edit_Type1" readonly>
+                                        <span class="text-danger error-text edit_Type1_error"></span>
+                                    </div>
+
                                     <div class="col-md-6">
                                         <label for="edit_business">Business Name</label>
                                         <input type="text" class="form-control" name="edit_business" id="edit_business">
                                         <span class="text-danger error-text edit_business_error"></span>
                                     </div>
+
                                     <div class="col-md-6">
                                         <label for="edit_Type">Type of Business</label>
-                                        <input type="text" class="form-control" name="edit_Type" id="edit_Type">
+                                        <input type="text" class="form-control" name="edit_Type" id="edit_Type" readonly>
                                         <span class="text-danger error-text edit_Type_error"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="edit_dIssued">Date Issued</label>
-                                        <input type="date" class="form-control" name="edit_dIssued" id="edit_dIssued">
+                                        <input type="date" class="form-control" name="edit_dIssued" id="edit_dIssued" readonly>
                                         <span class="text-danger error-text edit_dIssued_error"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="edit_pickUp">Pick up Date</label>
-                                        <input type="date" class="form-control" name="edit_pickUp" id="edit_pickUp">
+                                        <input type="date" class="form-control" name="edit_pickUp" id="edit_pickUp" readonly>
                                         <span class="text-danger error-text edit_pickUp_error"></span>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="edit_busiAdd">Business Address</label>
-                                        <input type="text" class="form-control" name="edit_busiAdd" id="edit_busiAdd">
+                                        <input type="text" class="form-control" name="edit_busiAdd" id="edit_busiAdd" readonly>
                                         <span class="text-danger error-text edit_busiAdd_error"></span>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="edit_nature">Nature of Business</label>
-                                        <input type="text" class="form-control" name="edit_nature" id="edit_nature">
+                                        <input type="text" class="form-control" name="edit_nature" id="edit_nature" readonly>
                                         <span class="text-danger error-text edit_nature_error"></span>
                                     </div>
                                 </div>
@@ -620,7 +631,8 @@
                     if (response.status === 1) {
                         const residentData = response.data.resident;  // Access the 'resident' object
                         const certDate = response.data;
-
+                        
+                        $('#edit_Type1').val(certDate.bc_transactionCode);
                         $('#edit_business').val(certDate.bc_businessName);
                         $('#edit_busiAdd').val(certDate.bc_businessAddress);
                         $('#edit_Type').val(certDate.bc_businessType);

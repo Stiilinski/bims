@@ -2,10 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\regValidation;
+use App\Models\schedule_tbl;
+use Carbon\Carbon;
 
 Route::get('/', function () {
-    return view('welcome');
+    $currentYear = Carbon::now()->year;
+    $schedules = schedule_tbl::where('sched_status', 'Accepted')->get();
+    return view('welcome', ['schedules' => $schedules]);
 });
+
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/publicSchedules', [regValidation::class, 'getLandPageSchedule']);
 
 //for multipurpose barangay clearance
 Route::post('saveBrgyClearance', [regValidation::class, 'saveBrgyClearance'])->name('regValidation.saveBrgyClearance');
@@ -82,7 +93,9 @@ Route::get('/residentBlotter/{id}', [regValidation::class, 'getResidentBlotter']
 
     Route::get('dashboards/resdidentsDb/blogs', [regValidation::class, 'blogs']);
     Route::get('dbBlogs', [regValidation::class, 'dbBlogs'])->name('dbBlogs');
-    Route::get('dbBlogsRead', [regValidation::class, 'dbBlogsRead'])->name('dbBlogsRead');
+    Route::get('/dbBlogsRead/{blog_id}', [regValidation::class, 'dbBlogsRead'])->name('dbBlogsRead');
+    Route::get('/searchBlogs', [regValidation::class, 'searchBlogs']);
+
 // END OF RESIDENTS
 
 // for employees

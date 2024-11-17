@@ -83,6 +83,7 @@
                         <option value="ready to pick up">Ready To Pick Up</option>
                         <option value="rejected">Reject</option>
                         <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
                         <option value="Archive">Archived</option>
                     </select>  
                 </div>
@@ -170,6 +171,11 @@
                                                     </li>
                                                 @elseif($clearances->bcl_status === 'rejected')
                                                     <!-- Actions for 'rejected' status -->
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
+                                                    </li>
+                                                @elseif($clearances->bcl_status === 'cancelled')
+                                                    <!-- Actions for 'cancelled' status -->
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
                                                     </li>

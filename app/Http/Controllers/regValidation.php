@@ -82,6 +82,9 @@ class regValidation extends Controller
 
     public function dashboard(Request $request)
     {
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
+
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
 
@@ -583,13 +586,97 @@ class regValidation extends Controller
     }
     
     
-    public function dbBlogs()
+    public function dbBlogs(Request $request)
     {
-        return view('dashboards/dbBlogs');
+        $currentDate = Carbon::now()->toDateString(); // Get today's date
+        $sevenDaysAgo = Carbon::now()->subDays(7)->toDateString(); // Get the date 7 days ago
+    
+        // Get the category from the query parameter, default to 'All Topics' if not set
+        $selectedCategory = $request->query('category', 'All Topics');
+    
+        // Fetch the most recent blog (latest blog)
+        $latestBlogs = blogs_tbl::with('author')
+            ->where('blog_status', 'Published')
+            ->orderBy('created_at', 'DESC')
+            ->first(); // Get only the most recent one
+    
+        // Start building the query for past blogs
+        $pastBlogsQuery = blogs_tbl::with('author')
+            ->where('blog_status', 'Published')
+            ->where('blog_date', '>', $sevenDaysAgo) // Get blogs older than 7 days
+            ->where('blog_id', '!=', optional($latestBlogs)->blog_id); // Exclude the latest blog
+    
+        // Apply category filtering if a category is selected
+        if ($selectedCategory !== 'All Topics') {
+            $pastBlogsQuery->where('blog_category', $selectedCategory); // Filter by selected category
+        }
+    
+        // Fetch the filtered past blogs
+        $pastBlogs = $pastBlogsQuery->orderBy('blog_date', 'DESC')->get();
+    
+        // Fetch logged user info (if needed for your view)
+        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+    
+        // Fetch latest recommendation news
+        $latestRecNews = recNews_tbl::where('rec_status', 'Published')
+            ->orderBy('created_at', 'DESC')
+            ->first();
+    
+        // Pass data to the view
+        $data = [
+            'LoggedUserInfo' => $loggedUserInfo,
+            'latestBlogs' => $latestBlogs,
+            'pastBlogs' => $pastBlogs,
+            'latestRecNews' => $latestRecNews,
+            'selectedCategory' => $selectedCategory, // Pass the selected category to the view
+        ];
+    
+        // Set headers for no-cache
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+    
+        return view('dashboards/dbBlogs', $data);
     }
-    public function dbBlogsRead()
+
+    public function searchBlogs(Request $request)
     {
-        return view('dashboards/skDb/dbBlogsReadMore');
+        $query = $request->query('query'); // Get search query from the request
+
+        // If the query is empty, return an empty array
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        // Fetch blogs that match the query on the blog_title
+        $blogs = blogs_tbl::with('author')
+            ->where('blog_status', 'Published')
+            ->where('blog_title', 'LIKE', '%' . $query . '%') // Search in the blog_title
+            ->orderBy('created_at', 'DESC') // Optional: Sort by latest created_at
+            ->limit(5) // Limit to 5 results
+            ->get(['blog_id', 'blog_title', 'blog_pic']); // Fetch only necessary columns
+
+        // Return the results as JSON
+        return response()->json($blogs);
+    }
+    
+    
+    public function dbBlogsRead($blog_id)
+    {
+        // Retrieve the blog by its ID
+        $blog = blogs_tbl::with('author')->findOrFail($blog_id);
+        // Fetch latest recommendation news
+        $latestRecNews = recNews_tbl::where('rec_status', 'Published')
+            ->orderBy('created_at', 'DESC')  // Sort by creation date, most recent first
+            ->first();
+    
+        
+        $data = [
+            'blog' => $blog,
+            'latestRecNews' => $latestRecNews,
+        ];
+        // Return the view and pass the blog data to it
+        return view('dashboards/skDb/dbBlogsReadMore', $data);
     }
 
 
@@ -3169,12 +3256,14 @@ class regValidation extends Controller
         try {
             // Get the current date in Asia/Manila timezone
             $now = Carbon::now('Asia/Manila');
-            $currentDate = $now->toDateString(); // Get the current date in 'Y-m-d' format
+            $currentMonth = $now->month;
+            $currentYear = $now->year;
 
             $schedules = DB::table('schedule_tbls')
                 ->where('sched_type', 'private')
                 ->where('sched_status', 'Accepted') 
-                ->whereDate('sched_date', $currentDate)
+                ->whereMonth('sched_date', $currentMonth)
+                ->whereYear('sched_date', $currentYear)
                 ->orderBy('sched_date')
                 ->get();
 
@@ -3188,7 +3277,6 @@ class regValidation extends Controller
             return response()->json(['message' => 'Error fetching private schedules data'], 500);
         }
     }
-
 
     public function getOfficialData()
     {
