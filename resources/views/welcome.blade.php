@@ -59,6 +59,9 @@
       object-fit: cover;
       width: 100%; /* Ensures the image scales with the container */
     }
+    #resultContainer {
+      overflow-x: scroll;
+    }
   </style>
   {{-- <link href="assets/css/style.css" rel="stylesheet"> --}}
     </head>
@@ -67,7 +70,7 @@
           <div
             class="container-fluid container-xl position-relative d-flex align-items-center"
           >
-            <a href="index.html" class="logo d-flex align-items-center me-auto">
+            <a href="/" class="logo d-flex align-items-center me-auto">
               <img src="assets/img/logo.png" alt="" />
               <h1 class="sitename">BIMS</h1>
             </a>

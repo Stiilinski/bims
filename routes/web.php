@@ -129,6 +129,12 @@ Route::get('/residentBlotter/{id}', [regValidation::class, 'getResidentBlotter']
     Route::post('/update-employees/{id}', [regValidation::class, 'update'])->name('employee.update');
     Route::post('/archive-employee', [regValidation::class, 'archiveEmployee'])->name('employee.archive');
     Route::post('/activate-employee', [regValidation::class, 'activateEmployee'])->name('employee.activate');
+
+    Route::get('/dashboards/officials', [regValidation::class, 'dbAdminOfficials']);
+    Route::post('inputOfficials', [regValidation::class, 'inputOfficials'])->name('regValidation.inputOfficials');
+    Route::get('/official/{id}', [regValidation::class, 'edit_official'])->name('employee.edit_official');
+    Route::post('/official/{id}', [regValidation::class, 'update_official'])->name('employee.update_official');
+    Route::post('/update-official-status', [regValidation::class, 'updateOfficialStatus']);
 // END OF SYSTEM ADMIN
 
 //FOR HEALTH WORKER
@@ -233,10 +239,11 @@ Route::get('/residentBlotter/{id}', [regValidation::class, 'getResidentBlotter']
 
 //FOR CAPTAIN
     Route::get('/dashboards/dbBrgyCap', [regValidation::class, 'dashboardCap']);
+    Route::get('/dashboards/captainDb/certificateReport', [regValidation::class, 'certReport']);
+
     Route::get('/dashboard/yearly-data/{type}', [regValidation::class, 'getYearlyGraphData']);
     Route::get('/dashboard/monthly-data/{type}', [regValidation::class, 'getMonthlyGraphData']);
     Route::get('/dashboards/captainDb/residentRecCap', [regValidation::class, 'residentsRecCap']);
-    Route::get('/dashboards/captainDb/dashboardCapCert', [regValidation::class, 'dashboardCapCert']);
     Route::get('/dashboards/captainDb/dashboardCapClearance', [regValidation::class, 'dashboardCapClearance']);
     Route::get('/dashboards/captainDb/dashboardCapBusiness', [regValidation::class, 'dashboardCapBusiness']);
     Route::get('/dashboards/captainDb/dashboardCapBlotter', [regValidation::class, 'dashboardCapBlotter']);

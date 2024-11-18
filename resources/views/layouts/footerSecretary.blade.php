@@ -21,10 +21,18 @@
 
 <script>
 $(document).ready(function() {
-    // Fetch private schedules for today
+    // Get current month and year
+    let currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-based
+    let currentYear = new Date().getFullYear();
+
+    // Fetch private schedules for the month
     $.ajax({
         url: '{{ url('/privateSchedules') }}', // Update this to your correct route
         type: 'GET',
+        data: {
+            month: currentMonth,
+            year: currentYear
+        },
         success: function(schedules) {
             let container = $('#schedules-container');
             container.empty(); // Clear any existing content
@@ -34,6 +42,7 @@ $(document).ready(function() {
                 let fullDescription = schedule.sched_description; // Full description
                 let scheduleItem = `
                     <div class="post-item clearfix">
+                        <small class="sched-date" style="padding-left: 15px;">${new Date(schedule.sched_date).toLocaleDateString()}</small>
                         <img src="${schedule.sched_picture.replace('public/', '/')}" alt="" style="height:60px!important;">
                         <h4>${schedule.sched_title}</h4>
                         <p class="sched-description">${truncatedDescription} <a href="#" class="see-more">See more...</a></p>
@@ -87,6 +96,7 @@ $(document).ready(function() {
                 let fullDescription = schedule.sched_description; // Full description
                 let scheduleItem = `
                     <div class="post-item clearfix">
+                        <small class="sched-date" style="padding-left: 15px;">${new Date(schedule.sched_date).toLocaleDateString()}</small>
                         <img src="${schedule.sched_picture.replace('public/', '/')}" alt="" style="height:60px!important;">
                         <h4>${schedule.sched_title}</h4>
                         <p class="sched-description">${truncatedDescription} <a href="#" class="see-more">See more...</a></p>
@@ -131,22 +141,30 @@ $(document).ready(function() {
 
 
 
-// Get the current date MONTHS
+// Get the current date with the correct time zone
 const currentDate = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+
 // Get the month from the current date (returns a number from 0 to 11)
 const currentMonth = new Date(currentDate).getMonth();
+
 // Array of month names
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                     'July', 'August', 'September', 'October', 'November', 'December'];
-// Get the month name using the currentMonth as an index
-const monthName = monthNames[currentMonth]; 
-// Find the span element by its id
-const spanElement = document.getElementById('currentMonthSpan');
-// Update the content of the span element
-if (spanElement) {
-  spanElement.textContent = `| ${monthName}`;
+
+// Get the current month name
+const monthName = monthNames[currentMonth];
+
+// Update the content of the span elements
+const privateSpan = document.getElementById('currentMonthSpanPrivate');
+const publicSpan = document.getElementById('currentMonthSpan');
+
+if (privateSpan) {
+    privateSpan.textContent = `| ${monthName}`;
 }
 
+if (publicSpan) {
+    publicSpan.textContent = `| ${monthName}`;
+}
 //updateEmployee
 $(document).ready(function() {
       $('#e_empForm').on('submit', function(event) {

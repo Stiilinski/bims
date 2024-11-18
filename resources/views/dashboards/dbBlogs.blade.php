@@ -84,23 +84,23 @@
                     <b style="font-weight: 1000; color: white;">Explore The Barangay</b>
                     <ul class="list-unstyled mb-0 top-container-link">
                       <li>
-                        <a href="#!" class="top-container-link">Home</a>
+                        <a href="/#hero" class="top-container-link">Home</a>
                       </li>
-                      <li><a href="#!" class="top-container-link">About</a></li>
+                      <li><a href="/#about" class="top-container-link">About</a></li>
                       <li>
-                        <a href="#!" class="top-container-link">Services</a>
-                      </li>
-                      <li>
-                        <a href="#!" class="top-container-link">Events</a>
+                        <a href="/#services" class="top-container-link">Services</a>
                       </li>
                       <li>
-                        <a href="#!" class="top-container-link">Officials</a>
+                        <a href="/#events" class="top-container-link">Events</a>
                       </li>
                       <li>
-                        <a href="#!" class="top-container-link">Contact</a>
+                        <a href="/#officials" class="top-container-link">Officials</a>
                       </li>
                       <li>
-                        <a href="#!" class="top-container-link">Trace Transaction</a>
+                        <a href="/#contact" class="top-container-link">Contact</a>
+                      </li>
+                      <li>
+                        <a href="/#transaction" class="top-container-link">Trace Transaction</a>
                       </li>
                     </ul>
                   </div>
@@ -135,7 +135,7 @@
     <div class="main-container">
       <nav class="navbar navbar-expand-lg mb-4 border-b">
         <div class="container">
-          <a href="index.html">
+          <a href="/">
             <img
               src="assets/img/logo.png"
               style="height: 75px; padding-right: 10px"
@@ -174,8 +174,8 @@
             <div class="col-lg-12">
               <div class="card mb-4">
                 @if($latestBlogs)
-                    <a href="#!">
-                        <img class="card-img-top" src="{{ asset(str_replace('public/', '', $latestBlogs->blog_pic)) }}" alt="..." style="width: 400px; height: 400px; object-fit: cover;"/>
+                    <a href="{{ route('dbBlogsRead', $latestBlogs->blog_id) }}">
+                        <img class="card-img-top" src="{{ asset(str_replace('public/', '', $latestBlogs->blog_pic)) }}" alt="..." style="width: 100%; height: 400px; object-fit: cover;"/>
                     </a>
                     <div class="card-body">
                         <h5><b>CURRENT</b> ISSUE</h5>
@@ -207,7 +207,7 @@
                 @foreach($pastBlogs as $blog)
                     <div class="card mb-4">
                         <a href="{{ route('dbBlogsRead', $blog->blog_id) }}">
-                            <img class="card-img-top" src="{{ asset(str_replace('public/', '', $blog->blog_pic)) }}" alt="Blog Image" style="width: 400px; height: 400px; object-fit: cover;"/>
+                            <img class="card-img-top" src="{{ asset(str_replace('public/', '', $blog->blog_pic)) }}" alt="Blog Image" style="width: 100%; height: 400px; object-fit: cover;"/>
                         </a>
                         <div class="card-body">
                             <h1><b>{{ \Carbon\Carbon::parse($blog->blog_date)->toFormattedDateString() }}</b></h1>

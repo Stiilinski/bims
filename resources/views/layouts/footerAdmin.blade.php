@@ -13,10 +13,7 @@
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
 <script>
-// EVENTS
 $(document).ready(function() {
     // Get current month and year
     let currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-based

@@ -2263,24 +2263,86 @@ class regValidation extends Controller
     //FOR CAPTAIN
     public function dashboardCap(Request $request)
     {
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
+    
         // Fetch the logged-in user's information
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+    
+        // Fetch the required counts, ensuring only 'Alive' and 'active' residents are included
+        $totalPopulation = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->count();
+        $totalCurrentPopulation = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->whereYear('res_dateReg', '=', $currentYear)->count();
+        $totalMale = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_sex', 'Male')->count();
+        $totalFemale = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_sex', 'Female')->count();
+        $totalVoters = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_voters', 'Yes')->count();
+        $totalNonVoters = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_voters', 'No')->count();
+        $totalBlotters = blotter_tbl::where('blotter_status', 'pending')->count();
+        $totalCertificates = brgyCertificate_tbl::where('certStatus', 'pending')->count();
+        $totalBusinessPermits = businessBrgyClearance_tbl::where('bc_status', 'pending')->count();
+        $totalClearances = brgyClearance_tbl::where('bcl_status', 'pending')->count();
 
-        // Fetch the required counts
-        $totalPopulation = resident_tbl::count();
-        $totalMale = resident_tbl::where('res_sex', 'Male')->count();
-        $totalFemale = resident_tbl::where('res_sex', 'Female')->count();
-        $totalVoters = resident_tbl::where('res_voters', 'Yes')->count();
-        $totalNonVoters = resident_tbl::where('res_voters', 'No')->count();
-        $totalBlotters = blotter_tbl::count();
-        $totalCertificates = brgyCertificate_tbl::count();
-        $totalBusinessPermits = businessBrgyClearance_tbl::count();
-        $totalClearances = brgyClearance_tbl::count();
 
-        // Determine the filter type
+        $totalCountBlotters = blotter_tbl::where('blotter_status', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+        $totalCountCertificates = brgyCertificate_tbl::where('certStatus', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+        $totalCountBusinessPermits = businessBrgyClearance_tbl::where('bc_status', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+        $totalCountClearances = brgyClearance_tbl::where('bcl_status', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+    
+        // Fetch monthly population data for the current year
+        $monthlyPopulationCurrentYear = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyPopulationCurrentYear[] = resident_tbl::where('res_personStatus', 'Alive')
+                ->where('res_status', 'active')
+                ->whereYear('res_dateReg', '=', $currentYear)
+                ->whereMonth('res_dateReg', '=', $month)
+                ->count();
+        }
+    
+        // Fetch monthly population data for the previous year
+        $monthlyPopulationPreviousYear = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyPopulationPreviousYear[] = resident_tbl::where('res_personStatus', 'Alive')
+                ->where('res_status', 'active')
+                ->whereYear('res_dateReg', '=', $previousYear)
+                ->whereMonth('res_dateReg', '=', $month)
+                ->count();
+        }
+    
+        // Calculate percentage of male and female residents
+        $malePercentage = ($totalMale / $totalPopulation) * 100;
+        $femalePercentage = ($totalFemale / $totalPopulation) * 100;
+    
+        // Calculate the percentage change in population between the current year and previous year
+        $percentageChange = 0;
+        $totalPopulationCurrentYear = array_sum($monthlyPopulationCurrentYear);
+        $totalPopulationPreviousYear = array_sum($monthlyPopulationPreviousYear);
+        if ($totalPopulationPreviousYear > 0) {
+            $percentageChange = (($totalPopulationCurrentYear - $totalPopulationPreviousYear) / $totalPopulationPreviousYear) * 100;
+        }
+    
+        // Age Distribution by Birth Year
+        $ageDistributionByYear = resident_tbl::selectRaw('YEAR(res_bdate) as birthYear, count(*) as total')
+            ->where('res_personStatus', 'Alive')
+            ->where('res_status', 'active')
+            ->groupBy('birthYear')
+            ->orderBy('birthYear', 'desc') // Sort descending by year
+            ->get();
+    
+        // Voter Status (Eligibility)
+        $eligibleVoters = resident_tbl::where('res_personStatus', 'Alive')
+            ->where('res_status', 'active')
+            ->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) >= 18')  // Eligible voters (18+ years)
+            ->count();
+    
+        $ineligibleVoters = $totalPopulation - $eligibleVoters;
+        $eligibleVotersPercentage = ($eligibleVoters / $totalPopulation) * 100;
+        $ineligibleVotersPercentage = ($ineligibleVoters / $totalPopulation) * 100;
+    
+        // Voter Turnout Projection (Optional)
+        $projectedVoterTurnoutRate = 0.75; // Example: 75% projected voter turnout
+        $projectedVoterTurnout = $eligibleVoters * $projectedVoterTurnoutRate;
+    
+        // Handle time-based filtering for today's, monthly, and yearly data
         $filter = $request->query('filter', 'today');
-
-        // Initialize data arrays
         $todayBlotters = [];
         $todayCertificates = [];
         $todayClearances = [];
@@ -2290,92 +2352,48 @@ class regValidation extends Controller
         $monthlyClearances = [];
         $monthlyBusinessPermits = [];
         $yearlyData = [];
-
+    
         // Get the current date and time in Manila time zone
         $manilaTime = new \DateTimeZone('Asia/Manila');
         $currentDate = new \DateTime('now', $manilaTime);
-        $currentYear = $currentDate->format('Y');
+    
 
-        if ($filter === 'today') {
-            for ($hour = 8; $hour <= 19; $hour++) {
-                $startHour = $currentDate->format('Y-m-d') . ' ' . $hour . ':00:00';
-                $endHour = $currentDate->format('Y-m-d') . ' ' . ($hour + 1) . ':00:00';
-
-                $todayBlotters[] = blotter_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
-                $todayCertificates[] = brgyCertificate_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
-                $todayClearances[] = brgyClearance_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
-                $todayBusinessPermits[] = businessBrgyClearance_tbl::whereBetween('created_at', [$startHour, $endHour])->count();
-            }
-        } elseif ($filter === 'monthly') {
-            for ($month = 1; $month <= 12; $month++) {
-                $monthlyBlotters[] = blotter_tbl::whereYear('blotter_complaintMade', $currentYear)
-                    ->whereMonth('blotter_complaintMade', $month)->count();
-                $monthlyCertificates[] = brgyCertificate_tbl::whereYear('cert_dateIssued', $currentYear)
-                    ->whereMonth('cert_dateIssued', $month)->count();
-                $monthlyClearances[] = brgyClearance_tbl::whereYear('bcl_dateIssued', $currentYear)
-                    ->whereMonth('bcl_dateIssued', $month)->count();
-                $monthlyBusinessPermits[] = businessBrgyClearance_tbl::whereYear('bc_dateIssued', $currentYear)
-                    ->whereMonth('bc_dateIssued', $month)->count();
-            }
-        } elseif ($filter === 'yearly') {
-            // Fetch data for each year from current year back to 10 years ago
-            for ($year = $currentYear - 10; $year <= $currentYear; $year++) {
-                $yearlyData[] = [
-                    'year' => $year,
-                    'blotters' => blotter_tbl::whereYear('blotter_complaintMade', $year)->count(),
-                    'certificates' => brgyCertificate_tbl::whereYear('cert_dateIssued', $year)->count(),
-                    'clearances' => brgyClearance_tbl::whereYear('bcl_dateIssued', $year)->count(),
-                    'businessPermits' => businessBrgyClearance_tbl::whereYear('bc_dateIssued', $year)->count(),
-                ];
-            }
+        // Monthly Certificates
+        $monthlyCertificates = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyCertificates[] = brgyCertificate_tbl::whereRaw('BINARY certStatus = ?', ['completed'])  // Strict equality for certStatus
+                ->whereYear('cert_dateIssued', '=', $currentYear)
+                ->whereMonth('cert_dateIssued', '=', $month)
+                ->count();
         }
 
-        // Calculate age ranges
-        $ageGroups = [
-            '0-59_months' => ['min' => 0, 'max' => 4], // 0-4 years
-            '5-12_years' => ['min' => 5, 'max' => 12], // 5-12 years
-            '13-17_years' => ['min' => 13, 'max' => 17], // 13-17 years
-            '18-30_years' => ['min' => 18, 'max' => 30], // 18-30 years
-            '31-45_years' => ['min' => 31, 'max' => 45], // 31-45 years
-            '45-65_years' => ['min' => 46, 'max' => 65], // 46-65 years
-            '66_above' => ['min' => 66, 'max' => null] // 66 and above
-        ];
-
-        $ageGroupData = [];
-
-        foreach ($ageGroups as $key => $ageRange) {
-            $query = resident_tbl::whereNotNull('res_bdate');
-
-            if ($ageRange['min'] !== null) {
-                $query->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) >= ?', [$ageRange['min']]);
-            }
-            if ($ageRange['max'] !== null) {
-                $query->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) <= ?', [$ageRange['max']]);
-            }
-
-            $total = $query->count();  // Total count
-
-            // Create a fresh query builder instance for male count
-            $maleQuery = clone $query;
-            $male = $maleQuery->where('res_sex', 'male')->count();  // Count of males
-            
-            // Create another fresh query builder instance for female count
-            $femaleQuery = clone $query;
-            $female = $femaleQuery->where('res_sex', 'female')->count();  // Count of females
-            
-            
-            $ageGroupData[$key] = [
-                'total' => $total,
-                'male' => $male,
-                'female' => $female
-            ];
-
-            // Debug output for age group data
-            echo "Total for $key: $total\n";
+        // Monthly Clearances
+        $monthlyClearances = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyClearances[] = brgyClearance_tbl::whereRaw('BINARY bcl_status = ?', ['completed'])  // Strict equality for bclStatus
+                ->whereYear('bcl_dateIssued', '=', $currentYear)
+                ->whereMonth('bcl_dateIssued', '=', $month)
+                ->count();
         }
 
+        $monthlyBlotters = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyBlotters[] = blotter_tbl::whereRaw('BINARY blotter_status = ?', ['completed'])  // Strict equality for blotter_status
+                ->whereYear('created_at', '=', $currentYear)
+                ->whereMonth('created_at', '=', $month)
+                ->count();
+        }
 
-        // Merge all the data into a single array
+        // Monthly Business Permits
+        $monthlyBusinessPermits = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyBusinessPermits[] = businessBrgyClearance_tbl::whereRaw('BINARY bc_status = ?', ['completed'])  // Strict equality for bc_status
+                ->whereYear('bc_dateIssued', '=', $currentYear)
+                ->whereMonth('bc_dateIssued', '=', $month)
+                ->count();
+        }
+    
+        // Prepare data to be passed to the view
         $data = [
             'LoggedUserInfo' => $loggedUserInfo,
             'totalPopulation' => $totalPopulation,
@@ -2387,6 +2405,17 @@ class regValidation extends Controller
             'totalCertificates' => $totalCertificates,
             'totalBusinessPermits' => $totalBusinessPermits,
             'totalClearances' => $totalClearances,
+            'malePercentage' => $malePercentage,
+            'femalePercentage' => $femalePercentage,
+            'percentageChange' => $percentageChange,
+            'ageDistributionByYear' => $ageDistributionByYear,
+            'eligibleVoters' => $eligibleVoters,
+            'ineligibleVoters' => $ineligibleVoters,
+            'eligibleVotersPercentage' => $eligibleVotersPercentage,
+            'ineligibleVotersPercentage' => $ineligibleVotersPercentage,
+            'projectedVoterTurnout' => $projectedVoterTurnout,
+            'monthlyPopulationCurrentYear' => $monthlyPopulationCurrentYear,
+            'monthlyPopulationPreviousYear' => $monthlyPopulationPreviousYear,
             'todayBlotters' => $todayBlotters,
             'todayCertificates' => $todayCertificates,
             'todayClearances' => $todayClearances,
@@ -2395,19 +2424,202 @@ class regValidation extends Controller
             'monthlyCertificates' => $monthlyCertificates,
             'monthlyClearances' => $monthlyClearances,
             'monthlyBusinessPermits' => $monthlyBusinessPermits,
+            'totalCountClearances' => $totalCountClearances,
+            'totalCountBusinessPermits' => $totalCountBusinessPermits,
+            'totalCountBlotters' => $totalCountBlotters,
+            'totalCountCertificates' => $totalCountCertificates,
             'yearlyData' => $yearlyData,
-            'ageGroupData' => $ageGroupData, // Include age group data
-            'filter' => $filter
+            'totalCurrentPopulation' => $totalCurrentPopulation,
         ];
-
+    
         // Set headers for no-cache
         header('Cache-Control: no-cache, no-store, must-revalidate');
         header('Pragma: no-cache');
         header('Expires: 0');
-
-        // Pass the data to the view
+    
         return view('dashboards/dbBrgyCap', $data);
     }
+    
+    public function certReport(Request $request)
+    {
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
+    
+        // Fetch the logged-in user's information
+        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+    
+        // Fetch the required counts, ensuring only 'Alive' and 'active' residents are included
+        $totalPopulation = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->count();
+        $totalCurrentPopulation = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->whereYear('res_dateReg', '=', $currentYear)->count();
+        $totalMale = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_sex', 'Male')->count();
+        $totalFemale = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_sex', 'Female')->count();
+        $totalVoters = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_voters', 'Yes')->count();
+        $totalNonVoters = resident_tbl::where('res_personStatus', 'Alive')->where('res_status', 'active')->where('res_voters', 'No')->count();
+        $totalBlotters = blotter_tbl::where('blotter_status', 'pending')->count();
+        $totalCertificates = brgyCertificate_tbl::where('certStatus', 'pending')->count();
+        $totalBusinessPermits = businessBrgyClearance_tbl::where('bc_status', 'pending')->count();
+        $totalClearances = brgyClearance_tbl::where('bcl_status', 'pending')->count();
+
+
+        $totalCountBlotters = blotter_tbl::where('blotter_status', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+        $totalCountCertificates = brgyCertificate_tbl::where('certStatus', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+        $totalCountBusinessPermits = businessBrgyClearance_tbl::where('bc_status', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+        $totalCountClearances = brgyClearance_tbl::where('bcl_status', 'completed')->whereYear('created_at', '=', $currentYear)->count();
+    
+        // Fetch monthly population data for the current year
+        $monthlyPopulationCurrentYear = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyPopulationCurrentYear[] = resident_tbl::where('res_personStatus', 'Alive')
+                ->where('res_status', 'active')
+                ->whereYear('res_dateReg', '=', $currentYear)
+                ->whereMonth('res_dateReg', '=', $month)
+                ->count();
+        }
+    
+        // Fetch monthly population data for the previous year
+        $monthlyPopulationPreviousYear = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyPopulationPreviousYear[] = resident_tbl::where('res_personStatus', 'Alive')
+                ->where('res_status', 'active')
+                ->whereYear('res_dateReg', '=', $previousYear)
+                ->whereMonth('res_dateReg', '=', $month)
+                ->count();
+        }
+    
+        // Calculate percentage of male and female residents
+        $malePercentage = ($totalMale / $totalPopulation) * 100;
+        $femalePercentage = ($totalFemale / $totalPopulation) * 100;
+    
+        // Calculate the percentage change in population between the current year and previous year
+        $percentageChange = 0;
+        $totalPopulationCurrentYear = array_sum($monthlyPopulationCurrentYear);
+        $totalPopulationPreviousYear = array_sum($monthlyPopulationPreviousYear);
+        if ($totalPopulationPreviousYear > 0) {
+            $percentageChange = (($totalPopulationCurrentYear - $totalPopulationPreviousYear) / $totalPopulationPreviousYear) * 100;
+        }
+    
+        // Age Distribution by Birth Year
+        $ageDistributionByYear = resident_tbl::selectRaw('YEAR(res_bdate) as birthYear, count(*) as total')
+            ->where('res_personStatus', 'Alive')
+            ->where('res_status', 'active')
+            ->groupBy('birthYear')
+            ->orderBy('birthYear', 'desc') // Sort descending by year
+            ->get();
+    
+        // Voter Status (Eligibility)
+        $eligibleVoters = resident_tbl::where('res_personStatus', 'Alive')
+            ->where('res_status', 'active')
+            ->whereRaw('TIMESTAMPDIFF(YEAR, res_bdate, CURDATE()) >= 18')  // Eligible voters (18+ years)
+            ->count();
+    
+        $ineligibleVoters = $totalPopulation - $eligibleVoters;
+        $eligibleVotersPercentage = ($eligibleVoters / $totalPopulation) * 100;
+        $ineligibleVotersPercentage = ($ineligibleVoters / $totalPopulation) * 100;
+    
+        // Voter Turnout Projection (Optional)
+        $projectedVoterTurnoutRate = 0.75; // Example: 75% projected voter turnout
+        $projectedVoterTurnout = $eligibleVoters * $projectedVoterTurnoutRate;
+    
+        // Handle time-based filtering for today's, monthly, and yearly data
+        $filter = $request->query('filter', 'today');
+        $todayBlotters = [];
+        $todayCertificates = [];
+        $todayClearances = [];
+        $todayBusinessPermits = [];
+        $monthlyBlotters = [];
+        $monthlyCertificates = [];
+        $monthlyClearances = [];
+        $monthlyBusinessPermits = [];
+        $yearlyData = [];
+    
+        // Get the current date and time in Manila time zone
+        $manilaTime = new \DateTimeZone('Asia/Manila');
+        $currentDate = new \DateTime('now', $manilaTime);
+    
+
+        // Monthly Certificates
+        $monthlyCertificates = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyCertificates[] = brgyCertificate_tbl::whereRaw('BINARY certStatus = ?', ['completed'])  // Strict equality for certStatus
+                ->whereYear('cert_dateIssued', '=', $currentYear)
+                ->whereMonth('cert_dateIssued', '=', $month)
+                ->count();
+        }
+
+        // Monthly Clearances
+        $monthlyClearances = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyClearances[] = brgyClearance_tbl::whereRaw('BINARY bcl_status = ?', ['completed'])  // Strict equality for bclStatus
+                ->whereYear('bcl_dateIssued', '=', $currentYear)
+                ->whereMonth('bcl_dateIssued', '=', $month)
+                ->count();
+        }
+
+        $monthlyBlotters = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyBlotters[] = blotter_tbl::whereRaw('BINARY blotter_status = ?', ['completed'])  // Strict equality for blotter_status
+                ->whereYear('created_at', '=', $currentYear)
+                ->whereMonth('created_at', '=', $month)
+                ->count();
+        }
+
+        // Monthly Business Permits
+        $monthlyBusinessPermits = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyBusinessPermits[] = businessBrgyClearance_tbl::whereRaw('BINARY bc_status = ?', ['completed'])  // Strict equality for bc_status
+                ->whereYear('bc_dateIssued', '=', $currentYear)
+                ->whereMonth('bc_dateIssued', '=', $month)
+                ->count();
+        }
+    
+        // Prepare data to be passed to the view
+        $data = [
+            'LoggedUserInfo' => $loggedUserInfo,
+            'totalPopulation' => $totalPopulation,
+            'totalMale' => $totalMale,
+            'totalFemale' => $totalFemale,
+            'totalVoters' => $totalVoters,
+            'totalNonVoters' => $totalNonVoters,
+            'totalBlotters' => $totalBlotters,
+            'totalCertificates' => $totalCertificates,
+            'totalBusinessPermits' => $totalBusinessPermits,
+            'totalClearances' => $totalClearances,
+            'malePercentage' => $malePercentage,
+            'femalePercentage' => $femalePercentage,
+            'percentageChange' => $percentageChange,
+            'ageDistributionByYear' => $ageDistributionByYear,
+            'eligibleVoters' => $eligibleVoters,
+            'ineligibleVoters' => $ineligibleVoters,
+            'eligibleVotersPercentage' => $eligibleVotersPercentage,
+            'ineligibleVotersPercentage' => $ineligibleVotersPercentage,
+            'projectedVoterTurnout' => $projectedVoterTurnout,
+            'monthlyPopulationCurrentYear' => $monthlyPopulationCurrentYear,
+            'monthlyPopulationPreviousYear' => $monthlyPopulationPreviousYear,
+            'todayBlotters' => $todayBlotters,
+            'todayCertificates' => $todayCertificates,
+            'todayClearances' => $todayClearances,
+            'todayBusinessPermits' => $todayBusinessPermits,
+            'monthlyBlotters' => $monthlyBlotters,
+            'monthlyCertificates' => $monthlyCertificates,
+            'monthlyClearances' => $monthlyClearances,
+            'monthlyBusinessPermits' => $monthlyBusinessPermits,
+            'totalCountClearances' => $totalCountClearances,
+            'totalCountBusinessPermits' => $totalCountBusinessPermits,
+            'totalCountBlotters' => $totalCountBlotters,
+            'totalCountCertificates' => $totalCountCertificates,
+            'yearlyData' => $yearlyData,
+            'totalCurrentPopulation' => $totalCurrentPopulation,
+        ];
+    
+        // Set headers for no-cache
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+    
+        return view('dashboards/captainDb/certificateReport', $data);
+    }
+    
+    
 
 
 
@@ -3147,6 +3359,177 @@ class regValidation extends Controller
         return view('dashboards.systemAdmin', $data);
     }
 
+    public function dbAdminOfficials()
+    {
+        // Fetch logged-in employee information
+        $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
+
+        $residents = resident_tbl::all();
+        // Alternatively, you may want to fetch all employees without any additional joins
+        $allEmployees = brgyOfficials_tbl::all();
+
+        // Prepare data to be passed to the view
+        $data = [
+            'LoggedUserInfo' => $loggedUserInfo,
+            'allEmployees' => $allEmployees, 
+            'residents' => $residents,
+        ];
+
+        // Pass the data array to the view 'dashboards/systemAdmin'
+        return view('dashboards.adminDb.officialDb', $data);
+    }
+
+    public function edit_official($id)
+    {
+        // Retrieve the employee record by ID
+        $employee = brgyOfficials_tbl::find($id);
+    
+        // Check if the employee exists
+        if (!$employee) {
+            return response()->json(['error' => 'Employee not found'], 404);
+        }
+    
+        // Return employee data as a JSON response
+        return response()->json([
+            'id' => $employee->of_id,
+            'full_name' => $employee->resident->res_id,  // Concatenating first and last name
+            'position' => $employee->of_position,
+            'status' => $employee->of_status,
+            'date' => $employee->of_date,
+            'profile_picture' => $employee->of_picture  // Include current profile picture path
+        ]);
+    }
+    
+    public function update_official(Request $request, $id)
+    {
+        // Retrieve the employee record
+        $employee = brgyOfficials_tbl::find($id);
+    
+        // Check if the employee exists
+        if (!$employee) {
+            return response()->json(['error' => 'Employee not found'], 404);
+        }
+    
+        // Validate incoming data
+        $validated = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+            'date' => 'required|date',
+            'pp' => 'nullable|string',  // Profile picture is optional
+        ]);
+    
+        // Update the employee's data
+        $employee->res_id = $validated['full_name'];
+        $employee->of_position = $validated['position'];
+        $employee->of_status = $validated['status'];
+        $employee->of_date = $validated['date'];
+    
+        // If a new profile picture is provided (base64 encoded)
+        if ($request->has('pp') && $validated['pp']) {
+            // Decode the base64 image data
+            $imageData = base64_decode(explode(',', $validated['pp'])[1]);
+    
+            // Generate a unique file name
+            $fileName = 'profile_' . Str::random(10) . '.png';
+    
+            // Store the image in the public directory
+            $path = public_path('assets/img/ppofficials/' . $fileName);
+            file_put_contents($path, $imageData);
+    
+            // Update the profile picture path in the database
+            $employee->of_picture = 'assets/img/ppofficials/' . $fileName;
+        }
+    
+        // Save the updated data
+        $employee->save();
+    
+        // Return success message
+        return response()->json(['message' => 'Employee updated successfully']);
+    }
+
+    public function updateOfficialStatus(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'id' => 'required|integer|exists:brgy_officials_tbls,of_id',
+            'status' => 'required|string|in:Active,Archive'  // Make sure only 'Active' or 'Archive' are accepted
+        ]);
+    
+        // Retrieve the employee record
+        $official = brgyOfficials_tbl::find($request->id);
+        
+        // Update the status
+        $official->of_status = $request->status;
+        $official->save();
+    
+        return response()->json(['success' => true]);  // Return success response
+    }
+
+    public function inputOfficials(Request $request)
+    {
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'fullName' => 'required',
+            'position' => 'required',
+            'appointment' => 'required|date',
+            'ofPicture' => 'mimes:jpg,jpeg,png|max:10240',  // Validate image type and size (10MB max)
+            'status' => 'required',
+        ], [
+            'required' => 'This field is required.',
+            'date' => 'This field must be in Date Format',
+            'ofPicture.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
+            'ofPicture.max' => 'The image size must not exceed 10MB.',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            // Start a transaction
+            DB::beginTransaction();
+            try {
+                // Handle the image upload
+                if ($request->hasFile('ofPicture')) {
+                    // Get the image file
+                    $image = $request->file('ofPicture');
+                    
+                    // Generate a unique file name for the image
+                    $imageName = time() . '.' . $image->getClientOriginalExtension();
+                    
+                    // Define the image directory path
+                    $destinationPath = public_path('assets/img/ppofficials');
+                    
+                    // Move the image to the destination directory
+                    $image->move($destinationPath, $imageName);
+                    
+                    // Get the image path for storage
+                    $imagePath = 'assets/img/ppofficials/' . $imageName;
+                    
+                    // Encode the image to base64 (optional, if you need base64 encoding)
+                    $imageBase64 = base64_encode(file_get_contents($destinationPath . '/' . $imageName));
+                }
+    
+                // Insert into daily_service_rec_tbl
+                $officials = new brgyOfficials_tbl;
+                $officials->res_id = $request->fullName;
+                $officials->of_position = $request->position;
+                $officials->of_date = $request->appointment;
+                $officials->of_status = $request->status;
+                $officials->of_picture = $imagePath; // Store the file path in the database
+                
+                $officials->save();
+                
+                // Commit the transaction
+                DB::commit();
+        
+                return response()->json(['status' => 1, 'msg' => 'New Record Has Been Added']);
+            } catch (\Exception $e) {
+                // Rollback the transaction in case of failure
+                DB::rollBack();
+                return response()->json(['status' => 0, 'msg' => 'Failed to add new Record: ' . $e->getMessage()], 500);
+            }
+        }
+    }
 
     public function update(Request $request, $id)
     {

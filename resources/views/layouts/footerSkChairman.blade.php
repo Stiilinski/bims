@@ -134,19 +134,28 @@ $(document).ready(function() {
 
 
 
-        // Get the current date MONTHS
-        const currentDate = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
-        // Get the month from the current date (returns a number from 0 to 11)
-        const currentMonth = new Date(currentDate).getMonth();
-        // Array of month names
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                            'July', 'August', 'September', 'October', 'November', 'December'];
-        // Get the month name using the currentMonth as an index
-        const monthName = monthNames[currentMonth]; 
-        // Find the span element by its id
-        const spanElement = document.getElementById('currentMonthSpan');
-        // Update the content of the span element
-        if (spanElement) {
-        spanElement.textContent = `| ${monthName}`;
-        }
+// Get the current date with the correct time zone
+const currentDate = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+
+// Get the month from the current date (returns a number from 0 to 11)
+const currentMonth = new Date(currentDate).getMonth();
+
+// Array of month names
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+
+// Get the current month name
+const monthName = monthNames[currentMonth];
+
+// Update the content of the span elements
+const privateSpan = document.getElementById('currentMonthSpanPrivate');
+const publicSpan = document.getElementById('currentMonthSpan');
+
+if (privateSpan) {
+    privateSpan.textContent = `| ${monthName}`;
+}
+
+if (publicSpan) {
+    publicSpan.textContent = `| ${monthName}`;
+}
 </script>
