@@ -442,7 +442,7 @@
                             <div class="form-1">
                                 <div class="form1">
                                     <label for="patientName">Name:</label>
-                                    <input type="text" name="patientName" id="patientName" value="{{ $rhu->resident->res_lname ?? '' }}, {{ $rhu->resident->res_fname ?? '' }} {{ $rhu->resident->res_mname ?? '' }} {{ $rhu->resident->res_suffix ?? '' }}" readonly>
+                                    <input type="text" name="patientName" id="patientName" value="{{ $rhu->resident->res_lname ?? '' }}, {{ $rhu->resident->res_fname ?? '' }}  @if($rhu->resident->res_mname && !in_array($rhu->resident->res_mname, ['N/A', '', null])) {{ $rhu->resident->res_mname }} @endif @if($rhu->resident->res_suffix && !in_array($rhu->resident->res_suffix, ['N/A', '', null])) {{ $rhu->resident->res_suffix }}  @endif"  readonly>
                                 </div>
                                 <div class="form2">
                                     <label for="patientAge">Age:</label>

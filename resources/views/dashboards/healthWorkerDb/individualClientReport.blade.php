@@ -271,7 +271,13 @@
                 <option value="">Select...</option>
                 @foreach($residents as $resident)
                     <option value="{{ $resident->res_id }}">
-                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}                                 
+                        @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                            {{ $resident->res_mname }} 
+                        @endif
+                        @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                            {{ $resident->res_suffix }} 
+                        @endif
                     </option>
                 @endforeach
             </select>
@@ -374,7 +380,9 @@
 
             if (residentInfo) {
                 // Update patient information (same as before)
-                document.querySelector('.infoFullName').textContent = `${residentInfo.res_lname}, ${residentInfo.res_fname} ${residentInfo.res_mname ?? ''} ${residentInfo.res_suffix ?? ''}`;
+                document.querySelector('.infoFullName').textContent = `${residentInfo.res_lname}, ${residentInfo.res_fname} 
+                    ${residentInfo.res_mname && residentInfo.res_mname !== 'N/A' && residentInfo.res_mname !== '' ? residentInfo.res_mname : ''} 
+                    ${residentInfo.res_suffix && residentInfo.res_suffix !== 'N/A' && residentInfo.res_suffix !== '' ? residentInfo.res_suffix : ''}`;
                 const age = calculateAge(residentInfo.res_bdate);
                 document.querySelector('.infoAge').textContent = age;
                 document.querySelector('.infoBday').textContent = residentInfo.res_bdate;

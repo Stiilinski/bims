@@ -321,7 +321,12 @@
 
                 @php
                     $motherName = $epi->epi_motherName ?? 
-                                trim(($epi->mother->res_lname ?? '') . ', ' . ($epi->mother->res_fname ?? '') . ' ' . ($epi->mother->res_mname ?? '') . ' ' . ($epi->mother->res_suffix ?? ''));
+                                trim(
+                                    ($epi->mother->res_lname ?? '') . ', ' . 
+                                    ($epi->mother->res_fname ?? '') . ' ' . 
+                                    ($epi->mother->res_mname && !in_array($epi->mother->res_mname, ['N/A', '', null]) ? $epi->mother->res_mname : '') . ' ' . 
+                                    ($epi->mother->res_suffix && !in_array($epi->mother->res_suffix, ['N/A', '', null]) ? $epi->mother->res_suffix : '')
+                                );
                     $displayMother = $motherName ?: $epi->mother_id ?: 'N/A';
                 @endphp
                 <div class="col-md-8 d-flex border">
@@ -350,8 +355,13 @@
 
                 @php
                     $fatherName = $epi->epi_fatherName ?? 
-                                trim(($epi->father->res_lname ?? '') . ', ' . ($epi->father->res_fname ?? '') . ' ' . ($epi->father->res_mname ?? '') . ' ' . ($epi->father->res_suffix ?? ''));
-                    $displayFather = $fatherName ?: $epi->mother_id ?: 'N/A';
+                                trim(
+                                    ($epi->father->res_lname ?? '') . ', ' . 
+                                    ($epi->father->res_fname ?? '') . ' ' . 
+                                    ($epi->father->res_mname && !in_array($epi->father->res_mname, ['N/A', '', null]) ? $epi->father->res_mname : '') . ' ' . 
+                                    ($epi->father->res_suffix && !in_array($epi->father->res_suffix, ['N/A', '', null]) ? $epi->father->res_suffix : '')
+                                );
+                    $displayFather = $fatherName ?: $epi->father_id ?: 'N/A';
                 @endphp
 
                 <div class="col-md-12 d-flex border">
@@ -612,7 +622,7 @@
         window.print();
     }); 
 
-    //CRUD
+//CRUD
     //iNSERT
     $(function() {
         $("#vacForm").on('submit', function(e) {
@@ -703,7 +713,6 @@
         // Show the modal
         $('#EditExtralargeModal').modal('show');
     });
-
 
     // uPDATE
     $(document).ready(function() {

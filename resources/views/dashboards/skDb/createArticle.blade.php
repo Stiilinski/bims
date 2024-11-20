@@ -202,6 +202,10 @@
                                     </div>
                                 </div>
 
+                                <div class="alertCon">
+                                    <div id="alert-container"></div>
+                                </div>
+
                                 <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
                                     <button type="reset" class="btn btn-secondary">Clear</button>
                                     <button type="submit" class="btn btn-warning" name="action" value="draft" onclick="setDraftStatus()">Save Draft</button>
@@ -220,7 +224,7 @@
           <!-- Private Announcement -->
           <div class="card">
             <div class="card-body pb-0">
-              <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+              <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
               <div class="news" id="schedules-container">
 
               </div><!-- End sidebar recent posts-->
@@ -243,9 +247,6 @@
 
         </div>
         <!-- End Right side columns -->
-        <div class="alertCon">
-            <div id="alert-container"></div>
-        </div>
         </section>
 
 

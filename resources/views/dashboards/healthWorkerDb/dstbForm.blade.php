@@ -941,7 +941,7 @@
                 <div class="patient-info">
                     <div class="data1">
                         <span>Patient's Full Name</span>
-                        <input type="text" name="fullname" id="fullname" value="{{ $dstb->resident->res_lname ?? '' }}, {{ $dstb->resident->res_fname ?? '' }} {{ $dstb->resident->res_mname ?? '' }} {{ $dstb->resident->res_suffix ?? '' }}" readonly>
+                        <input type="text" name="fullname" id="fullname" value="{{ $dstb->resident->res_lname ?? '' }}, {{ $dstb->resident->res_fname ?? '' }} @if($dstb->resident->res_mname && !in_array($dstb->resident->res_mname, ['N/A', '', null])) {{ $dstb->resident->res_mname }} @endif @if($dstb->resident->res_suffix && !in_array($dstb->resident->res_suffix, ['N/A', '', null])) {{ $dstb->resident->res_suffix }}  @endif"  readonly>
                     </div>
                     <div class="data2">
                         <span>Date of Birth (MM/DD/YYYY)</span>
@@ -963,11 +963,11 @@
                 <div class="patient-info">
                     <div class="data1">
                         <span>Permanent Address</span>
-                        <input type="text" name="address" id="address" value="{{ $dstb->dstb_permAdd ?? '' }}" readonly>
+                        <input type="text" name="address" id="address" value="{{ $dstb->resident->res_address ?? '' }}" readonly>
                     </div>
                     <div class="data2">
                         <span>Current Address (House No., Street, Barangay, City, Municipality, Province, Region, & Zip Code)</span>
-                        <input type="text" name="current" id="current" value="{{ $dstb->resident->res_address ?? '' }}" readonly>
+                        <input type="text" name="current" id="current" value="{{ $dstb->resident->res_tempAddress ?? '' }}" readonly>
                     </div>
                 </div>
                 <div class="patient-info">
@@ -977,7 +977,7 @@
                     </div>
                     <div class="data2">
                         <span>Other Contact Information:</span>
-                        <input type="text" name="othercontact" id="othercontact" value="{{ $dstb->dstb_inputOtherNum ?? '' }}" readonly>
+                        <input type="text" name="othercontact" id="othercontact" value="{{ $dstb->resident->res_otherContact ?? '' }}" readonly>
                     </div>
                     <div class="data1">
                         <span>PhilHealth No.:</span>

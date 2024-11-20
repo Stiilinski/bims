@@ -1,6 +1,10 @@
 @include('layouts.headSkChairman')
 <body>
 <style>
+  .datatable-container {
+    overflow-x:scroll;
+  }
+  
   .sales-card {
     height: 100%;
   }
@@ -98,6 +102,7 @@
                             <th scope="col">Date</th>
                             <th scope="col">Type</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Reason</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -107,10 +112,11 @@
                                     <td style="display: none;">{{ $event->sched_id }}</td>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $event->sched_title }}</td>
-                                    <td>{{ $event->sched_description}}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($event->sched_description, 15, '...') }}</td>
                                     <td>{{ $event->sched_date}}</td>
                                     <td>{{ $event->sched_type}}</td>
                                     <td>{{ $event->sched_status}}</td>
+                                    <td>{{ $event->sched_reason}}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -119,6 +125,7 @@
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" type="button" href="{{ route('editEvent1', ['sched_id' => $event->sched_id]) }}">Edit</a></li>
                                                 <li><button class="dropdown-item" type="button" onclick="updateEventStatus({{ $event->sched_id }}, 'Archived')">Archive</button></li>
+                                                <li><button class="dropdown-item" type="button" onclick="updatePendingStatus({{ $event->sched_id }}, 'Pending Event')">Pending Event</button></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -136,7 +143,7 @@
           <!-- Private Announcement -->
           <div class="card">
             <div class="card-body pb-0">
-              <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+              <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
               <div class="news" id="schedules-container">
 
               </div><!-- End sidebar recent posts-->
@@ -174,6 +181,31 @@
     function updateEventStatus(eventId, newStatus) 
     {
         fetch('/update-event-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                id: eventId,
+                status: newStatus
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Event status updated successfully');
+                location.reload();
+            } else {
+                alert('Failed to update Event status');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function updatePendingStatus(eventId, newStatus) 
+    {
+        fetch('/update-pending-status', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

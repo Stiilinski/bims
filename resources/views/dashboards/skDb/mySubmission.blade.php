@@ -97,6 +97,7 @@
                             <th scope="col">Subtitle</th>
                             <th scope="col">Date</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Reason</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -105,10 +106,11 @@
                                 </tr>
                                     <td style="display: none;">{{ $blogs->blog_id }}</td>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $blogs->blog_title }}</td>
-                                    <td>{{ $blogs->blog_subtitle}}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($blogs->blog_title, 10, '...') }}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($blogs->blog_subtitle, 25, '...') }}</td>
                                     <td>{{ $blogs->blog_date}}</td>
                                     <td>{{ $blogs->blog_status}}</td>
+                                    <td>{{ $blogs->blog_reason}}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -134,7 +136,7 @@
           <!-- Private Announcement -->
           <div class="card">
             <div class="card-body pb-0">
-              <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+              <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
               <div class="news" id="schedules-container">
 
               </div><!-- End sidebar recent posts-->

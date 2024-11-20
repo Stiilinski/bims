@@ -99,10 +99,10 @@
                         @foreach($blogs as $blog)
                             <div class="col-md-4">
                                 <a class="card" style="height: 300px!important; overflow:hidden; cursor: pointer;" href="{{ route('viewBlogs', ['blog_id' => $blog->blog_id]) }}">
-                                    <img src="{{ str_replace('public', '', $blog->blog_pic) }}" class="card-img-top" alt="Blog Image" style="height: 150px;">
+                                    <img src="{{ $blog->blog_pic ? str_replace('public', '', $blog->blog_pic) : asset('assets/img/default.png') }}" class="card-img-top" alt="Blog Image" style="height: 150px;">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ $blog->blog_title }}</h5>
-                                        <p class="card-text blog-subtitle">{{ $blog->blog_subtitle }}</p>
+                                        <h5 class="card-title">{{ \Illuminate\Support\Str::limit($blog->blog_title, 15, '...') }}</h5>
+                                        <p class="card-text blog-subtitle">{{ \Illuminate\Support\Str::limit($blog->blog_subtitle, 15, '...') }}</p>
                                     </div>
                                 </a>
                             </div>
@@ -120,8 +120,8 @@
                                 <a class="card" style="height: 300px!important; overflow:hidden; cursor: pointer;" href="{{ route('editEvent1', ['sched_id' => $event->sched_id]) }}">
                                     <img src="{{ str_replace('public', '', $event->sched_picture) }}" class="card-img-top" alt="Event Image" style="height: 150px;">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ $event->sched_title }}</h5>
-                                        <p class="card-text blog-subtitle">{{ $event->sched_description }}</p>
+                                        <h5 class="card-title">{{ \Illuminate\Support\Str::limit($event->sched_title, 15, '...') }}</h5>
+                                        <p class="card-text blog-subtitle">{{ \Illuminate\Support\Str::limit($event->sched_description, 15, '...') }}</p>
                                     </div>
                                 </a>
                             </div>
@@ -143,7 +143,7 @@
           <!-- Private Announcement -->
           <div class="card">
             <div class="card-body pb-0">
-              <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+              <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
               <div class="news" id="schedules-container">
 
               </div><!-- End sidebar recent posts-->

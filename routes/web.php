@@ -3,12 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\regValidation;
 use App\Models\schedule_tbl;
+use App\Models\brgyOfficials_tbl;
 use Carbon\Carbon;
 
 Route::get('/', function () {
     $currentYear = Carbon::now()->year;
     $schedules = schedule_tbl::where('sched_status', 'Accepted')->get();
-    return view('welcome', ['schedules' => $schedules]);
+    $officials = brgyOfficials_tbl::where('of_status', 'Active')->get();
+    return view('welcome', ['schedules' => $schedules, 'officials' => $officials]);
 });
 
 
@@ -297,6 +299,9 @@ Route::get('/residentBlotter/{id}', [regValidation::class, 'getResidentBlotter']
     Route::get('/dashboards/skChairmanDb/createEvent', [regValidation::class, 'createEvent1']);
     Route::get('/dashboards/skChairmanDb/eventList/{em_id}', [regValidation::class, 'eventLists1']);
     Route::get('/editEvent/skChairmanDb/{sched_id}', [regValidation::class, 'editEvent1'])->name('editEvent1');
+    Route::post('/update-event-status', [regValidation::class, 'updateEventStatus1']);
+    Route::post('/update-pending-status', [regValidation::class, 'updatePendingStatus']);
+    
 // END OF SK CHAIRMAN
 
 Route::get('logout', [regValidation::class, 'logout'])->name('regValidation.logout');

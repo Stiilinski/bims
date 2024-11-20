@@ -153,7 +153,7 @@
                         </tr>
                             <td style="display: none;">{{ $dsrs->dsr_id }}</td>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $dsrs->resident->res_lname }}, {{ $dsrs->resident->res_fname }} {{ $dsrs->resident->res_mname ?? '' }} {{ $dsrs->resident->res_suffix ?? '' }}</td>
+                            <td>{{ $dsrs->resident->res_lname }}, {{ $dsrs->resident->res_fname }} {{ ($dsrs->resident->res_mname == 'N/A' || $dsrs->resident->res_mname == '') ? '' : $dsrs->resident->res_mname }} {{ $dsrs->resident->res_suffix ?? '' == 'N/A' ? '' : $dsrs->resident->res_suffix ?? '' }}</td>
                             <td>{{ $dsrs->resident->res_bdate}}</td>
                             <td>{{ $dsrs->resident->res_civil}}</td>
                             <td>{{ $dsrs->resident->res_sex }}</td>
@@ -206,7 +206,13 @@
                                     <option value="">Select...</option>
                                     @foreach($residents as $resident)
                                         <option value="{{ $resident->res_id }}">
-                                            {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                            {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                            @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                {{ $resident->res_mname }} 
+                                            @endif
+                                            @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                {{ $resident->res_suffix }} 
+                                            @endif
                                         </option>
                                     @endforeach
                                 </select>

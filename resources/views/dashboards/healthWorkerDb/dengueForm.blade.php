@@ -555,7 +555,7 @@
                         <div class="content">
                             <div class="section1">
                                 <label for="resName">Name:</label>
-                                <input class="resName" type="text" name="resName" id="resName" value="{{ $dengue->resident->res_lname ?? '' }}, {{ $dengue->resident->res_fname ?? '' }} {{ $dengue->resident->res_mname ?? '' }} {{ $dengue->resident->res_suffix ?? '' }}" readonly>
+                                <input class="resName" type="text" name="resName" id="resName" value="{{ $dengue->resident->res_lname ?? '' }}, {{ $dengue->resident->res_fname ?? '' }}  @if($dengue->resident->res_mname && !in_array($dengue->resident->res_mname, ['N/A', '', null])) {{ $dengue->resident->res_mname }} @endif @if($dengue->resident->res_suffix && !in_array($dengue->resident->res_suffix, ['N/A', '', null])) {{ $dengue->resident->res_suffix }}  @endif"  readonly>
                                 <div class="sec">
                                     <label for="resDob">Date of Birth:</label>
                                     <input type="text" name="resDob" id="resDob" value="{{ $dengue->resident->res_bdate ?? '' }}" readonly>

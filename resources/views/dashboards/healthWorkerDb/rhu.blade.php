@@ -198,7 +198,14 @@
                     <tr>
                         <td style="display: none;">{{ $rhus->rhu_id }}</td>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $rhus->resident->res_lname }}, {{ $rhus->resident->res_fname }} {{ $rhus->resident->res_mname ?? '' }} {{ $rhus->resident->res_suffix ?? '' }}</td>
+                        <td>{{ $rhus->resident->res_lname }}, {{ $rhus->resident->res_fname }} 
+                            @if($rhus->resident->res_mname && !in_array($rhus->resident->res_mname, ['N/A', '', null]))
+                                {{ $rhus->resident->res_mname }} 
+                            @endif
+                            @if($rhus->resident->res_suffix && !in_array($rhus->resident->res_suffix, ['N/A', '', null]))
+                                {{ $rhus->resident->res_suffix }} 
+                            @endif
+                        </td>
                         <td>{{ $rhus->resident->res_bdate}}</td>
                         <td>{{ $rhus->resident->res_sex }}</td>
                         <td>{{ $rhus->resident->res_purok }}</td>
@@ -223,7 +230,7 @@
         </div>
     </div>
 
-      <!-- SIDE A -->
+    <!-- SIDE A -->
     <div class="modal fade" id="ExtralargeModal" tabindex="-1">
         <div class="modal-dialog custom-modal-width">
             <div class="modal-content">
@@ -247,7 +254,13 @@
                                                 <option value="">Select...</option>
                                                 @foreach($residents as $resident)
                                                     <option value="{{ $resident->res_id }}">
-                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                                        @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                            {{ $resident->res_mname }} 
+                                                        @endif
+                                                        @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                            {{ $resident->res_suffix }} 
+                                                        @endif
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -477,7 +490,8 @@
                 </form><!-- End Horizontal Form -->
             </div>
         </div>
-    </div><!-- End OF SIDE A-->
+    </div>
+    <!-- End OF SIDE A-->
 
     <!-- SIDE A -->
     <div class="modal fade" id="editRhuModal" tabindex="-1">
@@ -504,7 +518,13 @@
                                                 <option value="">Select...</option>
                                                 @foreach($residents as $resident)
                                                     <option value="{{ $resident->res_id }}">
-                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                                        @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                            {{ $resident->res_mname }} 
+                                                        @endif
+                                                        @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                            {{ $resident->res_suffix }} 
+                                                        @endif
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -744,7 +764,8 @@
                 </form><!-- End Horizontal Form -->
             </div>
         </div>
-    </div><!-- End OF SIDE A-->
+    </div>
+    <!-- End OF SIDE A-->
 
 
 </main><!-- End #main -->
@@ -772,6 +793,12 @@ const residentData = {
 
     $(document).ready(function () {
         $('#rhuFullName').selectize({
+            sortField: 'text'
+        });
+    });
+
+    $(document).ready(function () {
+        $('#edit_rhuFullName').selectize({
             sortField: 'text'
         });
     });
@@ -919,8 +946,11 @@ const residentData = {
                 {       
                     $('#edit_referId').val(response.data.rhu_id);
                     //patient info
-                        let fullName = `${response.data.resident.res_lname}, ${response.data.resident.res_fname} ${response.data.resident.res_mname ?? ''} ${response.data.resident.res_suffix ?? ''}`;
-                        $('#edit_rhuFullName').val(response.data.resident.res_id);
+                    let fullName = `${response.data.resident.res_lname}, ${response.data.resident.res_fname} ${response.data.resident.res_mname ?? ''} ${response.data.resident.res_suffix ?? ''}`;
+                    let residentId = response.data.resident.res_id;
+                    let selectize = $('#edit_rhuFullName')[0].selectize;
+                    selectize.setValue(residentId);
+
                         $('#edit_referDob').val(response.data.resident.res_bdate);
                         let birthDate = new Date(response.data.resident.res_bdate);
                         let age = calculateAge(birthDate);

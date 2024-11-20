@@ -1,4 +1,4 @@
-@include('layouts.headSkKagawad')
+@include('layouts.headSkChairman')
 <body>
 <style>
     .toggle-sidebar-btn {
@@ -78,7 +78,7 @@
 
 </style>
   <!-- ======= Header ======= -->
-    @include('layouts.headerSkKagawad')
+    @include('layouts.headerSkChairman')
   <!-- End Header -->
 
   <div id="container" class="container">
@@ -168,6 +168,7 @@
                                     </div>
 
                                     <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
+                                        <button class="btn btn-danger" type="button" onclick="openDeniedModal({{ $event->sched_id }})">Denied</button>
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
@@ -186,7 +187,7 @@
             <!-- Private Announcement -->
             <div class="card">
                 <div class="card-body pb-0">
-                <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
                 <div class="news" id="schedules-container">
 
                 </div><!-- End sidebar recent posts-->
@@ -211,9 +212,36 @@
             <!-- End Right side columns -->
     </section>
 
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog custom-modal-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Select Denial Reason</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="reasonSelect">Reason for Denial:</label>
+                    <select id="reasonSelect" class="form-control">
+                        <option value="Plan was cancelled">Plan was cancelled</option>
+                        <option value="Event exceeded budget">Event exceeded budget</option>
+                        <option value="Event rescheduled">Event rescheduled</option>
+                        <option value="Event was not approved by authorities">Event was not approved by authorities</option>
+                        <option value="Lack of resources or staff">Lack of resources or staff</option>
+                        <option value="Venue unavailable">Venue unavailable</option>
+                        <option value="Weather conditions">Weather conditions</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="submitDeniedStatus()">Denied</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div><!-- End #main -->
 
-@include('layouts.footerSkKagawad')
+@include('layouts.footerSkChairman')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 // CRUD
@@ -256,7 +284,39 @@
                 }
             });
         });
+    // Event
+    function openDeniedModal(id) {
+        artId = id;  // Store the article ID globally
+        $('#modal').modal('show');  // Show the modal
+    }
 
+    function submitDeniedStatus() {
+            const selectedReason = $('#reasonSelect').val(); // Get the selected reason
+
+            fetch('/update-event-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    id: artId,         // Pass the article ID
+                    status: 'Denied',  // Deny the article
+                    reason: selectedReason // Pass the selected reason
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Event status updated successfully');
+                    $('#modal').modal('hide');  // Close the modal
+                    location.reload(); // Reload the page to reflect changes
+                } else {
+                    alert('Failed to update Event status');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
         
 </script>
 

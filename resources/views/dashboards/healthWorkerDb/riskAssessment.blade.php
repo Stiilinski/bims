@@ -207,7 +207,14 @@
                         </tr>
                             <td style="display: none;">{{ $risks->risk_id }}</td>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $risks->resident->res_lname }}, {{ $risks->resident->res_fname }} {{ $risks->resident->res_mname ?? '' }} {{ $risks->resident->res_suffix ?? '' }}</td>
+                            <td>{{ $risks->resident->res_lname }}, {{ $risks->resident->res_fname }} 
+                                @if($risks->resident->res_mname && !in_array($risks->resident->res_mname, ['N/A', '', null]))
+                                    {{ $risks->resident->res_mname }} 
+                                @endif
+                                @if($risks->resident->res_suffix && !in_array($risks->resident->res_suffix, ['N/A', '', null]))
+                                    {{ $risks->resident->res_suffix }} 
+                                @endif
+                            </td>
                             <td>{{ $risks->resident->res_bdate}}</td>
                             <td>{{ $risks->resident->res_civil}}</td>
                             <td>{{ $risks->resident->res_sex }}</td>
@@ -264,7 +271,13 @@
                                             <option value="">Select...</option>
                                             @foreach($residents as $resident)
                                                 <option value="{{ $resident->res_id }}">
-                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                                    @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                        {{ $resident->res_mname }} 
+                                                    @endif
+                                                    @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                        {{ $resident->res_suffix }} 
+                                                    @endif
                                                 </option>
                                             @endforeach
                                         </select>
@@ -284,7 +297,6 @@
                                             <input type="text" class="form-control" id="inputBox" name="qtBox" readonly>
                                         </div>
                                     </div>
-                                    
 
                                     <div class="column mb-3">
                                         <label for="inputSex" class="col-sm-5 col-form-label">Sex</label>
@@ -323,12 +335,12 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="column mb-3">
+                                    <div class="column mb-3">
                                         <label for="inputEd" class="col-sm-5 col-form-label">Educational Attainment</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="inputEd" name="inputEd" readonly>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1303,11 +1315,17 @@
 
                                     <div class="column mb-3 pt-2">
                                         <label for="edit_fullName" class="form-label">Full Name</label>
-                                        <select id="edit_fullName" class="form-control" style="width: 84%;" name="edit_fullName" onchange="updateResidentDetails(this)">
+                                        <select id="edit_fullName" class="form-control" style="width: 84%;" name="edit_fullName" onchange="edit_updateResidentDetails(this)">
                                             <option value="">Select...</option>
                                             @foreach($residents as $resident)
                                                 <option value="{{ $resident->res_id }}">
-                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}
+                                                    @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                        {{ $resident->res_mname }} 
+                                                    @endif
+                                                    @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                        {{ $resident->res_suffix }} 
+                                                    @endif
                                                 </option>
                                             @endforeach
                                         </select>
@@ -1365,13 +1383,13 @@
                                             <input type="text" class="form-control" id="edit_inputContact" name="edit_inputContact" readonly>
                                         </div>
                                     </div>
-                                    {{-- 
+                                    
                                     <div class="column mb-3">
                                         <label for="edit_inputEd" class="col-sm-5 col-form-label">Educational Attainment</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="edit_inputEd" name="edit_inputEd" readonly>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1751,7 +1769,7 @@
                                                 <label class="form-check-label" for="edit_fatSaltIntake_yes">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="edit_fatSaltIntake" id="edit_fatSaltIntakel_no" value="No">
+                                                <input class="form-check-input" type="radio" name="edit_fatSaltIntake" id="edit_fatSaltIntake_no" value="No">
                                                 <label class="form-check-label" for="edit_fatSaltIntake_no">No</label>
                                             </div>
                                         </div>
@@ -2079,10 +2097,10 @@
                                         <div class="col-sm-10">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="edit_polydipsia" id="edit_polydipsiaYes" value="Yes">
-                                                <label class="form-check-label" for="edit_polydispiaYes">Yes</label>
+                                                <label class="form-check-label" for="edit_polydipsiaYes">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="edit_polydipsia" id="edit_polydipsiao" value="No">
+                                                <input class="form-check-input" type="radio" name="edit_polydipsia" id="edit_polydipsiaNo" value="No">
                                                 <label class="form-check-label" for="edit_polydipsiaNo">No</label>
                                             </div>
                                         </div>
@@ -2330,10 +2348,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script type="text/javascript">
-    // Initialize resident data from PHP
-    var residentData = @json($residents);
-</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>
 //*********************************************************
     $(document).ready(function () {
@@ -2341,6 +2357,27 @@
             sortField: 'text'
         });
     });
+
+    $(document).ready(function () {
+        $('#edit_fullName').selectize({
+            sortField: 'text'
+        });
+    });
+
+    const residentData = {
+        @foreach($residents as $resident)
+            "{{ $resident->res_id }}": {
+                res_address: "{{ addslashes($resident->res_address) }}",
+                res_bdate: "{{ $resident->res_bdate }}",
+                res_sex: "{{ $resident->res_sex }}",
+                res_contact: "{{ $resident->res_contact }}",
+                res_civil: "{{ $resident->res_civil }}",
+                res_citizen: "{{ $resident->res_citizen }}",
+                res_occupation: "{{ $resident->res_occupation }}",
+                res_educ: "{{ $resident->res_educ }}",
+            },
+        @endforeach
+    };
 
     // When submitting the form, store the signature data (base64) in the hidden fields
     document.getElementById('riskInputForm').addEventListener('submit', function () {
@@ -2416,17 +2453,14 @@
         }
     }
 
-    function updateResidentDetails(selectElement) 
-    {
+    function updateResidentDetails(selectElement) {
         const selectedId = selectElement.value;
 
-        if (selectedId) 
-        {
-            // Get resident data using the selected value (if available from backend)
-            const residentInfo = residentData.find(resident => resident.res_id == selectedId);
+        if (selectedId) {
+            // Access resident data directly using the selected ID
+            const residentInfo = residentData[selectedId]; // No need to use find() method
 
-            if (residentInfo) 
-            {
+            if (residentInfo) {
                 document.getElementById('inputAddress').value = residentInfo.res_address;
                 document.getElementById('inputbDate').value = residentInfo.res_bdate;
 
@@ -2438,12 +2472,10 @@
                 document.getElementById('inputOccupation').value = residentInfo.res_occupation;
                 document.getElementById('inputContact').value = residentInfo.res_contact;
                 document.getElementById('inputCivil').value = residentInfo.res_civil;
-                //document.getElementById('inputEd').value = residentInfo.res_education;
+                document.getElementById('inputEd').value = residentInfo.res_educ;
                 document.getElementById('inputSex').value = residentInfo.res_sex;
             }
-        } 
-        else 
-        {
+        } else {
             // Clear fields if no resident is selected
             document.getElementById('inputAddress').value = '';
             document.getElementById('inputbDate').value = '';
@@ -2452,6 +2484,40 @@
             document.getElementById('inputContact').value = '';
             document.getElementById('inputCivil').value = '';
             // document.getElementById('inputEd').value = '';
+            document.getElementById('inputSex').value = '';
+        }
+    }
+
+
+    function edit_updateResidentDetails(selectElement) {
+        const selectedId = selectElement.value;
+
+        if (selectedId) {
+            // Access resident data directly using the selected ID
+            const residentInfo = residentData[selectedId]; // No need to use find() method
+
+            if (residentInfo) {
+                document.getElementById('edit_inputAddress').value = residentInfo.res_address;
+                document.getElementById('edit_inputbDate').value = residentInfo.res_bdate;
+                document.getElementById('edit_inputOccupation').value = residentInfo.res_occupation;
+                document.getElementById('edit_inputContact').value = residentInfo.res_contact;
+                document.getElementById('edit_inputCivil').value = residentInfo.res_civil;
+                document.getElementById('edit_inputEd').value = residentInfo.res_educ;
+                document.getElementById('edit_inputSex').value = residentInfo.res_sex;
+
+                const birthDate = new Date(residentInfo.res_bdate);
+                const age = calculateAge(birthDate);
+                document.getElementById('edit_inputAge').value = age;
+            }
+        } else {
+            // Clear fields if no resident is selected
+            document.getElementById('edit_inputAddress').value = '';
+            document.getElementById('edit_inputbDate').value = '';
+            document.getElementById('edit_inputAge').value = '';
+            document.getElementById('edit_inputOccupation').value = '';
+            document.getElementById('edit_inputContact').value = '';
+            document.getElementById('edit_inputCivil').value = '';
+            document.getElementById('inputEd').value = '';
             document.getElementById('inputSex').value = '';
         }
     }
@@ -2468,9 +2534,6 @@
 
         return age;
     }
-
-
-
 
     //FOR SIGNATURE EDIT
     document.addEventListener("DOMContentLoaded", function() {
@@ -2499,8 +2562,6 @@
             signaturePad.clear();
         });
     });
-
-
 
     document.addEventListener("DOMContentLoaded", function() {
         var canvas = document.getElementById('edit_signaturePad2');
@@ -2607,8 +2668,12 @@
                     //Textbox
                         $('#edit_riskId').val(response.data.risk_id);
                         $('#edit_inputDateAssessment').val(response.data.risk_dateAss);
+
                         let fullName = `${response.data.resident.res_lname}, ${response.data.resident.res_fname} ${response.data.resident.res_mname ?? ''} ${response.data.resident.res_suffix ?? ''}`;
-                        $('#edit_fullName').val(response.data.resident.res_id);
+                        let residentId = response.data.resident.res_id;
+                        let selectize = $('#edit_fullName')[0].selectize;
+                        selectize.setValue(residentId);
+
                         $('#edit_inputbDate').val(response.data.resident.res_bdate);
                         // Calculate the age
                             let birthDate = new Date(response.data.resident.res_bdate);
@@ -2643,8 +2708,6 @@
                         $('#edit_inputRaFfUp').val(response.data.risk_followUp);
                         $('#edit_inputRaFinding').val(response.data.risk_findings);
                         $('#edit_inputStatus').val(response.data.risk_status);
-
-
 
                     
 
@@ -2758,10 +2821,10 @@
                         let exAlcohol = response.data.risk_alExcessive;
                             $('#edit_exAlcohol_yes').prop('checked', false);
                             $('#edit_exAlcohol_no').prop('checked', false);
-                            if (raisedBp === 'Yes') {
+                            if (exAlcohol === 'Yes') {
                                 $('#edit_exAlcohol_yes').prop('checked', true);
                             } 
-                            else if (raisedBp === 'No') {
+                            else if (exAlcohol === 'No') {
                                 $('#edit_exAlcohol_no').prop('checked', true);
                             }
                         let highFat = response.data.risk_highFat;
@@ -2807,7 +2870,7 @@
                                 $('#edit_result_yes').prop('checked', true);
                             } 
                             else if (result1 === 'No') {
-                                $('#edit_result_yes').prop('checked', true);
+                                $('#edit_result_no').prop('checked', true);
                             }
                         let rq1 = response.data.risk_q1;
                             $('#edit_questionnaire1_yes').prop('checked', false);
@@ -2903,10 +2966,10 @@
                         let symp1 = response.data.risk_diaSymp1;
                             $('#edit_polyphagiaYes').prop('checked', false);
                             $('#edit_polyphagiaNo').prop('checked', false);
-                            if (rq8 === 'Yes') {
+                            if (symp1 === 'Yes') {
                                 $('#edit_polyphagiaYes').prop('checked', true);
                             } 
-                            else if (rq8 === 'No') {
+                            else if (symp1 === 'No') {
                                 $('#edit_polyphagiaNo').prop('checked', true);
                             }
                         let symp2 = response.data.risk_diaSymp2;
@@ -3251,39 +3314,42 @@
                 if (checkPolyphagia) {
                     formData.append('edit_polyphagia', checkPolyphagia);
                 }
+
                 var checkPolydipsia = $('input[name="edit_polydipsia"]:checked').val();
                 if (checkPolydipsia) {
                     formData.append('edit_polydipsia', checkPolydipsia);
                 }
+
+
                 var checkPolyuria = $('input[name="edit_polyuria"]:checked').val();
                 if (checkPolyuria) {
                     formData.append('edit_polyuria', checkPolyuria);
                 }
-                var checkRbg = $('#edit_rbg').val();
+                var checkRbg = $('input[name="edit_rbg"]:checked').val();
                 if (checkRbg) {
                     formData.append('edit_rbg', checkRbg);
                 }
-                var checkRbl = $('#edit_rbl').val();
+                var checkRbl = $('input[name="edit_rbl"]:checked').val();
                 if (checkRbl) {
                     formData.append('edit_rbl', checkRbl);
                 }
-                var checkKetones = $('#edit_ketones').val();
+                var checkKetones = $('input[name="edit_ketones"]:checked').val();
                 if (checkKetones) {
                     formData.append('edit_ketones', checkKetones);
                 }
-                var checkProtein = $('#edit_protein').val();
+                var checkProtein = $('input[name="edit_protein"]:checked').val();
                 if (checkProtein) {
                     formData.append('edit_protein', checkProtein);
                 }
 
             // Risk Management
-                var checkRaManagement = $('#edit_raManagement').val();
+                var checkRaManagement = $('input[name="edit_raManagement"]:checked').val();
                 if (checkRaManagement) {
                     formData.append('edit_raManagement', checkRaManagement);
                 }
 
             // Risk Level
-                var checkRiskLevel = $('#edit_riskLevel').val();
+                var checkRiskLevel = $('input[name="edit_riskLevel"]:checked').val();
                 if (checkRiskLevel) {
                     formData.append('edit_riskLevel', checkRiskLevel);
                 }
@@ -3341,7 +3407,7 @@
                         </div>
                     `);
                     // $('#editRaModal').modal('hide');
-                    // location.reload();
+                    location.reload();
                 }
             },
             error: function(xhr, status, error) {

@@ -192,7 +192,14 @@
                         <tr>
                             <td style="display: none;">{{ $opt->opt_id }}</td>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $opt->resident->res_lname }}, {{ $opt->resident->res_fname }} {{ $opt->resident->res_mname ?? '' }} {{ $opt->resident->res_suffix ?? '' }}</td>
+                            <td>{{ $opt->resident->res_lname }}, {{ $opt->resident->res_fname }} 
+                                @if($opt->resident->res_mname && !in_array($opt->resident->res_mname, ['N/A', '', null]))
+                                    {{ $opt->resident->res_mname }} 
+                                @endif
+                                @if($opt->resident->res_suffix && !in_array($opt->resident->res_suffix, ['N/A', '', null]))
+                                    {{ $opt->resident->res_suffix }} 
+                                @endif
+                            </td>
                             <td>{{ $opt->opt_childName}}</td>
                             <td>{{ $opt->opt_dob }}</td>
                             <td>{{ $opt->opt_sex }}</td>
@@ -254,9 +261,7 @@
               <h5 class="modal-title">OPT First Form</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="alertCon">
-                <div id="alert-container"></div>
-            </div>
+
             <form method="POST" action="{{ route('regValidation.inputFirstOpt')}}" class="optForm" id="optForm" autocomplete="off"> <!-- Horizontal Form -->
                 @csrf
                 <div class="modal-body">
@@ -269,9 +274,17 @@
                                 <select id="motherName" class="form-control" name="motherName">
                                     <option value="">Select...</option>
                                     @foreach($residents as $resident)
-                                        <option value="{{ $resident->res_id }}">
-                                            {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
-                                        </option>
+                                        @if($resident->res_sex == 'Female') <!-- Check if the sex is Female -->
+                                            <option value="{{ $resident->res_id }}">
+                                                {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}
+                                                @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                    {{ $resident->res_mname }} 
+                                                @endif
+                                                @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                    {{ $resident->res_suffix }} 
+                                                @endif
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 <span class="text-danger error-text motherName_error"></span>
@@ -372,6 +385,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="alertCon">
+                    <div id="alert-container"></div>
+                </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-primary">Save</button>
@@ -388,9 +404,6 @@
                 <div class="modal-header">
                     <h5 class="modal-title">OPT Second Form</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="alertCon">
-                    <div id="alert-container1"></div>
                 </div>
                 <form id="optFormSec" autocomplete="off">
                     @csrf
@@ -410,6 +423,7 @@
                                 <div class="column mb-3">
                                     <label for="ageMonthSec" class="col-sm-12 col-form-label">Age in Month (2nd)</label>
                                     <div class="col-sm-10">
+                                        <input type="hidden" class="form-control" id="bdateSec" name="bdateSec" readonly>
                                         <input type="text" class="form-control" id="ageMonthSec" name="ageMonthSec">
                                         <span class="text-danger error-text ageMonthSec_error"></span>
                                     </div>
@@ -475,6 +489,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="alertCon">
+                        <div id="alert-container1"></div>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -492,9 +509,6 @@
                     <h5 class="modal-title">EDIT OPT Form</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="alertCon">
-                    <div id="alert-container2"></div>
-                </div>
                 <form id="editOptForm" autocomplete="off"> <!-- Horizontal Form -->
                 @csrf
                     <div class="modal-body">
@@ -508,9 +522,17 @@
                                     <select id="edit_motherName" class="form-control" name="edit_motherName">
                                         <option value="">Select...</option>
                                         @foreach($residents as $resident)
-                                            <option value="{{ $resident->res_id }}">
-                                                {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
-                                            </option>
+                                            @if($resident->res_sex == 'Female') <!-- Check if the sex is Female -->
+                                                <option value="{{ $resident->res_id }}">
+                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}
+                                                    @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                        {{ $resident->res_mname }} 
+                                                    @endif
+                                                    @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                        {{ $resident->res_suffix }} 
+                                                    @endif
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     <span class="text-danger error-text edit_motherName_error"></span>
@@ -553,7 +575,7 @@
                                     <div class="column mb-3">
                                         <label for="edit_ageMonthFirst" class="col-sm-12 col-form-label">Age in Month (1st)</label>
                                         <div class="col-sm-10">
-                                            <input type="number" class="form-control shortForm" id="edit_ageMonthFirst" name="edit_ageMonthFirst">
+                                            <input type="text" class="form-control shortForm" id="edit_ageMonthFirst" name="edit_ageMonthFirst">
                                             <span class="text-danger error-text edit_ageMonthFirst_error"></span>
                                         </div>
                                     </div>
@@ -561,7 +583,7 @@
                                     <div class="column mb-3">
                                         <label for="edit_ageMonthSec" class="col-sm-12 col-form-label">Age in Month (2nd)</label>
                                         <div class="col-sm-10">
-                                            <input type="number" class="form-control shortForm" id="edit_ageMonthSec" name="edit_ageMonthSec">
+                                            <input type="text" class="form-control shortForm" id="edit_ageMonthSec" name="edit_ageMonthSec">
                                             <span class="text-danger error-text edit_ageMonthSec_error"></span>
                                         </div>
                                     </div>
@@ -697,6 +719,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="alertCon">
+                        <div id="alert-container2"></div>
+                    </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -724,15 +749,17 @@ function calculateAgeInMonthsAndDays(dob) {
     let ageMonths = currentDate.getFullYear() * 12 + currentDate.getMonth() - (dobDate.getFullYear() * 12 + dobDate.getMonth());
     
     // Calculate the difference in days
-    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();  // Number of days in the current month
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();  // Number of days in the current month
     const dayOfMonth = currentDate.getDate();
     const dobDay = dobDate.getDate();
     
-    const days = dayOfMonth - dobDay;
+    let days = dayOfMonth - dobDay;  // Difference in days between current date and DOB day
     
-    // If the DOB day is greater than today's day, subtract a full month
+    // If the DOB day is greater than today's day, subtract a full month and correct the days calculation
     if (dobDay > dayOfMonth) {
-        ageMonths--;
+        ageMonths--;  // Decrement age by one month
+        const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);  // Get the last day of the previous month
+        days = prevMonth.getDate() + dayOfMonth - dobDay;  // Adjust the days accordingly
     }
     
     // Now calculate the fractional part of the month for the remaining days
@@ -741,8 +768,9 @@ function calculateAgeInMonthsAndDays(dob) {
     // Combine months and fractional part
     const ageInDecimal = ageMonths + fractionOfMonth;
     
-    return ageInDecimal.toFixed(1);  // Return age with one decimal place
+    return ageInDecimal.toFixed(2);  // Return age with two decimal places
 }
+
 
 // Event listener for DOB input field
 document.getElementById('inputDate').addEventListener('change', function() {
@@ -824,12 +852,18 @@ document.getElementById('inputDate').addEventListener('change', function() {
         var row = $(this).closest('tr');
         var opt_id = row.find('td:eq(0)').text();
         var opt_childName = row.find('td:eq(3)').text();
+        var opt_bDate = row.find('td:eq(4)').text();
         var opt_remark = row.find('td:eq(6)').text();
         
         // Populate the modal fields with the selected data
         $('#inputOptId').val(opt_id);
         $('#childFullName').val(opt_childName);
+        $('#bdateSec').val(opt_bDate); // Populate birthdate field
         $('#remarkSec').val(opt_remark);
+        
+        // Calculate the age after setting the birthdate
+        calculateAgeInMonthsAndDaysSec(opt_bDate); 
+
         // Show the modal
         $('#secondFormModal').modal('show');
     });
@@ -1085,6 +1119,42 @@ document.getElementById('inputDate').addEventListener('change', function() {
     window.onload = function() {
         setCurrentDate();
     };
+
+
+    function calculateAgeInMonthsAndDaysSec(bdate) {
+        const currentDate = new Date(); // Current date
+        const birthDate = new Date(bdate); // Birthdate from bdateSec
+
+        // Check if the date is valid
+        if (isNaN(birthDate)) {
+            console.error("Invalid birth date");
+            return;
+        }
+
+        // Calculate the difference in years, months, and days
+        let years = currentDate.getFullYear() - birthDate.getFullYear();
+        let months = currentDate.getMonth() - birthDate.getMonth();
+        let days = currentDate.getDate() - birthDate.getDate();
+
+        // Adjust the month if the current date is earlier than the birthdate in the current month
+        if (months < 0) {
+            months += 12;
+            years--;
+        }
+
+        // Adjust days for the case when the current day is earlier than the birth day
+        if (days < 0) {
+            const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0); // Get last day of previous month
+            days += prevMonth.getDate(); // Add the number of days in the previous month
+        }
+
+        // Convert total age to months as a decimal
+        const totalMonths = years * 12 + months + (days / 30); // Approximate days in a month as 30
+
+        // Set the value in the age field (ageMonthSec)
+        $('#ageMonthSec').val(totalMonths.toFixed(2)); // Display the result with 2 decimal places
+        console.log("Calculated Age in Months (Decimal):", totalMonths.toFixed(2));
+    }
 </script>
   @include('layouts.footerHealthWorkers')
 </body>

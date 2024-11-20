@@ -127,7 +127,7 @@
                         @foreach($residents as $index => $resident)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $resident->res_lname }}, {{ $resident->res_fname }} {{ substr($resident->res_mname, 0, 1) }}. {{ $resident->res_suffix == 'N/A' ? '' : $resident->res_suffix }}</td>
+                            <td>{{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname != 'N/A' ? substr($resident->res_mname, 0, 1) . '.' : '' }} {{ $resident->res_suffix == 'N/A' ? '' : $resident->res_suffix }}</td>
                             <td>{{ app('App\Http\Controllers\regValidation')->calculateAges($resident->res_bdate) }}</td>
                             <td>{{ $resident->res_civil }}</td>
                             <td>{{ $resident->res_sex }}</td>
@@ -271,7 +271,7 @@
                                     </div>                                    
                                     <div class="col-md-3">
                                         <label for="religion">Religion</label>
-                                        <input type="text" class="form-control" name="religion" id="religion" placeholder="Enter Email">
+                                        <input type="text" class="form-control" name="religion" id="religion" placeholder="Enter Religion">
                                         <span class="text-danger error-text religion_error"></span>
                                     </div>
                                     <div class="col-md-3">
@@ -474,7 +474,7 @@
                                         <input type="date" class="form-control" name="edit_birthDate" id="edit_bDate" placeholder="Enter Birth Date">
                                         <span class="text-danger error-text edit_birthDate_error"></span>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" style="display: none;">
                                         <label for="edit_age">Age</label>
                                         <input type="text" class="form-control" name="edit_age" id="edit_age" placeholder="Enter Age" readonly>
                                         <span class="text-danger error-text edit_age_error"></span>
@@ -508,7 +508,7 @@
                                     </div>                                    
                                     <div class="col-md-3">
                                         <label for="edit_religion">Religion</label>
-                                        <input type="text" class="form-control" name="edit_religion" id="edit_religion" placeholder="Enter Email">
+                                        <input type="text" class="form-control" name="edit_religion" id="edit_religion" placeholder="Enter Religion">
                                         <span class="text-danger error-text edit_religion_error"></span>
                                     </div>
                                     <div class="col-md-3">

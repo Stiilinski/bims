@@ -608,7 +608,14 @@
                             <td>{{ $dsrs->dsr_dateVisit ?? '' }}</td>
                             <td>{{ $dsrs->resident->res_lname ?? '' }}</td>
                             <td>{{ $dsrs->resident->res_fname ?? '' }}</td>
-                            <td>{{ $dsrs->resident->res_mname ?? '' }},  {{ $dsrs->resident->res_suffix ?? '' }}</td>
+                            <td>
+                                @if($dsrs->resident->res_mname && !in_array($dsrs->resident->res_mname, ['N/A', '', null]))
+                                    {{ $dsrs->resident->res_mname }} 
+                                @endif
+                                @if($dsrs->resident->res_suffix && !in_array($dsrs->resident->res_suffix, ['N/A', '', null]))
+                                    {{ $dsrs->resident->res_suffix }} 
+                                @endif
+                            </td>
                             <td class="bdate">{{ $dsrs->resident->res_bdate}}</td>
                             <td class="age"></td>
                             <td>{{ $dsrs->resident->res_sex }}</td>

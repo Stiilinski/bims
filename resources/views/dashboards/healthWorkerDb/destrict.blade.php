@@ -299,7 +299,14 @@
                     <tr>
                         <td style="display: none;">{{ $destricts->des_id }}</td>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $destricts->resident->res_lname }}, {{ $destricts->resident->res_fname }} {{ $destricts->resident->res_mname ?? '' }} {{ $destricts->resident->res_suffix ?? '' }}</td>
+                        <td>{{ $destricts->resident->res_lname }}, {{ $destricts->resident->res_fname }} 
+                            @if($destricts->resident->res_mname && !in_array($destricts->resident->res_mname, ['N/A', '', null]))
+                                {{ $destricts->resident->res_mname }} 
+                            @endif
+                            @if($destricts->resident->res_suffix && !in_array($destricts->resident->res_suffix, ['N/A', '', null]))
+                                {{ $destricts->resident->res_suffix }} 
+                            @endif
+                        </td>
                         <td>{{ $destricts->resident->res_bdate}}</td>
                         <td>{{ $destricts->resident->res_sex }}</td>
                         <td>{{ $destricts->resident->res_purok }}</td>
@@ -347,7 +354,13 @@
                                         <option value="">Select...</option>
                                         @foreach($residents as $resident)
                                             <option value="{{ $resident->res_id }}">
-                                                {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                                @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                    {{ $resident->res_mname }} 
+                                                @endif
+                                                @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                    {{ $resident->res_suffix }} 
+                                                @endif
                                             </option>
                                         @endforeach
                                     </select>
@@ -850,11 +863,17 @@
                                 <input type="hidden" class="form-control shortField" id="edit_desId" name="edit_desId" readonly>
                                 <div class="col-md-6 pt-2">
                                     <label for="edit_desFullName" class="form-label">Patient Full Name</label>
-                                    <select id="edit_desFullName" class="form-control" name="edit_desFullName" onchange="updateResidentDetails(this)">
+                                    <select id="edit_desFullName" class="form-control" name="edit_desFullName" onchange="edit_updateResidentDetails(this)">
                                         <option value="">Select...</option>
                                         @foreach($residents as $resident)
                                             <option value="{{ $resident->res_id }}">
-                                                {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                                @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                    {{ $resident->res_mname }} 
+                                                @endif
+                                                @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                    {{ $resident->res_suffix }} 
+                                                @endif
                                             </option>
                                         @endforeach
                                     </select>
@@ -1202,6 +1221,12 @@
         });
     });
 
+    $(document).ready(function () {
+        $('#edit_desFullName').selectize({
+            sortField: 'text'
+        });
+    });
+
     function calculateAge(birthDate) {
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -1235,6 +1260,29 @@
         }
     }
 
+    function edit_updateResidentDetails(selectElement) {
+        const selectedId = selectElement.value;
+
+        if (selectedId) {
+            const residentInfo = residentData[selectedId];
+
+            if (residentInfo) {
+                document.getElementById('edit_destrictAddress').value = residentInfo.res_address;
+                document.getElementById('edit_destrictBdate').value = residentInfo.res_bdate;
+
+                // Calculate age from the birth date
+                const birthDate = new Date(residentInfo.res_bdate);
+                const age = calculateAge(birthDate);
+                document.getElementById('edit_destrictAge').value = age;
+            }
+        } else {
+            // Clear fields if no resident is selected
+            document.getElementById('edit_destrictAddress').value = '';
+            document.getElementById('edit_destrictBdate').value = '';
+            document.getElementById('edit_destrictAge').value = '';
+        }
+    }
+    
 
 
 //insert destrict
@@ -1308,9 +1356,12 @@
                 if (response.status === 1) 
                 {       
                     $('#edit_desId').val(response.data.des_id);
-                    //patient info
+                        //patient info
                         let fullName = `${response.data.resident.res_lname}, ${response.data.resident.res_fname} ${response.data.resident.res_mname ?? ''} ${response.data.resident.res_suffix ?? ''}`;
-                        $('#edit_desFullName').val(response.data.resident.res_id);
+                        let residentId = response.data.resident.res_id;
+                        let selectize = $('#edit_desFullName')[0].selectize;
+                        selectize.setValue(residentId);
+
                         $('#edit_destrictBdate').val(response.data.resident.res_bdate);
                         let birthDate = new Date(response.data.resident.res_bdate);
                         let age = calculateAge(birthDate);

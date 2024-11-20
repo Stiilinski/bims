@@ -290,6 +290,7 @@
                                     <option disabled selected>Choose...</option>
                                     <option value="Tablet">Tablet</option>
                                     <option value="Boxes">Boxes</option>
+                                    <option value="Pieces">Pieces</option>
                                 </select>
                                 <span class="text-danger error-text inputUnit_error"></span>
                             </div>

@@ -222,107 +222,12 @@
                                             <span class="text-danger error-text inputInsLink_error"></span>
                                         </div>
                                     </div>
-                                    
-                                    <hr>
-                                    {{-- RECOMMENDED NEWS --}}
-                                        <div class="col-md-4">
-                                            <label for="inputRec1" class="col-sm-8 col-form-label">Recommended Link</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRec1" name="inputRec1" value="{{ $blogs->blog_recommend1 }}">
-                                                <span class="text-danger error-text inputRec1_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecTitle1" class="col-sm-12 col-form-label">Recommended Title</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRecTitle1" name="inputRecTitle1" value="{{ $blogs->blog_recommendTitle1 }}">
-                                                <span class="text-danger error-text inputRecTitle1_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecImg1" class="col-sm-12 col-form-label">Recommended Image</label>
-                                            <div class="col-sm-12">
-                                                <input type="file" class="form-control" id="inputRecImg1" name="inputRecImg1">
-                                                <span class="text-danger error-text inputRecImg1_error"></span>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-4">
-                                            <label for="inputRec2" class="col-sm-8 col-form-label">Recommended Link</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRec2" name="inputRec2" value="{{ $blogs->blog_recommend2 }}">
-                                                <span class="text-danger error-text inputRec2_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecTitle2" class="col-sm-12 col-form-label">Recommended Title</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRecTitle2" name="inputRecTitle2" value="{{ $blogs->blog_recommendTitle2 }}">
-                                                <span class="text-danger error-text inputRecTitle2_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecImg2" class="col-sm-12 col-form-label">Recommended Image</label>
-                                            <div class="col-sm-12">
-                                                <input type="file" class="form-control" id="inputRecImg2" name="inputRecImg2">
-                                                <span class="text-danger error-text inputRecImg2_error"></span>
-                                            </div>
-                                        </div>
+                                    <input type="hidden" id="blogStatus" name="blogStatus" value="">
 
-                                        <div class="col-md-4">
-                                            <label for="inputRec3" class="col-sm-8 col-form-label">Recommended Link</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRec3" name="inputRec3" value="{{ $blogs->blog_recommend3 }}">
-                                                <span class="text-danger error-text inputRec3_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecTitle3" class="col-sm-12 col-form-label">Recommended Title</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRecTitle3" name="inputRecTitle3" value="{{ $blogs->blog_recommendTitle3 }}">
-                                                <span class="text-danger error-text inputRecTitle3_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecImg3" class="col-sm-12 col-form-label">Recommended Image</label>
-                                            <div class="col-sm-12">
-                                                <input type="file" class="form-control" id="inputRecImg3" name="inputRecImg3">
-                                                <span class="text-danger error-text inputRecImg3_error"></span>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="inputRec4" class="col-sm-8 col-form-label">Recommended Link</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRec4" name="inputRec4" value="{{ $blogs->blog_recommend4 }}">
-                                                <span class="text-danger error-text inputRec4_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecTitle4" class="col-sm-12 col-form-label">Recommended Title</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="inputRecTitle4" name="inputRecTitle4" value="{{ $blogs->blog_recommendTitle4 }}">
-                                                <span class="text-danger error-text inputRecTitle4_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <label for="inputRecImg4" class="col-sm-12 col-form-label">Recommended Image</label>
-                                            <div class="col-sm-12">
-                                                <input type="file" class="form-control" id="inputRecImg4" name="inputRecImg4">
-                                                <span class="text-danger error-text inputRecImg4_error"></span>
-                                            </div>
-                                        </div>
-                                        
-                                    <input type="text" id="blogStatus" name="blogStatus" value="">
-                                    {{-- END OF RECOMMENDED NEWS --}}
+                                    <div class="alertCon">
+                                        <div id="alert-container"></div>
+                                    </div>
 
                                     <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
                                         <button type="reset" class="btn btn-secondary">Clear</button>
@@ -334,9 +239,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="alertCon">
-                    <div id="alert-container"></div>
-                </div>
             </div>
 
             <!-- Right side columns -->
@@ -345,7 +247,7 @@
             <!-- Private Announcement -->
             <div class="card">
                 <div class="card-body pb-0">
-                <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
                 <div class="news" id="schedules-container">
 
                 </div><!-- End sidebar recent posts-->
@@ -378,40 +280,33 @@
 // CRUD
     //uPDATE
         // Function to submit the form via AJAX
-        $('#articleEdit').on('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+        $('#articleEdit button').on('click', function(event) {
+            event.preventDefault();
 
-            // Show loading or disable buttons if needed
-            $('#alert-container').html('<div class="alert alert-info">Saving...</div>');
+            let action = $(this).val(); // Get the button value (draft/submit)
+            let form = $('#articleEdit')[0];
+            let formData = new FormData(form);
+            formData.append('action', action);
 
-            // Send form data via AJAX
             $.ajax({
-                url: $(this).attr('action'),
-                method: $(this).attr('method'),
-                data: new FormData(this),
+                url: $('#articleEdit').attr('action'),
+                method: 'POST',
+                data: formData,
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    // Show success message
                     $('#alert-container').html('<div class="alert alert-success">' + response.message + '</div>');
-
-                    // Hide the success message after 1 second (1000ms)
-                    setTimeout(function() {
-                        $('#alert-container').html(''); // Clear the alert message
-                    }, 1000);
-
-                    // Reload the page after another 1 second (total of 2 seconds after the success message is shown)
-                    setTimeout(function() {
-                        location.reload(); // This will reload the current page
-                    }, 2000); // 2000ms (1 second delay after hiding the message)
+                    setTimeout(() => location.reload(), 2000);
                 },
-                error: function(xhr, status, error) {
-                    // Show error message
-                    var errorMessage = 'Something went wrong. Please try again.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        $('.error-text').html(''); // Clear previous errors
+                        $.each(xhr.responseJSON.errors, function(key, value) {
+                            $('.' + key + '_error').html(value[0]);
+                        });
+                    } else {
+                        $('#alert-container').html('<div class="alert alert-danger">An unexpected error occurred.</div>');
                     }
-                    $('#alert-container').html('<div class="alert alert-danger">' + errorMessage + '</div>');
                 }
             });
         });

@@ -44,11 +44,11 @@
         }
 
         /* Hide unnecessary elements like page title, buttons, and other non-printable content */
-        #header, .pagetitle {
+        #header, .pagetitle, .dateFilter {
             display: none !important; /* Hide page title and button area */
         }
 
-        .card-title, .nav {
+        .card-title, .nav, .col-lg-4 {
             display: none !important;
         }
 
@@ -95,6 +95,16 @@
           <div class="col-lg-8">
             <div class="card">
                 <div class="card-body" style="width: 100%!important;">
+                    <!-- Date Range Filter -->
+                    <div class="dateFilter" style="margin-bottom: 20px;">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" name="startDate">
+                        
+                        <label for="endDate" style="margin-left: 10px;">End Date:</label>
+                        <input type="date" id="endDate" name="endDate">
+                    </div>
+
+                    <!-- Table Structure -->
                     <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
@@ -110,32 +120,37 @@
                         </thead>
                         <tbody>
                             @php
+                                use Carbon\Carbon;
                                 $totalRevenue = 0;
+                                $currentDate = Carbon::today(); // Get today's date
                             @endphp
+                            
                             @foreach($transactions as $transaction)
                                 @php
-                                    // Calculate age
                                     $birthdate = \Carbon\Carbon::parse($transaction->res_bdate);
                                     $age = $birthdate->age;
-                                    // Concatenate full name
+
                                     $fullName = $transaction->res_fname . ' ' . $transaction->res_mname . ' ' . $transaction->res_lname;
                                     if ($transaction->res_suffix !== 'N/A') {
                                         $fullName .= ' ' . $transaction->res_suffix;
                                     }
-                                    // Determine document type and status
-                                    if (!is_null($transaction->cert_id) && $transaction->certStatus === 'completed') {
+
+                                    $transactionCreatedAt = \Carbon\Carbon::parse($transaction->created_at);
+                                    $isToday = $transactionCreatedAt->isSameDay($currentDate); // Compare if created_at is today
+
+                                    if (!is_null($transaction->cert_id) && $transaction->certStatus === 'completed' && $isToday) {
                                         $documentType = 'Certification';
                                         $documentStatus = $transaction->certStatus;
                                         $price = 25.00;
-                                    } elseif (!is_null($transaction->bcl_id) && $transaction->bcl_status === 'completed') {
+                                    } elseif (!is_null($transaction->bcl_id) && $transaction->bcl_status === 'completed' && $isToday) {
                                         $documentType = 'Barangay Clearance';
                                         $documentStatus = $transaction->bcl_status;
                                         $price = 25.00;
-                                    } elseif (!is_null($transaction->business_id) && $transaction->bc_status === 'completed') {
+                                    } elseif (!is_null($transaction->business_id) && $transaction->bc_status === 'completed' && $isToday) {
                                         $documentType = 'Business Permit';
                                         $documentStatus = $transaction->bc_status;
                                         $price = 30.00;
-                                    } elseif (!is_null($transaction->blotter_id)) {
+                                    } elseif (!is_null($transaction->blotter_id) && $isToday) {
                                         $documentType = 'Blotter/Complaint';
                                         $documentStatus = $transaction->blotter_status;
                                         $price = 0.00; // Set appropriate price for this document type
@@ -144,25 +159,32 @@
                                         $documentStatus = 'Unknown';
                                         $price = 0.00; // Default price for unknown type
                                     }
-                                    // Accumulate total revenue if the status is "ready to pick up"
-                                    if ($documentStatus === 'completed') {
+
+                                    if ($documentStatus === 'completed' && $isToday) {
                                         $totalRevenue += $transaction->tr_amountPaid;
                                     }
                                 @endphp
-                                @if($documentStatus === 'completed')
-                                    <tr>
+
+                                @if($documentStatus === 'completed' && $isToday)
+                                    <tr class="transaction-row" data-date="{{ $transaction->created_at }}">
                                         <td>{{ $transaction->tr_id }}</td>
                                         <td>{{ $fullName }}</td>
                                         <td>{{ $documentType }}</td>
                                         <td>{{ $transaction->created_at }}</td>
                                         <td>{{ number_format($price, 2) }}</td>
-                                        <td>{{ $transaction->tr_amountPaid }}</td>
+                                        <td>{{ number_format($transaction->tr_amountPaid, 2) }}</td>
                                         <td>{{ $documentStatus }}</td>
                                     </tr>
                                 @endif
                             @endforeach
                         </tbody>
                     </table>
+
+                    <!-- Total Amount Paid Section Below the Table -->
+                    <div style="margin-top: 20px;">
+                        <label for="totalAmountPaid">Total Amount Paid:</label>
+                        <input type="text" id="totalAmountPaid" name="totalAmountPaid" value="{{ number_format($totalRevenue, 2) }}" readonly style="width: 200px;">
+                    </div>
                 </div>
             </div>
           </div>
@@ -175,7 +197,7 @@
               <!-- Private Announcement -->
               <div class="card">
                 <div class="card-body pb-0">
-                  <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                  <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
                   <div class="news" id="schedules-container">
     
                   </div><!-- End sidebar recent posts-->
@@ -219,6 +241,45 @@
                 stripeClasses: ['even', 'odd'], // Optional: applies even/odd classes for striped rows
                 order: [[3, 'desc']],  // Order by the 'created_at' column (index 4) in descending order
             });
+        });
+
+
+        $(document).ready(function () {
+            // Function to filter the table based on date range
+            function filterTableByDate() {
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+
+                // Loop through each row and check if it matches the filter
+                $('#example tbody tr').each(function () {
+                    var rowDate = $(this).data('date'); // Get the date of the row
+                    var isVisible = true; // By default, show the row
+
+                    // Check if the row's date is within the date range
+                    if (startDate) {
+                        isVisible = rowDate >= startDate; // Start date condition
+                    }
+
+                    if (isVisible && endDate) {
+                        isVisible = rowDate <= endDate; // End date condition
+                    }
+
+                    // Show or hide the row based on date condition
+                    if (isVisible) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+
+            // Trigger filtering when any date field changes
+            $('#startDate, #endDate').on('change', function () {
+                filterTableByDate();
+            });
+
+            // Initialize the table filter on page load
+            filterTableByDate();
         });
     </script>
 </body>

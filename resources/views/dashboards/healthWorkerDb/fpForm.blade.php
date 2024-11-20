@@ -1,20 +1,20 @@
 @include('layouts.headHealthWorkers')
 <style>
-.container {
-    max-width: 100% !important;
-    margin-top: 80px;
-    padding-bottom: 10px;
-}
+    .container {
+        max-width: 100% !important;
+        margin-top: 80px;
+        padding-bottom: 10px;
+    }
 
-.pagetitle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .pagetitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.pagetitle *{
-    font-size: 16px;
-}
+    .pagetitle *{
+        font-size: 16px;
+    }
 /* First Form */
     * {
         font-size: 12px;
@@ -499,7 +499,7 @@
                                         <span><b>NAME OF CLIENT:</b> (Last Name, Given Name, Middle Initial)</span>
                                     </div>
                                     <div class="inp_bar">
-                                        <input type="text" name="" id="" class="form-control" value="{{ $fp->client->res_lname ?? '' }}, {{ $fp->client->res_fname ?? '' }} {{ $fp->client->res_mname ?? '' }} {{ $fp->client->res_suffix ?? '' }}" readonly>
+                                        <input type="text" name="" id="" class="form-control" value="{{ $fp->client->res_lname ?? '' }}, {{ $fp->client->res_fname ?? '' }}  @if($fp->client->res_mname && !in_array($fp->client->res_mname, ['N/A', '', null])) {{ $fp->client->res_mname }} @endif @if($fp->client->res_suffix && !in_array($fp->client->res_suffix, ['N/A', '', null])) {{ $fp->client->res_suffix }}  @endif"  readonly>
                                     </div>
                                 </div>
                             </div>
@@ -599,7 +599,7 @@
                                         <span><b>NAME OF SPOUSE:</b> (Last Name, Given Name, Middle Initial)</span>
                                     </div>
                                     <div class="inp_bar">
-                                        <input type="text" class="form-control" value="{{ $fp->spouse->res_lname ?? '' }}, {{ $fp->spouse->res_fname ?? '' }} {{ $fp->spouse->res_mname ?? '' }} {{ $fp->spouse->res_suffix ?? '' }}" readonly>
+                                        <input type="text" class="form-control" value="{{ $fp->spouse_name ?? '' }}" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -610,7 +610,7 @@
                                             <span><b>Date of Birth:</b> (MM/DD/YYYY)</span>
                                         </div>
                                         <div class="inp_bar">
-                                            <input type="date" class="form-control" value="{{ $fp->spouse->res_bdate ?? '' }}" readonly>
+                                            <input type="date" class="form-control" value="{{ $fp->spouse_dob ?? '' }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -620,7 +620,7 @@
                                             <b>Age</b>
                                         </div>
                                         <div class="inp_bar">
-                                            <input type="text" class="form-control" value=" {{ $ageSpouse }}"  readonly> readonly>
+                                            <input type="text" class="form-control" value=" {{ $ageSpouse }}"  readonly> 
                                         </div>
                                     </div>
                                 </div>
@@ -630,7 +630,7 @@
                                             <b>Occupation</b>
                                         </div>
                                         <div class="inp_bar">
-                                            <input type="text" class="form-control" value="{{ $fp->spouse->res_occupation ?? '' }}" readonly>
+                                            <input type="text" class="form-control" value="{{ $fp->spouse_occupation ?? '' }}" readonly>
                                         </div>
                                     </div>
                                 </div>

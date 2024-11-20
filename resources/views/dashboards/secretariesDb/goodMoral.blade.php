@@ -525,52 +525,43 @@
             </div>
         </div>
 
-            </div>
-        </div>
-    </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="insertTransactionModal" tabindex="-1" aria-labelledby="insertTransactionModalLabel" aria-hidden="true">
-    <div class="modal-dialog custom-modal-width">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="insertTransactionModalLabel">Insert Transaction Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="updateInsertForm" id="insertTransactions" action="{{ route('regValidation.insertCertTransaction', ['id' => request()->query('id')]) }}" method="POST">
-                    @csrf
+    <div class="modal fade" id="insertTransactionModal" tabindex="-1" aria-labelledby="insertTransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog custom-modal-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="insertTransactionModalLabel">Insert Transaction Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="updateInsertForm" id="insertTransactions" action="{{ route('regValidation.insertCertTransaction', ['id' => request()->query('id')]) }}" method="POST">
+                        @csrf
+                        
+                        <div class="col-md-12">
+                            <label for="certNum">Residence Certificate Number</label>
+                            <input type="text" name="certNum" id="certNum" class="form-control">
+                            <span class="error-text certNum_error"></span>
+                        </div>
                     
-                    <div class="col-md-12">
-                        <label for="certNum">Residence Certificate Number</label>
-                        <input type="text" name="certNum" id="certNum" class="form-control">
-                        <span class="error-text certNum_error"></span>
-                    </div>
-                
-                    <div class="col-md-12">
-                        <label for="puOr">Paid Under O.R Number</label>
-                        <input type="text" name="puOr" id="puOr" class="form-control">
-                        <span class="error-text puOr_error"></span>
-                    </div>
-                
-                    <div class="col-md-12">
-                        <label for="dates">Date</label>
-                        <input type="date" name="dates" id="dates" class="form-control">
-                        <span class="error-text dates_error"></span>
-                    </div>
+                        <div class="col-md-12">
+                            <label for="puOr">Paid Under O.R Number</label>
+                            <input type="text" name="puOr" id="puOr" class="form-control">
+                            <span class="error-text puOr_error"></span>
+                        </div>
+                    
+                        <div class="col-md-12">
+                            <label for="dates">Date</label>
+                            <input type="date" name="dates" id="dates" class="form-control">
+                            <span class="error-text dates_error"></span>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                </div>
+            </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Insert</button>
-            </div>
-        </form>
         </div>
     </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -598,40 +589,45 @@
                 <form id="updateForm" class="rephraseForm" method="POST" action="{{ route('updateTransaction', ['id' => $certificate->id]) }}">
                     @csrf
                     @method('PUT')
-
+                <div class="row g-3">
                     <input type="hidden" id="ecert_Id" value="{{ $certificate->id }}" readonly>
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label for="certificateNum">Residence Certificate Number</label>
-                            <input type="text" name="certificateNum" id="certificateNum" class="form-control">
-                            <span class="error-text certificateNum_error"></span>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="orNum">O.R Number</label>
-                            <input type="text" name="orNum" id="orNum" class="form-control">
-                            <span class="error-text orNum_error"></span>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="amountPaids">Amount Paid</label>
-                            <input type="text" name="amountPaids" id="amountPaids" class="form-control">
-                            <span class="error-text amountPaids_error"></span>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="updateDates">Date</label>
-                            <input type="date" name="updateDates" id="updateDates" class="form-control">
-                            <span class="error-text updateDates_error"></span>
-                        </div>
+        
+                    <div class="col-md-12">
+                        <label for="certificateNum">Residence Certificate Number</label>
+                        <input type="text" name="certificateNum" id="certificateNum" class="form-control">
+                        <span class="error-text certificateNum_error"></span>
                     </div>
-
-                    <div class="buttonArea mt-3">
-                        <!-- Cancel button also should have data-bs-dismiss="modal" -->
+        
+                    <div class="col-md-12">
+                        <label for="orNum">O.R Number</label>
+                        <input type="text" name="orNum" id="orNum" class="form-control">
+                        <span class="error-text orNum_error"></span>
+                    </div>
+        
+                    <div class="col-md-12">
+                        <label for="amountPaids">Amount Paid</label>
+                        <input type="text" name="amountPaids" id="amountPaids" class="form-control">
+                        <span class="error-text amountPaids_error"></span>
+                    </div>
+        
+                    <div class="col-md-12">
+                        <label for="updateDates">Date</label>
+                        <input type="date" name="updateDates" id="updateDates" class="form-control">
+                        <span class="error-text updateDates_error"></span>
+                    </div>
+        
+                    <div class="col-md-12">
+                        <label for="rephrasePurpose">PARAPHRASE PURPOSE</label>
+                        <textarea name="rephrasePurpose" id="rephrasePurpose" class="form-control"></textarea>
+                        <span class="error-text rephrasePurpose_error"></span>
+                    </div>
+                </div>
+        
+                    <div class="buttonArea">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary update_certTran">Update</button>
                     </div>
-                </form>
+                </form>        
             </div>
         </div>
     </div>

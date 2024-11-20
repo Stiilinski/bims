@@ -1,4 +1,4 @@
-@include('layouts.headSkKagawad')
+@include('layouts.headSkChairman')
 <body>
 <style>
     .toggle-sidebar-btn {
@@ -78,7 +78,7 @@
 
 </style>
   <!-- ======= Header ======= -->
-    @include('layouts.headerSkKagawad')
+    @include('layouts.headerSkChairman')
   <!-- End Header -->
 
   <div id="container" class="container">
@@ -229,7 +229,7 @@
             <!-- Private Announcement -->
             <div class="card">
                 <div class="card-body pb-0">
-                <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
                 <div class="news" id="schedules-container">
 
                 </div><!-- End sidebar recent posts-->
@@ -256,7 +256,7 @@
 
 </div><!-- End #main -->
 
-@include('layouts.footerSkKagawad')
+@include('layouts.footerSkChairman')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 // CRUD

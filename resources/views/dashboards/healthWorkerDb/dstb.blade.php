@@ -252,7 +252,14 @@
                     <tr>
                         <td style="display: none;">{{ $dstbs->dstb_id }}</td>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $dstbs->resident->res_lname }}, {{ $dstbs->resident->res_fname }} {{ $dstbs->resident->res_mname ?? '' }} {{ $dstbs->resident->res_suffix ?? '' }}</td>
+                        <td>{{ $dstbs->resident->res_lname }}, {{ $dstbs->resident->res_fname }} 
+                            @if($dstbs->resident->res_mname && !in_array($dstbs->resident->res_mname, ['N/A', '', null]))
+                                {{ $dstbs->resident->res_mname }} 
+                            @endif
+                            @if($dstbs->resident->res_suffix && !in_array($dstbs->resident->res_suffix, ['N/A', '', null]))
+                                {{ $dstbs->resident->res_suffix }} 
+                            @endif
+                        </td>
                         <td>{{ $dstbs->resident->res_bdate}}</td>
                         <td>{{ $dstbs->resident->res_sex }}</td>
                         <td>{{ $dstbs->resident->res_purok }}</td>
@@ -284,9 +291,6 @@
                 <div class="modal-header">
                     <h5 class="modal-title">DS-TB Treatment Form</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="alertCon">
-                    <div id="alert-container"></div>
                 </div>
                 <form method="POST" action="{{ route('regValidation.dstbInput')}}" class="dstbForm" id="tbForm" autocomplete="off"> <!-- Horizontal Form -->
                     @csrf
@@ -363,7 +367,13 @@
                                             <option value="">Select...</option>
                                             @foreach($residents as $resident)
                                                 <option value="{{ $resident->res_id }}">
-                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                    {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}
+                                                    @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                        {{ $resident->res_mname }} 
+                                                    @endif
+                                                    @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                        {{ $resident->res_suffix }} 
+                                                    @endif
                                                 </option>
                                             @endforeach
                                         </select>
@@ -401,7 +411,7 @@
                                         <div class="column mb-3">
                                             <label for="inputPermAdd" class="col-sm-5 col-form-label">Permanent Address</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control " id="inputPermAdd" name="inputPermAdd">
+                                                <input type="text" class="form-control " id="inputPermAdd" name="inputPermAdd" readonly>
                                                 <span class="text-danger error-text inputPermAdd_error"></span>
                                             </div>
                                         </div>
@@ -409,7 +419,7 @@
                                         <div class="column mb-3">
                                             <label for="inputCurAdd" class="col-sm-5 col-form-label">Current Address</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputCurAdd" name="inputCurAdd">
+                                                <input type="text" class="form-control" id="inputCurAdd" name="inputCurAdd" readonly>
                                                 <span class="text-danger error-text inputCurAdd_error"></span>
                                             </div>
                                         </div>
@@ -427,7 +437,7 @@
                                         <div class="column mb-3">
                                             <label for="inputOtherNum" class="col-sm-10 col-form-label">Other Contact Number</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control shortField" id="inputOtherNum" name="inputOtherNum">
+                                                <input type="text" class="form-control shortField" id="inputOtherNum" name="inputOtherNum" readonly>
                                                 <span class="text-danger error-text inputOtherNum_error"></span>
                                             </div>
                                         </div>
@@ -904,7 +914,9 @@
 
                         </div>
                     </div>   
-
+                    <div class="alertCon">
+                        <div id="alert-container"></div>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -934,7 +946,7 @@
                             </div>
                             <div class="inputArea">
                                 <div class="left">
-                                    <input type="hidden" class="form-control" id="edit_dstb_id" name="edit_dstb_id">
+                                    <input type="text" class="form-control" id="edit_dstb_id" name="edit_dstb_id">
                                     <div class="column mb-3">
                                         <label for="Edit_inputDiagnosingFac" class="col-sm-10 col-form-label">Name of Diagnosing Facility</label>
                                         <div class="col-sm-10">
@@ -996,16 +1008,27 @@
                             <div class="inputArea columnGrp">
                                 <div class="columnGrp">
 
-                                        <div class="rowGroup">    
-                                            <div class="column mb-3">
-                                                <label for="Edit_inputPatient" class="col-sm-10 col-form-label">Patient Full Name</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control shortField" id="Edit_inputPatient" name="Edit_inputPatient" readonly>
-                                                    <span class="text-danger error-text Edit_inputPatient_error"></span>
-                                                </div>
+                                        <div class="row g-3">    
+                                            <div class="col-md-6 pt-2">
+                                                <label for="Edit_inputPatient" class="form-label">Patient Full Name</label>
+                                                <select id="Edit_inputPatient" class="form-control" name="Edit_inputPatient" style="width: 100%" onchange="edit_updateResidentDetails(this)">
+                                                    <option value="">Select...</option>
+                                                    @foreach($residents as $resident)
+                                                        <option value="{{ $resident->res_id }}">
+                                                            {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}
+                                                            @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                                {{ $resident->res_mname }} 
+                                                            @endif
+                                                            @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                                {{ $resident->res_suffix }} 
+                                                            @endif
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="text-danger error-text inputPatient_error"></span>
                                             </div>
                                             
-                                            <div class="column mb-3">
+                                            <div class="col-md-3">
                                                 <label for="Edit_inputDob" class="col-sm-10 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-10">
                                                     <input type="date" class="form-control shortField" id="Edit_inputDob" name="Edit_inputDob" readonly>
@@ -1013,7 +1036,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="column mb-3">
+                                            <div class="col-md-3">
                                                 <label for="Edit_inputSex" class="col-sm-5 col-form-label">Sex</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control shortField" id="Edit_inputSex" name="Edit_inputSex" readonly>
@@ -1560,22 +1583,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function() {
-        $('#inputPatient').select2({
-            placeholder: "Choose...",
-            allowClear: true
-        });
-
-        // Initialize Select2 on modal show
-        $('#ExtralargeModal').on('shown.bs.modal', function () {
-            $('#inputPatient').select2({
-                dropdownParent: $('#ExtralargeModal')
-            });
+    $(document).ready(function () {
+        $('#inputPatient').selectize({
+            sortField: 'text'
         });
     });
 
     $(document).ready(function () {
-        $('#inputPatient').selectize({
+        $('#Edit_inputPatient').selectize({
             sortField: 'text'
         });
     });
@@ -1636,6 +1651,34 @@
             document.getElementById('inputConNum').value = '';
             document.getElementById('inputOtherNum').value = '';
             document.getElementById('inputNat').value = '';
+        }
+    }
+
+    function edit_updateResidentDetails(selectElement) {
+        const selectedId = selectElement.value;
+
+        if (selectedId) {
+            const residentInfo = residentData[selectedId];
+
+            if (residentInfo) {
+                document.getElementById('Edit_inputPermAdd').value = residentInfo.res_address;
+                document.getElementById('Edit_inputCurAdd').value = residentInfo.res_tempAddress;
+                document.getElementById('Edit_inputDob').value = residentInfo.res_bdate;
+                document.getElementById('Edit_inputSex').value = residentInfo.res_sex;
+                document.getElementById('Edit_inputConNum').value = residentInfo.res_contact;
+                document.getElementById('Edit_inputOtherNum').value = residentInfo.res_otherContact;
+                document.getElementById('Edit_inputNat').value = residentInfo.res_citizen;
+                document.getElementById('Edit_inputPhilHealth').value = '';
+            }
+        } else {
+            // Clear fields if no resident is selected
+            document.getElementById('Edit_inputPermAdd').value = '';
+            document.getElementById('Edit_inputCurAdd').value = '';
+            document.getElementById('Edit_inputDob').value = '';
+            document.getElementById('Edit_inputSex').value = '';
+            document.getElementById('Edit_inputConNum').value = '';
+            document.getElementById('Edit_inputOtherNum').value = '';
+            document.getElementById('Edit_inputNat').value = '';
         }
     }
 
@@ -1718,8 +1761,14 @@
                         $('#Edit_inputRegion').val(response.data.dstb_inputRegion);
                         
                     //patient info
-                        let fullName = `${response.data.resident.res_lname}, ${response.data.resident.res_fname} ${response.data.resident.res_mname ?? ''} ${response.data.resident.res_suffix ?? ''}`;
-                        $('#Edit_inputPatient').val(fullName);
+                    let fullName = `${response.data.resident.res_lname}, ${response.data.resident.res_fname} ${response.data.resident.res_mname ?? ''} ${response.data.resident.res_suffix ?? ''}`;
+                    let residentId = response.data.resident.res_id;
+                    let selectize = $('#Edit_inputPatient')[0].selectize;
+                    selectize.setValue(residentId);
+
+                    // Optionally, if you want to display the full name as part of the value in the input (useful for display purposes):
+                    // But setting the value to the ID is what you need for form submission or server processing.
+                        $('#Edit_inputPatient').val(residentId);
                         $('#Edit_inputDob').val(response.data.resident.res_bdate);
                         $('#Edit_inputSex').val(response.data.resident.res_sex);
                         $('#Edit_inputPermAdd').val(response.data.dstb_permAdd);
@@ -1913,6 +1962,7 @@
 
         // Create a FormData object with the form fields
         var formData = new FormData();
+        formData.append('Edit_inputPatient', $('#Edit_inputPatient').val());
         formData.append('Edit_inputDiagnosingFac', $('#Edit_inputDiagnosingFac').val());
         formData.append('Edit_inputNtpCode', $('#Edit_inputNtpCode').val());
         formData.append('Edit_inputProvinceHuc', $('#Edit_inputProvinceHuc').val());
@@ -2049,18 +2099,18 @@
                 } else if (response.status === 404) {
                     $('#alert-container3').html(`
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-triangle me-1"></i> OPT Not Found.
+                            <i class="bi bi-exclamation-triangle me-1"></i> DSTB Not Found.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     `);
                 } else {
                     $('#alert-container3').html(`
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="bi bi-check-circle me-1"></i> OPT updated successfully!
+                            <i class="bi bi-check-circle me-1"></i> DSTB updated successfully!
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     `);
-                    $('#optFormSec').modal('hide');
+                    $('#editDstbForm').modal('hide');
                     location.reload();
                 }
             },

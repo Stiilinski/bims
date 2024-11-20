@@ -404,7 +404,7 @@ class regValidation extends Controller
     public function saveResidents(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'profile' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'profile' => 'required|image|mimes:jpeg,jpg,png|max:20480',
             'household' => 'required',
             'dateRegister' => 'required|date',
             'firstName' => 'required|string',
@@ -506,7 +506,7 @@ class regValidation extends Controller
     
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'edit_profile' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',  // Ensure correct file types and size
+            'edit_profile' => 'nullable|image|mimes:jpg,jpeg,png|max:20480',  // Ensure correct file types and size
             'edit_household' => 'nullable|string',
             'edit_dateRegister' => 'nullable|date',
             'edit_fname' => 'required|string',           // make fname required
@@ -703,14 +703,14 @@ class regValidation extends Controller
     }
 
 
-    // FOR CERTIFICATION INPUT
+// FOR CERTIFICATION INPUT
     public function saveCertificate(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'fName3' => 'required|string|exists:resident_tbls,res_fname',
-                'mName3' => 'required|string|exists:resident_tbls,res_mname',
-                'lName3' => 'required|string|exists:resident_tbls,res_lname',
+                'fName3' => 'required|string|min:2|exists:resident_tbls,res_fname',
+                'mName3' => 'required|string|min:2|exists:resident_tbls,res_mname',
+                'lName3' => 'required|string|min:2|exists:resident_tbls,res_lname',
                 'suffix3' => 'nullable|string|exists:resident_tbls,res_suffix',
                 'bDate3' => 'required|date|exists:resident_tbls,res_bdate',
                 'tcode3' => [
@@ -725,11 +725,12 @@ class regValidation extends Controller
                         }
                     }
                 ],
-                'certType' => 'required|string',
-                'purposeCertificate3' => 'required|string',
+                'certType' => 'required|string|min:2',
+                'purposeCertificate3' => 'required|string|min:2',
                 'dateIssued3' => 'required|date',
                 'pickUp3' => 'required|date'
             ], [
+                'min' => 'Field Required More Than 1 Letter',
                 'fName3.exists' => 'First Name Not Found',
                 'mName3.exists' => 'Middle Name Not Found',
                 'lName3.exists' => 'Last Name Not Found',
@@ -829,14 +830,14 @@ class regValidation extends Controller
         ]);
     }
 
-    // FOR BARANGAY CLEARANCE/BUSINESS INPUT
+// FOR BARANGAY CLEARANCE/BUSINESS INPUT
     public function saveBusinessClearance(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'fName2' => 'required|string|exists:resident_tbls,res_fname',
-                'mName2' => 'required|string|exists:resident_tbls,res_mname',
-                'lName2' => 'required|string|exists:resident_tbls,res_lname',
+                'fName2' => 'required|string|min:2|exists:resident_tbls,res_fname',
+                'mName2' => 'required|string|min:2|exists:resident_tbls,res_mname',
+                'lName2' => 'required|string|min:2|exists:resident_tbls,res_lname',
                 'suffix2' => 'nullable|string|exists:resident_tbls,res_suffix',
                 'bDate2' => 'required|date|exists:resident_tbls,res_bdate',
                 'tcode2' => [
@@ -859,6 +860,7 @@ class regValidation extends Controller
                 'pickUp2' => 'required|date'
             ], [
                 // Custom messages for each validation rule
+                'min' => 'Field Required More Than 1 Letter.',
                 'required' => 'This field is required.',  // Custom message for all "required" fields
                 'string' => 'This field must be a valid string.',
                 'date' => 'This field must be a valid date.',
@@ -988,7 +990,7 @@ class regValidation extends Controller
 
 
 
-    //MULTI PURPOSE BARANGAY CLEARANCE
+//MULTI PURPOSE BARANGAY CLEARANCE
     public function saveBrgyClearance(Request $request)
     {
         try {
@@ -1078,7 +1080,7 @@ class regValidation extends Controller
         }
     }
 
-    //DISPLAY CERTIFICATES AND CERTIFICATE ISSUANCE
+//DISPLAY CERTIFICATES AND CERTIFICATE ISSUANCE
     public function barangayCert()
     {
         $data = [
@@ -1865,7 +1867,7 @@ class regValidation extends Controller
         return response()->json(['success' => true]);
     }
 
-    //for complaint
+//for complaint
     public function saveComplaints(Request $request)
     {
         try {
@@ -2151,7 +2153,7 @@ class regValidation extends Controller
     }
 
 
-    // display transactions!
+// display transactions!
     public function requestedDoc()
     {
         $data = [
@@ -2237,7 +2239,7 @@ class regValidation extends Controller
         return view('dashboards/secretariesDb/requestedDocs', $data);
     }    
 
-    // for purok list
+// for purok list
     public function fetchPurokResidents(Request $request)
     {
         $purok = $request->query('purok');
@@ -2260,7 +2262,7 @@ class regValidation extends Controller
         return response()->json($formattedResidents);
     }
 
-    //FOR CAPTAIN
+//FOR CAPTAIN
     public function dashboardCap(Request $request)
     {
         $currentYear = date('Y');
@@ -2937,11 +2939,16 @@ class regValidation extends Controller
 
     public function employeeProfile()
     {
-        $data = ['LoggedUserInfo' => employee_tbl::where('em_id','=', session('LoggedUser'))->first()];
+        // Fetch the logged-in employee's data
+        $LoggedUserInfo = employee_tbl::where('em_id', session('LoggedUser'))->first();
+    
+        // Prevent caching of the page
         header('Cache-Control: no-cache, no-store, must-revalidate');
         header('Pragma: no-cache');
-        header('Expires: 0'); 
-        return view('dashboards/employeeProfile', $data);
+        header('Expires: 0');
+    
+        // Pass the employee data to the view
+        return view('dashboards.employeeProfile', ['LoggedUserInfo' => $LoggedUserInfo]);
     }
 
     //FOR TREASURER
@@ -3473,13 +3480,10 @@ class regValidation extends Controller
             'fullName' => 'required',
             'position' => 'required',
             'appointment' => 'required|date',
-            'ofPicture' => 'mimes:jpg,jpeg,png|max:10240',  // Validate image type and size (10MB max)
             'status' => 'required',
         ], [
             'required' => 'This field is required.',
             'date' => 'This field must be in Date Format',
-            'ofPicture.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
-            'ofPicture.max' => 'The image size must not exceed 10MB.',
         ]);
         
         if ($validator->fails()) {
@@ -3488,34 +3492,16 @@ class regValidation extends Controller
             // Start a transaction
             DB::beginTransaction();
             try {
-                // Handle the image upload
-                if ($request->hasFile('ofPicture')) {
-                    // Get the image file
-                    $image = $request->file('ofPicture');
-                    
-                    // Generate a unique file name for the image
-                    $imageName = time() . '.' . $image->getClientOriginalExtension();
-                    
-                    // Define the image directory path
-                    $destinationPath = public_path('assets/img/ppofficials');
-                    
-                    // Move the image to the destination directory
-                    $image->move($destinationPath, $imageName);
-                    
-                    // Get the image path for storage
-                    $imagePath = 'assets/img/ppofficials/' . $imageName;
-                    
-                    // Encode the image to base64 (optional, if you need base64 encoding)
-                    $imageBase64 = base64_encode(file_get_contents($destinationPath . '/' . $imageName));
-                }
-    
+               
                 // Insert into daily_service_rec_tbl
                 $officials = new brgyOfficials_tbl;
                 $officials->res_id = $request->fullName;
                 $officials->of_position = $request->position;
                 $officials->of_date = $request->appointment;
                 $officials->of_status = $request->status;
-                $officials->of_picture = $imagePath; // Store the file path in the database
+                $officials->facebook_Link = $request->fbLink;
+                $officials->x_Link = $request->twitterLink;
+                $officials->insta_Link = $request->instaLink;
                 
                 $officials->save();
                 
@@ -5133,7 +5119,7 @@ class regValidation extends Controller
                 }
                 // Questionaire
                 if ($request->filled('edit_result')) {
-                    $risk->risk_qResult = $request->edit_physicalAct;
+                    $risk->risk_qResult = $request->edit_result;
                 }
                 if ($request->filled('edit_questionnaire1')) {
                     $risk->risk_q1 = $request->edit_questionnaire1;
@@ -5436,6 +5422,7 @@ class regValidation extends Controller
         if ($dstb) {
             $dstb->dstb_id = $request->dstb_id;
 
+            $dstb->res_id = $request->Edit_inputPatient;
             $dstb->dstb_inputDiagnosingFac = $request->Edit_inputDiagnosingFac;
             $dstb->dstb_inputNtpCode = $request->Edit_inputNtpCode;
             $dstb->dstb_inputProvinceHuc = $request->Edit_inputProvinceHuc;
@@ -5498,6 +5485,7 @@ class regValidation extends Controller
             if ($dstb->save()) {
                 return response()->json(['status' => 1, 'msg' => 'DSTB Record updated successfully.']);
             } else {
+                \Log::error('Failed to update DSTB record', ['dstb_data' => $dstb->toArray()]);
                 return response()->json(['status' => 0, 'msg' => 'Failed to update DSTB Record.']);
             }
         }
@@ -5581,7 +5569,7 @@ class regValidation extends Controller
     {
         $validator = Validator::make($request->all(), [
             'inputClient' => 'required|integer',
-            'inputSpouse' => 'required|integer',
+            'inputSpouse' => 'required',
             'em_id' => 'required|String',
             //Postpone
                 // 'fp_NoLivChild' => 'nullable|integer',
@@ -5666,7 +5654,9 @@ class regValidation extends Controller
             $fp->fp_nhts = $request->fpNhts;
             $fp->fp_4ps = $request->fp4Ps;
             $fp->fp_clientId = $request->inputClient;
-            $fp->fp_spouseId = $request->inputSpouse;
+            $fp->spouse_name = $request->inputSpouse;
+            $fp->spouse_dob = $request->fpSpouseDob;
+            $fp->spouse_occupation = $request->fpSpouseOcc;
             $fp->fp_NoLivChild = $request->fpLiveChild;
             $fp->fp_planMoreChild = $request->children;
             $fp->fp_monthlyIncome = $request->fpIncome;
@@ -5776,7 +5766,11 @@ class regValidation extends Controller
             // TextBox
                 $fp->fp_phNum = $request->edit_fpPhNum;
                 $fp->fp_clientId = $request->edit_inputClient;
-                $fp->fp_spouseId = $request->edit_inputSpouse;
+
+                $fp->spouse_name = $request->edit_inputSpouse;
+                $fp->spouse_dob = $request->edit_fpSpouseDob;
+                $fp->spouse_occupation = $request->edit_fpSpouseOcc;
+
                 $fp->em_id = $request->edit_em_id;
                 $fp->fp_NoLivChild = $request->edit_fpLiveChild;
                 $fp->fp_monthlyIncome = $request->edit_fpIncome;
@@ -6080,7 +6074,7 @@ class regValidation extends Controller
         $dob = new \DateTime($fp->client->res_bdate);
         $age = $dob->diff(new \DateTime())->y;
 
-        $dobSpouse = new \DateTime($fp->spouse->res_bdate ?? 'now');
+        $dobSpouse = new \DateTime($fp->spouse_dob ?? 'now');
         $ageSpouse = $dobSpouse->diff(new \DateTime())->y;
 
 
@@ -8235,61 +8229,66 @@ public function calendar(Request $request)
 
         public function articleInput(Request $request)
         {
-            $validator = Validator::make($request->all(), [
-                'inputTitle' => 'required',
-                'inputSubTitle' => 'required',
-                'inputQoute' => 'required',
-                'inputDate' => 'required',
-                'inputContent' => 'required',
-                'inputCategory' => 'required',
-                'inputAuthor' => 'required',
-                'inputImg' => 'required|mimes:jpeg,png,jpg,svg',
-                'inputImgLoc' => 'required',
-                'inputImgOwn' => 'required',
-                'inputFbLink' => 'required',
-                'inputXLink' => 'required',
-                'inputInsLink' => 'required',
-            ], [
-                // Custom error messages
-                'required' => 'This field is required.',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
-            } else {
-                $blogs = new blogs_tbl;
-                $blogs->blog_title = $request->inputTitle;
-                $blogs->blog_subtitle = $request->inputSubTitle;
-                $blogs->blog_qoute = $request->inputQoute;
-                $blogs->blog_description = $request->inputContent;
-                $blogs->blog_date = $request->inputDate;
-                $blogs->blog_category = $request->inputCategory;
-                $blogs->blog_author = $request->inputAuthor;
-                $blogs->blog_picLocation = $request->inputImgLoc;
-                $blogs->blog_picOwner = $request->inputImgOwn;
-                $blogs->blog_fbLink = $request->inputFbLink;
-                $blogs->blog_xLink = $request->inputXLink;
-                $blogs->blog_insLink = $request->inputInsLink;
-
-                $blogs->blog_status = $request->input('blogStatus', 'Draft');
-
-                // Save primary image
-                if ($request->hasFile('inputImg')) {
-                    $picFile2 = $request->file('inputImg');
-                    $picFileName2 = uniqid() . '.' . $picFile2->getClientOriginalExtension();
-                    $picFilePath2 = 'public/assets/img/blogs/' . $picFileName2;
-                    $picFile2->move(public_path('assets/img/blogs'), $picFileName2);
-                    $blogs->blog_pic = $picFilePath2; // Store the image path
-                }
-
-                if ($blogs->save()) {
-                    return response()->json(['status' => 1, 'msg' => 'New article has been added.']);
-                } else {
-                    return response()->json(['status' => 0, 'msg' => 'Failed to add new article.'], 500);
+            // Only run validation if it's a submit action
+            if ($request->input('blogStatus') == 'Pending Article') {
+                $validator = Validator::make($request->all(), [
+                    'inputTitle' => 'required',
+                    'inputSubTitle' => 'required',
+                    'inputQoute' => 'required',
+                    'inputDate' => 'required',
+                    'inputContent' => 'required',
+                    'inputCategory' => 'required',
+                    'inputAuthor' => 'required',
+                    'inputImg' => 'required|mimes:jpeg,png,jpg,svg',
+                    'inputImgLoc' => 'required',
+                    'inputImgOwn' => 'required',
+                    'inputFbLink' => 'required',
+                    'inputXLink' => 'required',
+                    'inputInsLink' => 'required',
+                ], [
+                    // Custom error messages
+                    'required' => 'This field is required.',
+                ]);
+        
+                if ($validator->fails()) {
+                    return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
                 }
             }
+        
+            // If no validation fails (or validation is skipped for draft), continue with the saving process
+            $blogs = new blogs_tbl;
+            $blogs->blog_title = $request->inputTitle;
+            $blogs->blog_subtitle = $request->inputSubTitle;
+            $blogs->blog_qoute = $request->inputQoute;
+            $blogs->blog_description = $request->inputContent;
+            $blogs->blog_date = $request->inputDate;
+            $blogs->blog_category = $request->inputCategory;
+            $blogs->blog_author = $request->inputAuthor;
+            $blogs->blog_picLocation = $request->inputImgLoc;
+            $blogs->blog_picOwner = $request->inputImgOwn;
+            $blogs->blog_fbLink = $request->inputFbLink;
+            $blogs->blog_xLink = $request->inputXLink;
+            $blogs->blog_insLink = $request->inputInsLink;
+        
+            // Set blog status
+            $blogs->blog_status = $request->input('blogStatus', 'Draft');
+        
+            // Save primary image
+            if ($request->hasFile('inputImg')) {
+                $picFile2 = $request->file('inputImg');
+                $picFileName2 = uniqid() . '.' . $picFile2->getClientOriginalExtension();
+                $picFilePath2 = 'public/assets/img/blogs/' . $picFileName2;
+                $picFile2->move(public_path('assets/img/blogs'), $picFileName2);
+                $blogs->blog_pic = $picFilePath2; // Store the image path
+            }
+        
+            if ($blogs->save()) {
+                return response()->json(['status' => 1, 'msg' => 'New article has been added.']);
+            } else {
+                return response()->json(['status' => 0, 'msg' => 'Failed to add new article.'], 500);
+            }
         }
-
+        
 
         public function myDraft($em_id)
         {
@@ -8316,9 +8315,10 @@ public function calendar(Request $request)
         {
             $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
             $resident = resident_tbl::all();
-            $blogs = blogs_tbl::whereIn('blog_status', ['Pending Article', 'Published', 'Declined'])
+            $blogs = blogs_tbl::whereIn('blog_status', ['Pending Article', 'Published', 'Denied'])
             ->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
-            ->where('blog_author', $em_id) // Filter by the 'blog_author' (the 'em_id' from the URL)
+            ->where('blog_author', $em_id)
+            ->orderBy('blog_date', 'desc')
             ->get();
 
             // Merge all the data into a single array
@@ -8356,85 +8356,70 @@ public function calendar(Request $request)
 
         public function updateArticle(Request $request, $blogId)
         {
-            // Find the blog by its ID
-            $blog = blogs_tbl::where('blog_id', $blogId)->firstOrFail();
-
-            // Update blog post fields
+            $action = $request->input('blogStatus');
+        
+            $rules = [];
+            if ($action === 'Pending Article') {
+                $rules = [
+                    'inputTitle' => 'required',
+                    'inputSubTitle' => 'required',
+                    'inputQoute' => 'required',
+                    'inputDate' => 'required|date',
+                    'inputContent' => 'required',
+                    'inputCategory' => 'required',
+                    'inputImg' => 'nullable|image|mimes:jpeg,png,jpg|max:20480',
+                    'inputImgLoc' => 'required',
+                    'inputImgOwn' => 'required',
+                    'inputFbLink' => 'required|url',
+                    'inputXLink' => 'required|url',
+                    'inputInsLink' => 'required|url',
+                ];
+            }
+        
+            // Validate the request
+            $validator = Validator::make($request->all(), $rules, [
+                'required' => 'This Field is Required.',
+            ]);
+        
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+        
+            // Proceed with saving data
+            $blog = blogs_tbl::findOrFail($blogId);
             $blog->blog_title = $request->input('inputTitle');
             $blog->blog_subtitle = $request->input('inputSubTitle');
             $blog->blog_qoute = $request->input('inputQoute');
-            $blog->blog_date = $request->input('inputDate');
             $blog->blog_description = $request->input('inputContent');
-            $blog->blog_category = $request->input('inputCategory');
+            $blog->blog_date = $request->input('inputDate');
             $blog->blog_author = $request->input('inputAuthor');
+
+            $blog->blog_picLocation = $request->input('inputImgLoc');
+            $blog->blog_picOwner = $request->input('inputImgOwn');
             $blog->blog_fbLink = $request->input('inputFbLink');
             $blog->blog_xLink = $request->input('inputXLink');
             $blog->blog_insLink = $request->input('inputInsLink');
-            $blog->blog_picLocation = $request->input('inputImgLoc');
-            $blog->blog_picOwner = $request->input('inputImgOwn');
-        
+            $blog->blog_category = $request->input('inputCategory');
+
+            $blog->blog_status = $action === 'Pending Article' ? 'Pending Article' : 'Draft';
+            $blog->blog_reason = "";
+
+            // Handle image upload if provided
             if ($request->hasFile('inputImg')) {
-                // Get the uploaded file
                 $image = $request->file('inputImg');
-
-                // Generate a random, unique image name using Str::random() method
-                $imageName = Str::random(12) . '.' . $image->getClientOriginalExtension(); // 12-character unique name
-
-                // Direct path to the pre-existing 'public/assets/img/blogs'
+                $imageName = Str::random(12) . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('assets/img/blogs');
-
-                // Save the file directly to 'public/assets/img/blogs' without creating new directories
                 $image->move($destinationPath, $imageName);
-
-                // Save the relative path in the database (no 'storage' prefix)
-                $blog->blog_pic = 'public/assets/img/blogs/' . $imageName; // Relative path
+                $blog->blog_pic = '/assets/img/blogs/' . $imageName;
             }
-
-            // Recommended links and images (for the recommended news section)
-            for ($i = 1; $i <= 4; $i++) {
-                $recLink = $request->input("inputRec{$i}");
-                $recTitle = $request->input("inputRecTitle{$i}");
-                $recImgField = $request->file("inputRecImg{$i}");
-
-                if ($recLink || $recTitle || $recImgField) {
-                    $blog->{"blog_recommend{$i}"} = $recLink;
-                    $blog->{"blog_recommendTitle{$i}"} = $recTitle;
-
-                    if ($recImgField) {
-                        // Handle recommended images upload
-                        $recImageName = Str::random(12) . '-' . $i . '.' . $recImgField->getClientOriginalExtension();
-
-                        // Direct path for recommended images to the pre-existing folder
-                        $recImagePath = public_path('assets/img/blogs');
-
-                        // Save the recommended image file directly to the folder (no creation of directories)
-                        $recImgField->move($recImagePath, $recImageName);
-
-                        // Save the relative path for the recommended image
-                        $blog->{"blog_recommendPic{$i}"} = 'public/assets/img/blogs/' . $recImageName;
-                    }
-                }
-            }
-
-
-            // Save the blog status (draft or submitted)
-            if ($request->has('blogStatus') && $request->input('blogStatus') === 'Draft') {
-                $blog->blog_status = 'Draft';
-            } else {
-                $blog->blog_status = 'Pending Article';
-            }
-
-            // $blogs->blog_status = $request->input('blogStatus', 'Draft');
-
-            // Save the blog
+        
             $blog->save();
-
-            // Return success response
-            return response()->json([
-                'success' => true,
-                'message' => 'Article updated successfully!',
-            ]);
+        
+            return response()->json(['message' => $action === 'Pending Article' ? 'Article submitted!' : 'Draft saved!']);
         }
+        
 
         public function updateArticleStatus(Request $request)
         {
@@ -8589,6 +8574,7 @@ public function calendar(Request $request)
             return response()->json(['success' => true]);
         }
 
+
 // END OF SK KAGAWAD
 
 // SK CHAIRMAN
@@ -8599,7 +8585,6 @@ public function calendar(Request $request)
 
         // Fetch all blogs where blog_author is the logged-in user
         $events = DB::table('schedule_tbls')
-            ->where('em_id', '=', $loggedUserInfo->em_id)
             ->where('sched_status', '=', 'Pending Event') // Assuming drafts have 'Draft' status
             ->get();
 
@@ -8946,7 +8931,7 @@ public function calendar(Request $request)
         {
             $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
             $resident = resident_tbl::all();
-            $events = schedule_tbl::whereIn('sched_status', ['Pending Event', 'Accepted', 'Denied', 'Archived'])->where('em_id', $em_id)->get();
+            $events = schedule_tbl::whereIn('sched_status', ['Pending Event', 'Accepted', 'Denied', 'Archived'])->orderBy('created_at', 'DESC')->get();
 
             // Merge all the data into a single array
             $data = [
@@ -8979,6 +8964,49 @@ public function calendar(Request $request)
                 return redirect()->back()->with('error', 'Record not found.');
             }
             return view('dashboards/skChairmanDb/editEvent', $data);
+        }
+
+        public function updateEventStatus1(Request $request)
+        {
+            $request->validate([
+                'id' => 'required|integer|exists:schedule_tbls,sched_id', // Validate the blog ID
+                'status' => 'required|string', // Validate the status (it will be "Denied")
+                'reason' => 'nullable|string' // Validate the reason for denial
+            ]);
+        
+            // Find the blog by ID
+            $event = schedule_tbl::find($request->id);
+        
+            // Update the blog's status and reason
+            $event->sched_status = $request->status;  // Set status to 'Denied'
+            $event->sched_reason = $request->reason;  // Set the reason for denial
+        
+            // Save the updated blog record
+            $event->save();
+        
+            // Return a success response
+            return response()->json(['success' => true]);
+        }
+
+        public function updatePendingStatus(Request $request)
+        {
+            $request->validate([
+                'id' => 'required|integer|exists:schedule_tbls,sched_id', // Validate the blog ID
+                'status' => 'required|string', // Validate the status (it will be "Denied")
+            ]);
+        
+            // Find the blog by ID
+            $event = schedule_tbl::find($request->id);
+        
+            // Update the blog's status and reason
+            $event->sched_status = $request->status;  // Set status to 'Denied'
+            $event->sched_reason = null; // Set the reason for denial
+        
+            // Save the updated blog record
+            $event->save();
+        
+            // Return a success response
+            return response()->json(['success' => true]);
         }
 // END OF SK CHAIRMAN
 }

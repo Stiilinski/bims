@@ -93,14 +93,14 @@ input *{
                 <form method="POST" action="{{ route('regValidation.inputOfficials') }}" id="officialForm" enctype="multipart/form-data" autocomplete="off">
                     @csrf
                     <div class="modal-body"> 
-                        <div class="row g-3">
+                        <div class="row g-3" style="padding: 10px;">
                             <div class="col-md-12 pt-2">
                                 <label for="fullName" class="form-label">Full Name</label>
                                 <select id="fullName" class="form-control" name="fullName">
                                     <option value="">Select...</option>
                                     @foreach($residents as $resident)
                                         <option value="{{ $resident->res_id }}">
-                                            {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                            {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname === 'N/A' ? '' : $resident->res_mname }} {{ $resident->res_suffix === 'N/A' ? '' : $resident->res_suffix }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -110,7 +110,7 @@ input *{
                             <div class="col-md-12 pt-2">
                                 <label for="position" class="form-label">Position</label>
                                 <select id="position" class="form-select" name="position">
-                                    <option value="" selected>Select...</option>
+                                    <option value="" selected disabled>Select...</option>
                                     <option value="Punong Barangay">Punong Barangay</option>
                                     <option value="Barangay Kagawad">Barangay Kagawad</option>
                                     <option value="SK Chairman">SK Chairman</option>
@@ -125,7 +125,7 @@ input *{
                                 <span class="text-danger error-text position_error"></span>
                             </div>
                 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="appointment" class="col-sm-12 col-form-label">Appointment Date</label>
                                 <div class="col-sm-12">
                                     <input type="date" class="form-control" id="appointment" name="appointment">
@@ -133,15 +133,7 @@ input *{
                                 <span class="text-danger error-text appointment_error"></span>
                             </div>
                 
-                            <div class="col-md-4">
-                                <label for="ofPicture" class="col-sm-12 col-form-label">Official's Picture</label>
-                                <div class="col-sm-12">
-                                    <input type="file" class="form-control" id="ofPicture" name="ofPicture">
-                                </div>
-                                <span class="text-danger error-text ofPicture_error"></span>
-                            </div>
-                
-                            <div class="col-md-4 pt-2">
+                            <div class="col-md-6 pt-2">
                                 <label for="status" class="form-label">Status</label>
                                 <select id="status" class="form-select" name="status">
                                     <option value="" selected>Select...</option>
@@ -150,15 +142,40 @@ input *{
                                 </select>
                                 <span class="text-danger error-text status_error"></span>
                             </div>
+
+                            <div class="col-md-4">
+                                <label for="fbLink" class="col-sm-12 col-form-label">Facebook Link</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="fbLink" name="fbLink">
+                                </div>
+                                <span class="text-danger error-text fbLink_error"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="twitterLink" class="col-sm-12 col-form-label">Twitter/X Link</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="twitterLink" name="twitterLink">
+                                </div>
+                                <span class="text-danger error-text twitterLink_error"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="instaLink" class="col-sm-12 col-form-label">Instagram Link</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="instaLink" name="instaLink">
+                                </div>
+                                <span class="text-danger error-text instaLink_error"></span>
+                            </div>
                         </div>
+
+                        <div id="alert-container"></div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </form>
-                
-                <div id="alert-container"></div>
             </div>
         </div>
     </div>
@@ -320,7 +337,7 @@ input *{
                             setTimeout(() => {
                                 $('.alert').alert('close');
                                 // You can reload the page if needed or just close the modal if that's what you want
-                                // location.reload();
+                                location.reload();
                             }, 1000);
                         }
                     },

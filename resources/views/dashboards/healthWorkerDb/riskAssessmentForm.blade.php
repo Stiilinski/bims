@@ -1068,7 +1068,7 @@
                                     </div>
                                     <div class="info">
                                         <label for="name">Name:</label>
-                                        <input type="text" name="name" id="name" value="{{ $risk->resident->res_lname ?? '' }}, {{ $risk->resident->res_fname ?? '' }} {{ $risk->resident->res_mname ?? '' }} {{ $risk->resident->res_suffix ?? '' }}" readonly>
+                                        <input type="text" name="name" id="name" value="{{ $risk->resident->res_lname ?? '' }}, {{ $risk->resident->res_fname ?? '' }}  @if($risk->resident->res_mname && !in_array($risk->resident->res_mname, ['N/A', '', null])) {{ $risk->resident->res_mname }} @endif @if($risk->resident->res_suffix && !in_array($risk->resident->res_suffix, ['N/A', '', null])) {{ $risk->resident->res_suffix }}  @endif"  readonly>
                                     </div>
                                     <div class="info">
                                         <label for="address">Address:</label>
@@ -1126,7 +1126,7 @@
                                         </div>
                                         <div class="education">
                                             <label for="eduAttain">Educational Attainment:</label>
-                                            <input type="text" name="eduAttain" id="eduAttain">
+                                            <input type="text" name="eduAttain" id="eduAttain" value="{{ $risk->resident->res_educ ?? '' }}" readonly>
                                         </div>
                                     </div>
                                 </div>

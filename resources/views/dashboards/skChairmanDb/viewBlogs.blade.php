@@ -255,7 +255,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-danger" onclick="submitDeniedStatus()">Update Status</button>
+                                <button type="button" class="btn btn-danger" onclick="submitDeniedStatus()">Denied</button>
                             </div>
                         </div>
                     </div>
@@ -269,7 +269,7 @@
             <!-- Private Announcement -->
             <div class="card">
                 <div class="card-body pb-0">
-                <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
                 <div class="news" id="schedules-container">
 
                 </div><!-- End sidebar recent posts-->

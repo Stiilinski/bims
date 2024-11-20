@@ -107,7 +107,7 @@
                             @foreach($blogs as $blog)
                                 <div class="col-md-4">
                                     <a class="card" style="height: 300px!important; overflow:hidden; cursor: pointer;" href="{{ route('editArticle', ['blog_id' => $blog->blog_id]) }}">
-                                        <img src="{{ str_replace('public', '', $blog->blog_pic) }}" class="card-img-top" alt="Blog Image" style="height: 150px;">
+                                        <img src="{{ $blog->blog_pic ? str_replace('public', '', $blog->blog_pic) : asset('assets/img/default.png') }}" class="card-img-top" alt="Blog Image" style="height: 150px;">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $blog->blog_title }}</h5>
                                             <p class="card-text blog-subtitle">{{ $blog->blog_subtitle }}</p>
@@ -126,7 +126,7 @@
                             @foreach($events as $event)
                                 <div class="col-md-4">
                                     <a class="card" style="height: 300px!important; overflow:hidden; cursor: pointer;" href="{{ route('editEvent', ['sched_id' => $event->sched_id]) }}">
-                                        <img src="{{ str_replace('public', '', $event->sched_picture) }}" class="card-img-top" alt="Event Image" style="height: 150px;">
+                                        <img src="{{ $event->sched_picture ? str_replace('public', '',  $event->sched_picture) : asset('assets/img/default.png') }}" class="card-img-top" alt="Event Image" style="height: 150px;">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $event->sched_title }}</h5>
                                             <p class="card-text blog-subtitle">{{ $event->sched_description }}</p>
@@ -151,7 +151,7 @@
           <!-- Private Announcement -->
           <div class="card">
             <div class="card-body pb-0">
-              <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+              <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
               <div class="news" id="schedules-container">
 
               </div><!-- End sidebar recent posts-->

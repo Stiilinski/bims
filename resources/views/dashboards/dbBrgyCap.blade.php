@@ -199,8 +199,6 @@
                               </div>
                               <div class="ps-3">
                                 <h6>{{ $totalFemale }}</h6>
-                                <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
-
                               </div>
                             </div>
 
@@ -365,7 +363,7 @@
               <!-- Private Announcement -->
               <div class="card">
                 <div class="card-body pb-0">
-                  <h5 class="card-title">Private Announcement <span>| Today</span></h5>
+                  <h5 class="card-title">Private Announcement <span id="currentMonthSpanPrivate">| Today</span></h5>
                   <div class="news" id="schedules-container">
 
                   </div><!-- End sidebar recent posts-->

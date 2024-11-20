@@ -302,7 +302,14 @@
                     </tr>
                         <td style="display: none;">{{ $fps->fp_id }}</td>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $fps->client->res_lname }}, {{ $fps->client->res_fname }} {{ $fps->client->res_mname ?? '' }} {{ $fps->client->res_suffix ?? '' }}</td>
+                        <td>{{ $fps->client->res_lname }}, {{ $fps->client->res_fname }}
+                            @if($fps->client->res_mname && !in_array($fps->client->res_mname, ['N/A', '', null]))
+                                {{ $fps->client->res_mname }} 
+                            @endif
+                            @if($fps->client->res_suffix && !in_array($fps->client->res_suffix, ['N/A', '', null]))
+                                {{ $fps->client->res_suffix }} 
+                            @endif
+                        </td>
                         <td>{{ $fps->client->res_bdate}}</td>
                         <td>{{ $fps->client->res_sex }}</td>
                         <td>{{ $fps->client->res_purok }}</td>
@@ -392,7 +399,13 @@
                                                 <option value="">Select...</option>
                                                 @foreach($residents as $resident)
                                                     <option value="{{ $resident->res_id }}">
-                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} 
+                                                        @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                            {{ $resident->res_mname }} 
+                                                        @endif
+                                                        @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                            {{ $resident->res_suffix }} 
+                                                        @endif
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -457,30 +470,17 @@
                                     </div>
                                     
                                     <div class="columnCon">                                       
-                                        <div class="column mb-3 pt-2">
-                                            <label for="inputSpouse" class="form-label">Name of Spouse</label>
-                                            <select id="inputSpouse" class="form-control averageField" name="inputSpouse" style="width: 100%" onchange="updateSpouseDetails(this)">
-                                                <option value="">Select...</option>
-                                                @foreach($residents as $resident)
-                                                    <option value="{{ $resident->res_id }}">
-                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <span class="text-danger error-text inputSpouse_error"></span>
+                                        <div class="column mb-3">
+                                            <label for="inputSpouse" class="col-sm-8 col-form-label">Name of Spouse</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" style="width: 328px;" id="inputSpouse" name="inputSpouse">
+                                            </div>
                                         </div>
 
                                         <div class="column mb-3">
                                             <label for="fpSpouseDob" class="col-sm-5 col-form-label">Date of Birth</label>
                                             <div class="col-sm-12">
                                                 <input type="date" class="form-control shortField" id="fpSpouseDob" name="fpSpouseDob">
-                                            </div>
-                                        </div>
-
-                                        <div class="column mb-3">
-                                            <label for="fpSpouseAge" class="col-sm-5 col-form-label">Age</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control briefField" id="fpSpouseAge" name="fpSpouseAge">
                                             </div>
                                         </div>
 
@@ -520,7 +520,7 @@
                                         <div class="column mb-3">
                                             <label for="fpIncome" class="col-sm-8 col-form-label">Average Monthly Income</label>
                                             <div class="col-sm-12">
-                                                <input type="number" class="form-control" id="fpIncome" name="fpIncome">
+                                                <input type="text" class="form-control" id="fpIncome" name="fpIncome">
                                                 <span class="text-danger error-text fpIncome_error"></span>
                                             </div>
                                         </div>
@@ -1645,7 +1645,13 @@
                                                 <option value="">Select...</option>
                                                 @foreach($residents as $resident)
                                                     <option value="{{ $resident->res_id }}">
-                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }}
+                                                        @if($resident->res_mname && !in_array($resident->res_mname, ['N/A', '', null]))
+                                                            {{ $resident->res_mname }} 
+                                                        @endif
+                                                        @if($resident->res_suffix && !in_array($resident->res_suffix, ['N/A', '', null]))
+                                                            {{ $resident->res_suffix }} 
+                                                        @endif
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -1703,17 +1709,11 @@
                                     </div>
                                     
                                     <div class="columnCon">                                       
-                                        <div class="column mb-3 pt-2">
-                                            <label for="edit_inputSpouse" class="form-label">Name of Spouse</label>
-                                            <select id="edit_inputSpouse" class="form-control averageField" name="edit_inputSpouse" style="width: 100%" onchange="updateSpouseDetails(this)">
-                                                <option value="">Select...</option>
-                                                @foreach($residents as $resident)
-                                                    <option value="{{ $resident->res_id }}">
-                                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <span class="text-danger error-text edit_inputSpouse_error"></span>
+                                        <div class="column mb-3">
+                                            <label for="edit_inputSpouse" class="col-sm-8 col-form-label">Name of Spouse</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" style="width: 328px;" id="edit_inputSpouse" name="edit_inputSpouse">
+                                            </div>
                                         </div>
 
                                         <div class="column mb-3">
@@ -1759,7 +1759,7 @@
                                         <div class="column mb-3">
                                             <label for="edit_fpIncome" class="col-sm-8 col-form-label">Average Monthly Income</label>
                                             <div class="col-sm-12">
-                                                <input type="number" class="form-control" id="edit_fpIncome" name="edit_fpIncome">
+                                                <input type="text" class="form-control" id="edit_fpIncome" name="edit_fpIncome">
                                                 <span class="text-danger error-text edit_fpIncome_error"></span>
                                             </div>
                                         </div>
@@ -2909,12 +2909,13 @@
         });
     });
 
-    //SPOUSE SELECT
+    //CLIENT SELECT
     $(document).ready(function () {
-        $('#inputSpouse').selectize({
+        $('#edit_inputClient').selectize({
             sortField: 'text'
         });
     });
+
 
 
     //FOR IUD
@@ -3097,29 +3098,36 @@
         }
     }
 
-    function updateSpouseDetails(selectElement) {
+    function edit_updateResidentDetails(selectElement) {
         const selectedId = selectElement.value;
 
         if (selectedId) {
             const residentInfo = residentData[selectedId];
 
             if (residentInfo) {
-                document.getElementById('fpSpouseDob').value = residentInfo.res_bdate;
-
-                // Calculate age from the birth date
-                const birthDate = new Date(residentInfo.res_bdate);
-                const age = calculateAge(birthDate);
-                document.getElementById('fpSpouseAge').value = age;
-
-                document.getElementById('fpSpouseOcc').value = residentInfo.res_occupation;
+                document.getElementById('edit_fpAdd').value = residentInfo.res_address;
+                document.getElementById('edit_fpDob').value = residentInfo.res_bdate;
+                document.getElementById('edit_fpOcc').value = residentInfo.res_occupation;
+                document.getElementById('edit_fpCn').value = residentInfo.res_contact;
+                document.getElementById('edit_fpCs').value = residentInfo.res_civil;
+                document.getElementById('edit_fpEa').value = residentInfo.res_educ;
+                document.getElementById('edit_fpReligion').value = residentInfo.res_religion;
             }
-        } else {
+        } 
+        else {
             // Clear fields if no resident is selected
-            document.getElementById('fpSpouseDob').value = '';
-            document.getElementById('fpSpouseAge').value = '';
-            document.getElementById('fpSpouseOcc').value = '';
+            document.getElementById('edit_fpAdd').value = '';
+            document.getElementById('edit_fpDob').value = '';
+            document.getElementById('edit_fpAge').value = '';
+            document.getElementById('edit_fpOcc').value = '';
+            document.getElementById('edit_fpCn').value = '';
+            document.getElementById('edit_fpCs').value = '';
+            document.getElementById('edit_fpEa').value = '';
+            document.getElementById('edit_fpReligion').value = '';
         }
     }
+
+
 
     // Calculate age on date change
     document.getElementById('edit_fpDob').addEventListener('change', calculateAge);
@@ -3240,7 +3248,10 @@
 
                     //Client info
                         let fullName = `${response.data.client.res_lname}, ${response.data.client.res_fname} ${response.data.client.res_mname ?? ''} ${response.data.client.res_suffix ?? ''}`;
-                        $('#edit_inputClient').val(response.data.client.res_id);
+                        let residentId = response.data.client.res_id;
+                        let selectize = $('#edit_inputClient')[0].selectize;
+                        selectize.setValue(residentId);
+
                         $('#edit_fpDob').val(response.data.client.res_bdate);
                         // $('#edit_fpEa').val(response.data.client.res_permAdd);
                         $('#edit_fpOcc').val(response.data.client.res_occupation);
@@ -3252,10 +3263,9 @@
 
 
                     //Spouse Info
-                        let fullNameSpouse = `${response.data.spouse.res_lname}, ${response.data.spouse.res_fname} ${response.data.spouse.res_mname ?? ''} ${response.data.spouse.res_suffix ?? ''}`;
-                        $('#edit_inputSpouse').val(response.data.spouse.res_id);
-                        $('#edit_fpSpouseDob').val(response.data.spouse.res_bdate);
-                        $('#edit_fpSpouseOcc').val(response.data.spouse.res_occupation);
+                        $('#edit_inputSpouse').val(response.data.spouse_name);
+                        $('#edit_fpSpouseDob').val(response.data.spouse_dob);
+                        $('#edit_fpSpouseOcc').val(response.data.spouse_occupation);
                     
                     //personal Client Info
                         $('#edit_fpLiveChild').val(response.data.fp_NoLivChild);
@@ -3470,7 +3480,7 @@
                                 $('#edit_fpDisabilityNo').prop('checked', true);
                             }
 
-                        $('#edit_disabilityDetails').val(response.data.spouse.fp_mhSpecific);
+                        $('#edit_disabilityDetails').val(response.data.fp_mhSpecific);
 
                     //OBSTETRICAL HISTORY
                         $('#edit_fpNumG').val(response.data.fp_ohNpG);
@@ -3891,6 +3901,8 @@
                 formData.append('edit_fpPhNum', $('#edit_fpPhNum').val());
                 formData.append('edit_inputClient', $('#edit_inputClient').val());
                 formData.append('edit_inputSpouse', $('#edit_inputSpouse').val());
+                formData.append('edit_fpSpouseDob', $('#edit_fpSpouseDob').val());
+                formData.append('edit_fpSpouseOcc', $('#edit_fpSpouseOcc').val());
                 formData.append('edit_em_id', $('#edit_em_id').val());
                 formData.append('edit_fpLiveChild', $('#edit_fpLiveChild').val());
                 formData.append('edit_fpIncome', $('#edit_fpIncome').val());

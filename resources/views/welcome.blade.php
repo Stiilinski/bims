@@ -440,7 +440,7 @@
                     "loop": true,
                     "speed": 600,
                     "autoplay": {
-                      "delay": 4000
+                      "delay": 100000000
                     },
                     "slidesPerView": "auto",
                     "pagination": {
@@ -470,170 +470,46 @@
                                   />
                                 </div>
                                 <div class="member-info">
-                                  <h4>Janjan Castañares</h4>
-                                  <span>Punong Barangay</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
+                                  @if($officials->isNotEmpty() && $officials[0]->of_position == 'Punong Barangay')
+                                    <h4>{{ $officials[0]->resident->res_fname ?? 'Unknown' }} {{ $officials[0]->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $officials[0]->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $officials[0]->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $officials[0]->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $officials[0]->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  @else
+                                    <p>No Punong Barangay available.</p>
+                                  @endif
                                 </div>
                               </div>
                             </div>
                             <!-- End Team Member -->
                 
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-2.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Jhunniel Esmeña</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
+                            @foreach($officials as $official)
+                              @if($official->of_position == 'Barangay Kagawad')
+                                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                  <div class="team-member d-flex align-items-start">
+                                    <div class="pic">
+                                      <img
+                                      src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                        class="img-fluid"
+                                        alt="Profile Picture"
+                                      />
+                                    </div>
+                                    <div class="member-info">
+                                      <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                      <span>{{ $official->of_position }}</span>
+                                      <div class="social">
+                                        <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                        <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                        <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <!-- End Team Member -->
-                
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-3.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Audie Desuyo</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- End Team Member -->
-                
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-4.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Rolito Tarega</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- End Team Member -->
-                
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-5.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Aldwin Getuaban</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- End Team Member -->
-                
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-6.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Quitos Ruiz</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- End Team Member -->
-                
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-7.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Mario Parages</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- End Team Member -->
-                
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                              <div class="team-member d-flex align-items-start">
-                                <div class="pic">
-                                  <img
-                                    src="assets/img/officials/off-8.png"
-                                    class="img-fluid"
-                                    alt=""
-                                  />
-                                </div>
-                                <div class="member-info">
-                                  <h4>Amelito Abatayo</h4>
-                                  <span>Barangay Kagawad</span>
-                                  <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                              @endif
+                            @endforeach
                             <!-- End Team Member -->
                           </div>
                         </div>
@@ -650,180 +526,56 @@
               
                       <div class="container">
                         <div class="row gy-4">
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-1.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Jenniebert Padayao</h4>
-                                <span>SK Chairman</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'SK Chairman')
+                              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                <div class="team-member d-flex align-items-start">
+                                  <div class="pic">
+                                    <img
+                                    src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                      class="img-fluid"
+                                      alt="Profile Picture"
+                                    />
+                                  </div>
+                                  <div class="member-info">
+                                    <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $official->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            @endif
+                          @endforeach
                           <!-- End Team Member -->
               
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-2.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Jackie Plaresan</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'SK Councilors')
+                              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                <div class="team-member d-flex align-items-start">
+                                  <div class="pic">
+                                    <img
+                                    src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                      class="img-fluid"
+                                      alt="Profile Picture"
+                                    />
+                                  </div>
+                                  <div class="member-info">
+                                    <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $official->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-3.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Jefferson Pugoy</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-4.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Susen Sanchez</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-5.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>RJ Quinio</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-6.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Mie Ann Rosalita</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-7.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Dave Randolf Zafra</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/skoff/sk-8.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Angel May Borinaga</h4>
-                                <span>SK Kagawad</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                            @endif
+                          @endforeach
                           <!-- End Team Member -->
                         </div>
                       </div>
@@ -840,159 +592,89 @@
               
                       <div class="container">
                         <div class="row gy-4">
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp9.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Maria Michelle A. Villarin</h4>
-                                <span>Barangay Nutrition Scholar</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'Brgy. Nutrition Scholar')
+                              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                <div class="team-member d-flex align-items-start">
+                                  <div class="pic">
+                                    <img
+                                    src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                      class="img-fluid"
+                                      alt="Profile Picture"
+                                    />
+                                  </div>
+                                  <div class="member-info">
+                                    <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $official->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            @endif
+                          @endforeach
                           <!-- End Team Member -->
               
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp12.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Virgie P. Lopez</h4>
-                                <span>Barangay Health Worker</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @php
+                            $counter = 0;  // Initialize counter to track item number
+                          @endphp
+                        
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'Brgy. Health Worker')
+                              @php
+                                $counter++;  // Increment the counter
+                              @endphp
+                              
+                              <!-- Check if the counter is less than or equal to 3 -->
+                              @if($counter <= 3)
+                                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                  <div class="team-member d-flex align-items-start">
+                                    <div class="pic">
+                                      <img
+                                        src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                        class="img-fluid"
+                                        alt="Profile Picture"
+                                      />
+                                    </div>
+                                    <div class="member-info">
+                                      <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                      <span>{{ $official->of_position }}</span>
+                                      <div class="social">
+                                        <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                        <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                        <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Charlotte C. Sellote</h4>
-                                <span>Barangay Health Worker</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                              @else
+                                <!-- Apply col-lg-4 for the next 3 items -->
+                                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                                  <div class="team-member d-flex align-items-start">
+                                    <div class="pic">
+                                      <img
+                                        src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                        class="img-fluid"
+                                        alt="Profile Picture"
+                                      />
+                                    </div>
+                                    <div class="member-info">
+                                      <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                      <span>{{ $official->of_position }}</span>
+                                      <div class="social">
+                                        <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                        <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                        <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Rubbie T. Balansag</h4>
-                                <span>Barangay Health Worker</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp11.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Lovely E. Mesitas</h4>
-                                <span>Barangay Health Worker</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp8.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Joan B. Coca</h4>
-                                <span>Barangay Health Worker</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp7.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Jennifer O. Arroyo</h4>
-                                <span>Barangay Health Worker</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
+                              @endif
+                            @endif
+                          @endforeach
                         </div>
                       </div>
                     </div>
@@ -1008,291 +690,64 @@
               
                       <div class="container">
                         <div class="row gy-4">
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp4.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Jan Philip A. Tarega</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp3.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Dariel P. Alivo</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp10.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Richard Rays A Encina</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp1.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Alberto B. Mangubat</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Kieth Ivan C. Oberes</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp5.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Marjun P. Aulestia</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-              
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Marlon T. Unabia</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
+                          @php
+                            $counterTanod = 0;  // Initialize counter to track Brgy. Tanod items
+                          @endphp
 
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Marloun C. Lapay</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'Brgy. Tanod')
+                              @php
+                                $counterTanod++;  // Increment the counter for Brgy. Tanod
+                              @endphp
+                              
+                              <!-- Check if the counter is less than or equal to 4 -->
+                              @if($counterTanod <= 4)
+                                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                  <div class="team-member d-flex align-items-start">
+                                    <div class="pic">
+                                      <img
+                                        src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                        class="img-fluid"
+                                        alt="Profile Picture"
+                                      />
+                                    </div>
+                                    <div class="member-info">
+                                      <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                      <span>{{ $official->of_position }}</span>
+                                      <div class="social">
+                                        <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                        <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                        <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
+                              @else
+                                <!-- Apply col-lg-4 for the remaining Brgy. Tanod items -->
+                                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                                  <div class="team-member d-flex align-items-start">
+                                    <div class="pic">
+                                      <img
+                                        src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                        class="img-fluid"
+                                        alt="Profile Picture"
+                                      />
+                                    </div>
+                                    <div class="member-info">
+                                      <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                      <span>{{ $official->of_position }}</span>
+                                      <div class="social">
+                                        <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                        <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                        <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              @endif
+                            @endif
+                          @endforeach
 
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Deogracias Pardillo</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Alven Abendan</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Ram Panimdim</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>George Lacia</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
-
-                          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/BARANGAY WARD II.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Rosaleo Boholst</h4>
-                                <span>Tanod</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
                         </div>
                       </div>
                     </div>
@@ -1308,71 +763,82 @@
               
                       <div class="container">
                         <div class="row gy-4">
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp14.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Gracebell M. Flores</h4>
-                                <span>Brgy. Secretary</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'Brgy. Secretary')
+                              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                <div class="team-member d-flex align-items-start">
+                                  <div class="pic">
+                                    <img
+                                    src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                      class="img-fluid"
+                                      alt="Profile Picture"
+                                    />
+                                  </div>
+                                  <div class="member-info">
+                                    <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $official->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            @endif
+                          @endforeach
                           <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp13.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Lianne Grace C. Padayao</h4>
-                                <span>Brgy. Treasurer</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'Brgy. Treasurer')
+                              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                <div class="team-member d-flex align-items-start">
+                                  <div class="pic">
+                                    <img
+                                    src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                      class="img-fluid"
+                                      alt="Profile Picture"
+                                    />
+                                  </div>
+                                  <div class="member-info">
+                                    <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $official->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            @endif
+                          @endforeach
                           <!-- End Team Member -->
-              
-                          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="team-member d-flex align-items-start">
-                              <div class="pic">
-                                <img
-                                  src="assets/img/ppofficials/pp2.png"
-                                  class="img-fluid"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="member-info">
-                                <h4>Cherrybille A. Encina</h4>
-                                <span>Focal Person</span>
-                                <div class="social">
-                                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                                  <a href=""><i class="bi bi-facebook"></i></a>
-                                  <a href=""><i class="bi bi-instagram"></i></a>
+                          @foreach($officials as $official)
+                            @if($official->of_position == 'Focal Person')
+                              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                                <div class="team-member d-flex align-items-start">
+                                  <div class="pic">
+                                    <img
+                                    src="{{ $official->resident->res_picture ? asset('storage/' . str_replace('public/', '', $official->resident->res_picture)) : asset('assets/img/ward2logo.png') }}" 
+                                      class="img-fluid"
+                                      alt="Profile Picture"
+                                    />
+                                  </div>
+                                  <div class="member-info">
+                                    <h4>{{ $official->resident->res_fname ?? 'Unknown' }} {{ $official->resident->res_lname ?? 'Unknown' }}</h4>
+                                    <span>{{ $official->of_position }}</span>
+                                    <div class="social">
+                                      <a href="{{ $official->facebook_Link }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                      <a href="{{ $official->x_Link }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                                      <a href="{{ $official->insta_Link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                          <!-- End Team Member -->
+                            @endif
+                          @endforeach
+                      <!-- End Team Member -->
+
                         </div>
                       </div>
                     </div>
@@ -1818,6 +1284,18 @@
                                 </div>
 
                                 <div class="col-md-6">
+                                  <label for="certType" class="form-label">Type</label>
+                                  <select id="certType" name="certType" class="form-select" aria-label="Default select example">
+                                      <option value="" selected disabled>Select Type</option>
+                                      <option value="Indigency">Indigency</option>
+                                      <option value="Certification">Certification</option>
+                                      <option value="First Time Job Seeker">First Time Job Seeker</option>
+                                      <option value="Good Moral">Good Moral</option>
+                                  </select>
+                                  <span class="text-danger error-text certType_error"></span>
+                                </div>
+
+                                <div class="col-md-6">
                                   <label for="purposeCertificate3" class="form-label">Purpose</label>
                                   <input type="text" class="form-control" id="purposeCertificate3" name="purposeCertificate3" >
                                   <span class="text-danger error-text purposeCertificate3_error"></span>
@@ -1944,6 +1422,7 @@
                                                 <th>Respondents</th>
                                                 <th>Date</th>
                                                 <th>Status</th>
+                                                <th>Reason</th>
                                                 ${data.result.blotter_status === 'pending' ? '<th>Action</th>' : ''}
                                             </tr>
                                         </thead>
@@ -1954,6 +1433,7 @@
                                                 <td>${data.result.blotter_respondents}</td>
                                                 <td>${data.result.blotter_complaintMade}</td>
                                                 <td>${data.result.blotter_status}</td>
+                                                <td>${data.result.blotter_reason}</td>
                                                 ${data.result.blotter_status === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelBlotter(${data.result.blotter_id})">Cancel</button></td>` : ''}
                                             </tr>
                                         </tbody>
@@ -1971,6 +1451,7 @@
                                                 <th>Type</th>
                                                 <th>Purpose</th>
                                                 <th>Status</th>
+                                                <th>Reason</th>
                                                 ${data.result.certStatus === 'pending' ? '<th>Action</th>' : ''}
                                             </tr>
                                         </thead>
@@ -1983,6 +1464,7 @@
                                                 <td>${data.result.cert_type}</td>
                                                 <td>${data.result.cert_purpose}</td>
                                                 <td>${data.result.certStatus}</td>
+                                                <td>${data.result.certReason}</td>
                                                 ${data.result.certStatus === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelCertificate(${data.result.id})">Cancel</button></td>` : ''}
                                             </tr>
                                         </tbody>
@@ -1997,8 +1479,9 @@
                                                 <th>Full Name</th>
                                                 <th>Age</th>
                                                 <th>Purok</th>
-                                                <th>Status</th>
                                                 <th>Purpose</th>
+                                                <th>Status</th>
+                                                <th>Reason</th>
                                                 ${data.result.bcl_status === 'pending' ? '<th>Action</th>' : ''}
                                             </tr>
                                         </thead>
@@ -2008,8 +1491,9 @@
                                                 <td>${data.result.res_fname} ${data.result.res_mname} ${data.result.res_lname}</td>
                                                 <td>${calculateAge(data.result.res_bdate)}</td>
                                                 <td>${data.result.res_purok}</td>
-                                                <td>${data.result.bcl_status}</td>
                                                 <td>${data.result.bcl_purpose}</td>
+                                                <td>${data.result.bcl_status}</td>
+                                                <td>${data.result.bcl_reason}</td>
                                                 ${data.result.bcl_status === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelClearance(${data.result.bcl_id})">Cancel</button></td>` : ''}
                                             </tr>
                                         </tbody>
@@ -2028,6 +1512,7 @@
                                                 <th>Business Address</th>
                                                 <th>Pick Up Date</th>
                                                 <th>Status</th>
+                                                <th>Reason</th>
                                                 ${data.result.bc_status === 'pending' ? '<th>Action</th>' : ''}
                                             </tr>
                                         </thead>
@@ -2041,6 +1526,7 @@
                                                 <td>${data.result.bc_businessAddress}</td>
                                                 <td>${data.result.bc_pickUpDate}</td>
                                                 <td>${data.result.bc_status}</td>
+                                                <td>${data.result.bc_reason}</td>
                                                 ${data.result.bc_status === 'pending' ? `<td><button type="button" class="btn btn-danger" onclick="cancelBusiness(${data.result.id})">Cancel</button></td>` : ''}
                                             </tr>
                                         </tbody>
