@@ -117,7 +117,6 @@
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" type="button" href="{{ route('viewBlogs', ['blog_id' => $blogs->blog_id]) }}">View</a></li>
                                                 <li><button class="dropdown-item" type="button" onclick="updateArticleStatus1({{ $blogs->blog_id }}, 'Archive')">Archive</button></li>
-                                                <li><button class="dropdown-item" type="button" onclick="updateArticleStatus1({{ $blogs->blog_id }}, 'Published')">Publish</button></li>
                                             </ul>
                                         </div>
                                     </td>

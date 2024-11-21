@@ -371,7 +371,7 @@
             .then(data => {
                 if (data.success) {
                     alert('Article status updated successfully');
-                    location.reload();  // Reload the page to reflect changes
+                    window.location.href = "{{ action([App\Http\Controllers\regValidation::class, 'submittedBlogs'], ['em_id' => $LoggedUserInfo['em_id']]) }}";
                 } else {
                     alert('Failed to update article status');
                 }
@@ -401,7 +401,7 @@
                 if (data.success) {
                     alert('Article status updated successfully');
                     $('#modal').modal('hide');  // Close the modal
-                    location.reload(); // Reload the page to reflect changes
+                    window.location.href = "{{ action([App\Http\Controllers\regValidation::class, 'submittedBlogs'], ['em_id' => $LoggedUserInfo['em_id']]) }}";
                 } else {
                     alert('Failed to update article status');
                 }

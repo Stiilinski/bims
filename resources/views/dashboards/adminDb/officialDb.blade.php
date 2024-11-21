@@ -205,7 +205,7 @@ input *{
                                 <option value="">Select...</option>
                                 @foreach($residents as $resident)
                                     <option value="{{ $resident->res_id }}">
-                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname }} {{ $resident->res_suffix ?? '' }}
+                                        {{ $resident->res_id }} - {{ $resident->res_lname }}, {{ $resident->res_fname }} {{ $resident->res_mname === 'N/A' ? '' : $resident->res_mname }} {{ $resident->res_suffix === 'N/A' ? '' : $resident->res_suffix }}
                                     </option>   
                                 @endforeach
                             </select>

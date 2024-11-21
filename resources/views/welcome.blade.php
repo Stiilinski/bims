@@ -443,6 +443,7 @@
                       "delay": 100000000
                     },
                     "slidesPerView": "auto",
+                    "autoHeight": true,
                     "pagination": {
                       "el": ".swiper-pagination",
                       "type": "bullets",
@@ -939,7 +940,7 @@
                             <input type="text" class="form-control" id="transactionCode" name="transactionCode" placeholder="Input Transaction Code Here...">
                         </div>
                         <div class="col-md-2">
-                          <button type="submit" class="btn btn-primary" style="background-color: #f25af0">SEARCH</button>
+                          <button type="submit" class="btn btn-primary" style="background-color: #f25af0; border:none;">SEARCH</button>
                         </div>
                   </form>
               </div>

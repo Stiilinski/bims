@@ -160,7 +160,7 @@ a.top-container-link {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.2;
+  opacity: 0.187654321;
   z-index: -1; /* Ensure the video stays behind content if necessary */
 }
 

@@ -140,10 +140,16 @@
                                     <div class="col-md-12">
                                         <label for="inputType" class="col-sm-5 col-form-label">Schedule Type</label>
                                         <div class="col-sm-12">
-                                            <select name="inputType" id="inputType" class="form-select">
-                                                <option value="Public" {{ $event->sched_type == 'Public' ? 'selected' : '' }}>Public</option>
-                                                <option value="Private" {{ $event->sched_type == 'Private' ? 'selected' : '' }}>Private</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="inputType" name="inputType" value="{{ $event->sched_type }}" readonly>
+                                            <span class="text-danger error-text inputType_error"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="inputImg" class="col-sm-5 col-form-label">Image</label>
+                                        <div class="col-sm-12">
+                                            <img src="{{ str_replace('public', '', $event->sched_picture) }}" class="card-img-top" alt="Blog Image" style="width: 100%; height:100%">
+                                            <span class="text-danger error-text inputImg_error"></span>
                                         </div>
                                     </div>
 
@@ -159,12 +165,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
-                                        <label for="inputImg" class="col-sm-5 col-form-label">Image</label>
-                                        <div class="col-sm-12">
-                                            <img src="{{ str_replace('public', '', $event->sched_picture) }}" class="card-img-top" alt="Blog Image" style="width: 100%; height:100%">
-                                            <span class="text-danger error-text inputImg_error"></span>
-                                        </div>
+                                    <div class="alertCon">
+                                        <div id="alert-container"></div>
                                     </div>
 
                                     <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
@@ -175,9 +177,6 @@
                             </form>
                         </div>
                     </div>
-                </div>
-                <div class="alertCon">
-                    <div id="alert-container"></div>
                 </div>
             </div>
 

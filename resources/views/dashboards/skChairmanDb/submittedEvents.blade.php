@@ -106,8 +106,8 @@
                                 </tr>
                                     <td style="display: none;">{{ $event->sched_id }}</td>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $event->sched_title }}</td>
-                                    <td>{{ $event->sched_description}}</td>
+                                    <td>{{\Illuminate\Support\Str::limit($event->sched_title, 15, '...')}}</td>
+                                    <td>{{\Illuminate\Support\Str::limit($event->sched_description, 15, '...')}}</td>
                                     <td>{{ $event->sched_date}}</td>
                                     <td>{{ $event->sched_type}}</td>
                                     <td>{{ $event->sched_status}}</td>

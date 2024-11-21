@@ -597,7 +597,7 @@ class regValidation extends Controller
         // Fetch the most recent blog (latest blog)
         $latestBlogs = blogs_tbl::with('author')
             ->where('blog_status', 'Published')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('blog_date', 'DESC')
             ->first(); // Get only the most recent one
     
         // Start building the query for past blogs
@@ -651,7 +651,8 @@ class regValidation extends Controller
         // Fetch blogs that match the query on the blog_title
         $blogs = blogs_tbl::with('author')
             ->where('blog_status', 'Published')
-            ->where('blog_title', 'LIKE', '%' . $query . '%') // Search in the blog_title
+            ->where('blog_subtitle', 'LIKE', '%' . $query . '%')
+            ->orWhere('blog_title', 'LIKE', '%' . $query . '%') // Search in the blog_title
             ->orderBy('created_at', 'DESC') // Optional: Sort by latest created_at
             ->limit(5) // Limit to 5 results
             ->get(['blog_id', 'blog_title', 'blog_pic']); // Fetch only necessary columns
@@ -8242,9 +8243,9 @@ public function calendar(Request $request)
                     'inputImg' => 'required|mimes:jpeg,png,jpg,svg',
                     'inputImgLoc' => 'required',
                     'inputImgOwn' => 'required',
-                    'inputFbLink' => 'required',
-                    'inputXLink' => 'required',
-                    'inputInsLink' => 'required',
+                    'inputFbLink' => 'nullable',
+                    'inputXLink' => 'nullable',
+                    'inputInsLink' => 'nullable',
                 ], [
                     // Custom error messages
                     'required' => 'This field is required.',
@@ -8370,9 +8371,9 @@ public function calendar(Request $request)
                     'inputImg' => 'nullable|image|mimes:jpeg,png,jpg|max:20480',
                     'inputImgLoc' => 'required',
                     'inputImgOwn' => 'required',
-                    'inputFbLink' => 'required|url',
-                    'inputXLink' => 'required|url',
-                    'inputInsLink' => 'required|url',
+                    'inputFbLink' => 'nullable|url',
+                    'inputXLink' => 'nullable|url',
+                    'inputInsLink' => 'nullable|url',
                 ];
             }
         
@@ -8607,7 +8608,7 @@ public function calendar(Request $request)
         {
             $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
             $resident = resident_tbl::all();
-            $blogs = blogs_tbl::where('blog_status', 'Pending Article')->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(),Carbon::now()->endOfDay()])->get();
+            $blogs = blogs_tbl::where('blog_status', 'Pending Article')->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(),Carbon::now()->endOfDay()])->orderBy('blog_date', 'DESC')->get();
 
             // Merge all the data into a single array
             $data = [

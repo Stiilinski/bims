@@ -834,9 +834,15 @@
                                 </div>
                                 @php
                                     $motherName = $maternal->mat_urMaiden ?? 
-                                                trim(($maternal->maiden->res_lname ?? '') . ', ' . ($maternal->maiden->res_fname ?? '') . ' ' . ($maternal->maiden->res_mname ?? '') . ' ' . ($maternal->maiden->res_suffix ?? ''));
+                                                trim(
+                                                    ($maternal->maiden->res_lname ?? '') . ', ' . 
+                                                    ($maternal->maiden->res_fname ?? '') . ' ' . 
+                                                    ($maternal->maiden->res_mname && !in_array($maternal->maiden->res_mname, ['N/A', '', null]) ? $maternal->maiden->res_mname : '') . ' ' . 
+                                                    ($maternal->maiden->res_suffix && !in_array($maternal->maiden->res_suffix, ['N/A', '', null]) ? $maternal->maiden->res_suffix : '')
+                                                );
                                     $displayMother = $motherName ?: $maternal->maiden_id ?: 'N/A';
                                 @endphp
+                                
                                 <div class="info4">
                                     <input type="text" name="fammaiden" id="fammaiden" value="{{ $displayMother }}" readonly>
                                     <label for="fammaiden"><i>FAMILY</i></label>
@@ -898,11 +904,15 @@
                         @php
                             // Combine husband's name fields if they exist, or set to 'N/A' if not
                             $fatherName = $maternal->mat_urHusband ?? 
-                                        trim(($maternal->husband->res_lname ?? '') . ', ' . ($maternal->husband->res_fname ?? '') . ' ' . ($maternal->husband->res_mname ?? '') . ' ' . ($maternal->husband->res_suffix ?? ''));
+                                        trim(
+                                            ($maternal->husband->res_lname ?? '') . ', ' . 
+                                            ($maternal->husband->res_fname ?? '') . ' ' . 
+                                            ($maternal->husband->res_mname && !in_array($maternal->husband->res_mname, ['N/A', '', null]) ? $maternal->husband->res_mname : '') . ' ' . 
+                                            ($maternal->husband->res_suffix && !in_array($maternal->husband->res_suffix, ['N/A', '', null]) ? $maternal->husband->res_suffix : '')
+                                        );
                             // Determine what to display: father's name or husband_id, or 'N/A'
                             $displayFather = $fatherName ?: $maternal->husband_id ?: 'N/A';
                         @endphp
-                        
                         <div class="fourth-info">
                             <div class="fourth">
                                 <p>HUSBAND NAME:</p>

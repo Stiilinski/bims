@@ -156,6 +156,8 @@
                                         </div>
                                     </div>
 
+                                    <input type="hidden" class="form-control" id="inputStatus" name="inputStatus" value="{{ $event->sched_status }}" readonly>
+
                                     <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
                                         <button type="reset" class="btn btn-secondary">Clear</button>
                                         <button type="submit" class="btn btn-primary">Submit</button>
