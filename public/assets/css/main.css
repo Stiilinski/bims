@@ -2058,3 +2058,23 @@ section,
   margin-right: 8px;
   color: var(--accent-color);
 }
+
+.custom-btn-99 {
+  border-radius: 50px !important;
+  padding: 8px 15px !important;
+  font-weight: bold !important;
+  color: #f25af0 !important;
+  border: solid 2px #f25af0 !important;
+  background-color: rgb(242,90,240, 0.2) !important;
+
+}
+
+.custom-btn-99:hover {
+  border-radius: 50px !important;
+  padding: 8px 15px !important;
+  font-weight: bold !important;
+  color: white !important;
+  border: none;
+  background-color: #f25af0 !important;
+  transition: 0.3s;
+}

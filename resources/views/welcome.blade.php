@@ -929,10 +929,10 @@
               <div class="container section-title" data-aos="fade-up">
                 <h2>TRACK REQUESTED TRANSACTION</h2>
               </div>
-              <div class="greetings">
+              <div class="greetings" data-aos="fade-up">
                   <span class="trackDesc">Please input your unique transaction code below to check the current status and progress of your request. This code will provide you with real-time updates on the processing of your transaction. Thank you for choosing our service, and we look forward to assisting you further!</span>
               </div>
-              <div class="traces">
+              <div class="traces" data-aos="fade-up">
                   <form action="{{ route('traceTransaction') }}" method="post" class="traceCon d-flex" style="flex-direction: column; gap:20px;">
                       @csrf
                       <div class="row g-3"></div>
@@ -940,7 +940,7 @@
                             <input type="text" class="form-control" id="transactionCode" name="transactionCode" placeholder="Input Transaction Code Here...">
                         </div>
                         <div class="col-md-2">
-                          <button type="submit" class="btn btn-primary" style="background-color: #f25af0; border:none;">SEARCH</button>
+                          <button type="submit" class="btn btn-primary custom-btn-99" style="background-color: #f25af0; border:none;">Search</button>
                         </div>
                   </form>
               </div>
