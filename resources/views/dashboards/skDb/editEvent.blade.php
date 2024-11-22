@@ -85,13 +85,13 @@
 
     <div class="pagetitle">
         <div class="pageArea">
-            <h1>Events</h1>
+            <h1>Announcement</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ action([App\Http\Controllers\regValidation::class, 'eventLists'], ['em_id' => $LoggedUserInfo['em_id']]) }}">Events List</a>
                     </li>
-                  <li class="breadcrumb-item active">Edit Article</li>
+                  <li class="breadcrumb-item active">Edit Announcement</li>
                 </ol>
               </nav>
         </div>
@@ -158,6 +158,10 @@
 
                                     <input type="hidden" class="form-control" id="inputStatus" name="inputStatus" value="{{ $event->sched_status }}" readonly>
 
+                                    <div class="alertCon">
+                                        <div id="alert-container"></div>
+                                    </div>
+
                                     <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
                                         <button type="reset" class="btn btn-secondary">Clear</button>
                                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -166,9 +170,6 @@
                             </form>
                         </div>
                     </div>
-                </div>
-                <div class="alertCon">
-                    <div id="alert-container"></div>
                 </div>
             </div>
 

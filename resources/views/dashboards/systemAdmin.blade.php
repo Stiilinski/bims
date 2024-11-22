@@ -82,16 +82,16 @@
         </div>
     </main>
     {{-- EDIT EMPLOYEE --}}
-    <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editEmployeeModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                    <h5 class="modal-title">Edit Employee</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form class="editOtherEmployeeForms" id="e_otherempForm" autocomplete="off" enctype="multipart/form-data">
-                        @csrf
+                <form class="editOtherEmployeeForms" id="e_otherempForm" autocomplete="off" enctype="multipart/form-data">
+                    @csrf   
+                    <div class="modal-body">
                         <div class="emp_leftInput">
                             <div class="emp_avatarcon">
                                 <input type="hidden" name="e_otherid" id="e_otherid">
@@ -132,9 +132,20 @@
 
                                 <div class="emp_addressPart">
                                     <label for="emp_otheraddress">Address</label>
-                                    <input type="text" class="form-control" name="otheraddress" id="emp_otheraddress">
-                                    <span class="text-danger error-text address_error"></span>
+                                    <select id="emp_otheraddress" class="form-select" name="otheraddress">
+                                        <option value="" disabled selected>Select Purok</option>
+                                        <option value="Tugas">Tugas</option>
+                                        <option value="Tambis">Tambis</option>
+                                        <option value="Mahogany">Mahogany</option>
+                                        <option value="Guyabano">Guyabano</option>
+                                        <option value="Mansinitas">Mansinitas</option>
+                                        <option value="Ipil-ipil">Ipil-ipil</option>
+                                        <option value="Lubi">Lubi</option>
+                                    </select>
+                                    <span class="text-danger error-text emp_otheraddress_error"></span>
                                 </div>
+
+
 
                                 <div class="emp_contactPart">
                                     <label for="emp_othercontact">Contact</label>
@@ -148,14 +159,13 @@
                                     <span class="text-danger error-text position_error"></span>
                                 </div>
                             </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary update_employees">Update</button>
-                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary update_employees">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -204,54 +214,51 @@
         }
 
 
-        $(document).on('click', '.update_employee', function (e) {
-            e.preventDefault();
-            var employee_id = $('#e_id').val();
+    // $(document).on('click', '.update_employee', function (e) {
+        //     e.preventDefault();
+        //     var employee_id = $('#e_id').val();
 
-            var formData = new FormData();
-            formData.append('fname', $('#emp_fname').val());
-            formData.append('lname', $('#emp_lname').val());
-            formData.append('email', $('#emp_email').val());
-            formData.append('password', $('#emp_password').val());
-            formData.append('address', $('#emp_address').val());
-            formData.append('contact', $('#emp_contact').val());
-            formData.append('position', $('#emp_position').val());
-            if ($('#e_profile')[0].files.length > 0) {
-                formData.append('picture', $('#e_profile')[0].files[0]); // Append the file only if selected
-            }
+        //     var formData = new FormData();
+        //     formData.append('fname', $('#emp_fname').val());
+        //     formData.append('lname', $('#emp_lname').val());
+        //     formData.append('email', $('#emp_email').val());
+        //     formData.append('password', $('#emp_password').val());
+        //     formData.append('address', $('#emp_address').val());
+        //     formData.append('contact', $('#emp_contact').val());
+        //     formData.append('position', $('#emp_position').val());
+        //     if ($('#e_profile')[0].files.length > 0) {
+        //         formData.append('picture', $('#e_profile')[0].files[0]); // Append the file only if selected
+        //     }
             
-            $.ajax({
-                type: "POST",
-                url: "/update-employee/" + employee_id,
-                data: formData,
-                dataType: "json",
-                contentType: false, // Needed for FormData
-                processData: false, // Needed for FormData
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    console.log(response);
-                    if(response.status == 400) {
-                        alert("Validation Error");
-                    } else if(response.status == 404) {
-                        alert("Employee Not Found");
-                    } else {
-                        alert("Success");
-                        document.querySelector('.editEmployeeAccount').style.display = 'none';
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    alert("An error occurred. Check the console for details.");
-                }
-            });
-        });
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/update-employee/" + employee_id,
+        //         data: formData,
+        //         dataType: "json",
+        //         contentType: false, // Needed for FormData
+        //         processData: false, // Needed for FormData
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         success: function(response) {
+        //             console.log(response);
+        //             if(response.status == 400) {
+        //                 alert("Validation Error");
+        //             } else if(response.status == 404) {
+        //                 alert("Employee Not Found");
+        //             } else {
+        //                 alert("Success");
+        //                 document.querySelector('.editEmployeeAccount').style.display = 'none';
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error(xhr.responseText);
+        //             alert("An error occurred. Check the console for details.");
+        //         }
+        //     });
+    // });
 
  
-
-
-
         $(document).on('click', '.update_employees', function (e) {
             e.preventDefault();
             var employee_id = $('#e_otherid').val();
@@ -285,8 +292,8 @@
                     } else if(response.status == 404) {
                         alert("Employee Not Found");
                     } else {
+                        location.reload();
                         alert("Success");
-                        document.querySelector('.editOtherEmployeeAccount').style.display = 'none';
                     }
                 },
                 error: function(xhr, status, error) {
@@ -298,28 +305,24 @@
 
 
         // Event listener to trigger modal and populate the form
-document.querySelectorAll('.edit_resident').forEach(button => {
-    button.addEventListener('click', function() {
-        const employeeData = JSON.parse(this.getAttribute('data-employee')); // Get employee data
-        openOtherEditForm(employeeData); // Open the modal and populate the form
-    });
-});
+        document.querySelectorAll('.edit_resident').forEach(button => {
+            button.addEventListener('click', function() {
+                const employeeData = JSON.parse(this.getAttribute('data-employee')); // Get employee data
+                openOtherEditForm(employeeData); // Open the modal and populate the form
+            });
+        });
 
-function openOtherEditForm(employee) {
-    // Populate the form fields with the employee data
-    document.getElementById('e_otherid').value = employee.em_id;
-    document.getElementById('emp_otherfname').value = employee.em_fname;
-    document.getElementById('emp_otherlname').value = employee.em_lname;
-    document.getElementById('emp_otheremail').value = employee.em_email;
-    document.getElementById('emp_otherpassword').value = ''; // Password can be left empty, handled by backend
-    document.getElementById('emp_otheraddress').value = employee.em_address;
-    document.getElementById('emp_othercontact').value = employee.em_contact;
-    document.getElementById('emp_otherposition').value = employee.em_position;
-
-    // Show the modal using Bootstrap's modal method
-    var modal = new bootstrap.Modal(document.getElementById('editEmployeeModal'));
-    modal.show();
-}
+        function openOtherEditForm(employee) {
+            // Populate the form fields with the employee data
+            document.getElementById('e_otherid').value = employee.em_id;
+            document.getElementById('emp_otherfname').value = employee.em_fname;
+            document.getElementById('emp_otherlname').value = employee.em_lname;
+            document.getElementById('emp_otheremail').value = employee.em_email;
+            document.getElementById('emp_otherpassword').value = ''; // Password can be left empty, handled by backend
+            document.getElementById('emp_otheraddress').value = employee.em_address;
+            document.getElementById('emp_othercontact').value = employee.em_contact;
+            document.getElementById('emp_otherposition').value = employee.em_position;
+        }
 
 
     </script>

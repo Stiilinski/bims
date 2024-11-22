@@ -78,7 +78,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Event List</h1>
+      <h1>Announcement List</h1>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -112,15 +112,21 @@
                                     <td>{{ $event->sched_type}}</td>
                                     <td>{{ $event->sched_status}}</td>
                                     <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Actions
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" type="button" href="{{ route('editEvent', ['sched_id' => $event->sched_id]) }}">Edit</a></li>
-                                                <li><button class="dropdown-item" type="button" onclick="updateEventStatus({{ $event->sched_id }}, 'Archived')">Archive</button></li>
-                                            </ul>
-                                        </div>
+                                      @if($event->sched_status !== "Archived" && $event->sched_status !== "Accepted")
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Actions
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                              <li>
+                                                  <a class="dropdown-item" type="button" href="{{ route('editEvent', ['sched_id' => $event->sched_id]) }}">Edit</a>
+                                              </li>
+                                              <li>
+                                                  <button class="dropdown-item" type="button" onclick="updateEventStatus({{ $event->sched_id }}, 'Archived')">Archive</button>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  @endif
                                     </td>
                                 </tr>
                             @endforeach

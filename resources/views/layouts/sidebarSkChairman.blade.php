@@ -59,7 +59,7 @@
       <li class="nav-item">
         <a class="nav-link {{ (Request::is('dashboards/skChairmanDb/submittedEvents*') || Request::is('dashboards/skChairmanDb/createEvent*')) ? '' : 'collapsed' }}" data-bs-target="#event-nav" data-bs-toggle="collapse" href="#">
           <i class="bx bxs-news"></i>
-          <span>Brgy. Events</span>
+          <span>Brgy. Announcement</span>
           <i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="event-nav" class="nav-content collapse {{ Request::is('dashboards/skChairmanDb/submittedEvents*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
@@ -67,21 +67,21 @@
           <li class="nav-item">
             <a class="nav-link {{ Request::is('dashboards/skChairmanDb/submittedEvents*') ? '' : 'collapsed' }}" href="{{ action([App\Http\Controllers\regValidation::class, 'submittedEvents'], ['em_id' => $LoggedUserInfo['em_id']]) }}">
               <i class="ri-newspaper-fill"></i>
-              <span>Submitted Events</span>
+              <span>Submitted Announcement</span>
             </a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link {{ Request::is('dashboards/skChairmanDb/createEvent*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@createEvent1') }}">
               <i class="bx bxs-news"></i>
-              <span>Create Events</span>
+              <span>Create Announcement</span>
             </a>
           </li>
       
           <li class="nav-item">
             <a class="nav-link {{ Request::is('dashboards/skChairmanDb/eventList*') ? '' : 'collapsed' }}" href="{{ action([App\Http\Controllers\regValidation::class, 'eventLists1'], ['em_id' => $LoggedUserInfo['em_id']]) }}">
               <i class="ri-newspaper-fill"></i>
-              <span>Events List</span>
+              <span>Announcement List</span>
             </a>
           </li>
         </ul>

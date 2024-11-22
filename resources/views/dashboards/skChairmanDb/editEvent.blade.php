@@ -111,7 +111,7 @@
                                 @method('PUT')
                                 <div class="row g-3">
                                     <input type="hidden" id="eventId" name="eventId" value="{{ $event->sched_id}}" readonly>
-                                    <input type="hidden" id="empId" name="empId" value="{{ $LoggedUserInfo['em_id'] }}" readonly>
+                                    <input type="hidden" id="empId" name="empId" value="{{ $event->em_id }}" readonly>
 
                                     <div class="col-md-6">
                                         <label for="inputDate" class="col-sm-5 col-form-label">Event Date</label>

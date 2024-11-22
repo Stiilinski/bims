@@ -82,7 +82,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Event List</h1>
+      <h1>Announcement List</h1>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">

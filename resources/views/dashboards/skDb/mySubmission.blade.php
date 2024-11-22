@@ -112,6 +112,7 @@
                                     <td>{{ $blogs->blog_status}}</td>
                                     <td>{{ $blogs->blog_reason}}</td>
                                     <td>
+                                      @if($blogs->blog_status !== "Archive" && $blogs->blog_status !== "Published")
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Actions
@@ -121,6 +122,7 @@
                                                 <li><button class="dropdown-item" type="button" onclick="updateArticleStatus({{ $blogs->blog_id }}, 'Archive')">Archive</button></li>
                                             </ul>
                                         </div>
+                                      @endif
                                     </td>
                                 </tr>
                             @endforeach

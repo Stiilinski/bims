@@ -85,7 +85,7 @@
 
     <div class="pagetitle">
         <div class="pageArea">
-            <h1>Article</h1>
+            <h1>Blogs</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -95,7 +95,7 @@
                             <a href="{{ action([App\Http\Controllers\regValidation::class, 'publishedBlogs'], ['em_id' => $LoggedUserInfo['em_id']]) }}">Published Blogs</a>
                         @endif
                     </li>
-                  <li class="breadcrumb-item active">Edit Article</li>
+                  <li class="breadcrumb-item active">Edit Blogs</li>
                 </ol>
               </nav>
         </div>

@@ -3177,7 +3177,7 @@ class regValidation extends Controller
     
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'picture' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'picture' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480',
             'fname' => 'sometimes|nullable|string|max:255',
             'lname' => 'sometimes|nullable|string|max:255',
             'password' => 'sometimes|nullable|string|min:8', // Allow empty password
@@ -3529,7 +3529,7 @@ class regValidation extends Controller
 
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'picture' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'picture' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480',
             'fname' => 'sometimes|nullable|string|max:255',
             'lname' => 'sometimes|nullable|string|max:255',
             'password' => 'sometimes|nullable|string|min:8',
@@ -4088,10 +4088,12 @@ class regValidation extends Controller
         $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
         $resident = resident_tbl::all();
         
-        $editmedicines = medicine_tbl::where('med_status', '!=', 'Expired')->get();
+        $editmedicines = $medicines = medicine_tbl::whereNotIn('med_status', ['Expired', 'Out Of Stock', 'Archive'])
+        ->get();
 
         // Fetch only non-expired medicines
-        $medicines = medicine_tbl::where('med_status', '!=', 'Expired')->get();
+        $medicines = $medicines = medicine_tbl::whereNotIn('med_status', ['Expired', 'Out Of Stock', 'Archive'])
+        ->get();
         
         // Fetch daily service records for the current year with "Completed" status
         $dsr = dailyServiceRec_tbl::with('resident', 'medicine')
@@ -8243,9 +8245,9 @@ public function calendar(Request $request)
                     'inputImg' => 'required|mimes:jpeg,png,jpg,svg',
                     'inputImgLoc' => 'required',
                     'inputImgOwn' => 'required',
-                    'inputFbLink' => 'nullable',
-                    'inputXLink' => 'nullable',
-                    'inputInsLink' => 'nullable',
+                    'inputFbLink' => 'nullable|url',
+                    'inputXLink' => 'nullable|url',
+                    'inputInsLink' => 'nullable|url',
                 ], [
                     // Custom error messages
                     'required' => 'This field is required.',
@@ -8316,7 +8318,7 @@ public function calendar(Request $request)
         {
             $loggedUserInfo = employee_tbl::where('em_id', '=', session('LoggedUser'))->first();
             $resident = resident_tbl::all();
-            $blogs = blogs_tbl::whereIn('blog_status', ['Pending Article', 'Published', 'Denied'])
+            $blogs = blogs_tbl::whereIn('blog_status', ['Pending Article', 'Published', 'Denied', 'Archive'])
             ->whereBetween('blog_date', [Carbon::now()->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
             ->where('blog_author', $em_id)
             ->orderBy('blog_date', 'desc')

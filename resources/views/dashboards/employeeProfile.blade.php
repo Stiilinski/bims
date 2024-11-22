@@ -242,7 +242,17 @@
                           <div class="row mb-3">
                             <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                             <div class="col-md-8 col-lg-9">
-                              <input name="address" type="text" class="form-control" id="address" value="{{ $LoggedUserInfo['em_address'] }}">
+                              <select id="address" class="form-select" name="address">
+                                <option value="" disabled>Select Purok</option>
+                                <option value="Tugas" {{ $LoggedUserInfo['em_address'] == 'Tugas' ? 'selected' : '' }}>Tugas</option>
+                                <option value="Tambis" {{ $LoggedUserInfo['em_address'] == 'Tambis' ? 'selected' : '' }}>Tambis</option>
+                                <option value="Mahogany" {{ $LoggedUserInfo['em_address'] == 'Mahogany' ? 'selected' : '' }}>Mahogany</option>
+                                <option value="Guyabano" {{ $LoggedUserInfo['em_address'] == 'Guyabano' ? 'selected' : '' }}>Guyabano</option>
+                                <option value="Mansinitas" {{ $LoggedUserInfo['em_address'] == 'Mansinitas' ? 'selected' : '' }}>Mansinitas</option>
+                                <option value="Ipil-ipil" {{ $LoggedUserInfo['em_address'] == 'Ipil-ipil' ? 'selected' : '' }}>Ipil-ipil</option>
+                                <option value="Lubi" {{ $LoggedUserInfo['em_address'] == 'Lubi' ? 'selected' : '' }}>Lubi</option>
+                              </select>
+
                             </div>
                           </div>
       

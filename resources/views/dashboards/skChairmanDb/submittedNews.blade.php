@@ -98,6 +98,7 @@
                             <th scope="col">Title 3</th>
                             <th scope="col">Title 4</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Time</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -111,6 +112,7 @@
                                     <td>{{ $blogs->rec_title3}}</td>
                                     <td>{{ $blogs->rec_title4}}</td>
                                     <td>{{ $blogs->rec_status}}</td>
+                                    <td>{{ $blogs->created_at}}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

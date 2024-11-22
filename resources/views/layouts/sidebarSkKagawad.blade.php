@@ -20,7 +20,7 @@
           <li class="nav-item">
             <a class="nav-link {{ Request::is('dashboards/skDb/createArticle') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@createArt') }}">
               <i class="bx bxs-news"></i>
-              <span>Create New Article</span>
+              <span>Create New Blogs</span>
             </a>
           </li>
       
@@ -44,7 +44,7 @@
       <li class="nav-item">
         <a class="nav-link {{ (Request::is('dashboards/skDb/createEvent*') || Request::is('dashboards/skDb/eventList*')) ? '' : 'collapsed' }}" data-bs-target="#event-nav" data-bs-toggle="collapse" href="#">
           <i class="bx bxs-news"></i>
-          <span>Brgy. Events</span>
+          <span>Brgy. Announcement</span>
           <i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="event-nav" class="nav-content collapse {{ Request::is('dashboards/skDb/createEvent*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
@@ -52,14 +52,14 @@
           <li class="nav-item">
             <a class="nav-link {{ Request::is('dashboards/skDb/createEvent*') ? '' : 'collapsed' }}" href="{{ action('App\Http\Controllers\regValidation@createEvent') }}">
               <i class="bx bxs-news"></i>
-              <span>Create Events</span>
+              <span>Create Announcement</span>
             </a>
           </li>
       
           <li class="nav-item">
             <a class="nav-link {{ Request::is('dashboards/skDb/eventList*') ? '' : 'collapsed' }}" href="{{ action([App\Http\Controllers\regValidation::class, 'eventLists'], ['em_id' => $LoggedUserInfo['em_id']]) }}">
               <i class="ri-newspaper-fill"></i>
-              <span>Events List</span>
+              <span>Announcement List</span>
             </a>
           </li>
         </ul>

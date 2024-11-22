@@ -191,6 +191,10 @@
                                     </div>
                                 {{-- END OF RECOMMENDED NEWS --}}
 
+                                <div class="alertCon">
+                                    <div id="alert-container"></div>
+                                </div>
+
                                 <div class="card-footer d-flex" style="justify-content: flex-end; gap: 1%;">
                                     <button type="reset" class="btn btn-secondary">Clear</button>
                                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -231,9 +235,6 @@
 
         </div>
         <!-- End Right side columns -->
-        <div class="alertCon">
-            <div id="alert-container"></div>
-        </div>
         </section>
 
 

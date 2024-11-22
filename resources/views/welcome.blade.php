@@ -885,7 +885,7 @@
                       <i class="bi bi-telephone flex-shrink-0"></i>
                       <div>
                         <h3>Call Us</h3>
-                        <p>+63 123 456 7890</p>
+                        <p>+63 921 375 1453</p>
                       </div>
                     </div>
                     <!-- End Info Item -->
@@ -898,7 +898,7 @@
                       <i class="bi bi-envelope flex-shrink-0"></i>
                       <div>
                         <h3>Email Us</h3>
-                        <p>example@email.com</p>
+                        <p>barangaywardtwo@gmail.com</p>
                       </div>
                     </div>
                     <!-- End Info Item -->
@@ -981,7 +981,7 @@
                     <div class="modal-body">
                       <div class="row g-3">
                         <div class="col-md-6">
-                          <label for="tcode1" class="form-label">Transaction Code</label>
+                          <label for="tcode1" class="form-label">Transaction Code (Don't Forget To Copy This Code)</label>
                           <input type="text" class="form-control" id="tcode1" name="tcode1" readonly>
                           <span class="text-danger error-text tcode1_error"></span>
                         </div>
@@ -1062,7 +1062,7 @@
                       @csrf 
                         <div class="row g-3">
                           <div class="col-md-6">
-                              <label for="tcode2" class="form-label">Transaction Code</label>
+                              <label for="tcode2" class="form-label">Transaction Code (Don't Forget To Copy This Code)</label>
                               <input type="text" class="form-control" id="tcode2" name="tcode2" readonly>
                               <span class="text-danger error-text tcode2_error"></span>
                           </div>
@@ -1159,7 +1159,7 @@
                       @csrf
                         <div class="row g-3">
                           <div class="col-md-6">
-                            <label for="tcode4" class="form-label">Transaction Code</label>
+                            <label for="tcode4" class="form-label">Transaction Code (Don't Forget To Copy This Code)</label>
                             <input type="text" class="form-control" id="tcode4" name="tcode4" readonly>
                             <span class="text-danger error-text tcode4_error"></span>
                           </div>
@@ -1244,7 +1244,7 @@
                         <form method="POST" action="{{ route('regValidation.saveCertificate')}}" class="certificate" id="certificate">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="tcode3" class="form-label">Transaction Code</label>
+                                    <label for="tcode3" class="form-label">Transaction Code (Don't Forget To Copy This Code)</label>
                                     <input type="text" class="form-control" id="tcode3" name="tcode3" readonly>
                                     <span class="text-danger error-text tcode3_error"></span>
                                 </div>

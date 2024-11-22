@@ -180,6 +180,7 @@ if (publicSpan) {
                 processData: false,
                 success: function(response) {
                     if(response.status === 200) {
+                        location.reload();
                         alert(response.msg);
                     } else {
                         alert('Error: ' + response.msg);
@@ -206,6 +207,7 @@ if (publicSpan) {
                 processData: false,
                 success: function(response) {
                     if(response.status === 200) {
+                        location.reload();
                         alert(response.msg);
                     } else {
                         alert('Error: ' + response.msg);

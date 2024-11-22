@@ -472,6 +472,7 @@
                                         <option value="Inaccurate Request">Inaccurate Request</option>
                                         <option value="Non-Compliance with Barangay Rules">Non-Compliance with Barangay Rules</option>
                                         <option value="Payment Issues">Payment Issues</option>
+                                        <option value="Ages Below 17 Must Do a Walk-in transaction with a guardian">Ages Below 17 Must Do a Walk-in transaction with a guardian</option>
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
