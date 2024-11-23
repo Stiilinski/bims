@@ -186,6 +186,7 @@
         <div class="row d-flex flex-column justify-content-center">
           <img src="{{ asset(str_replace('public/', '', $blog->blog_pic)) }}" alt="">
         </div>
+        <b>Image Owner:</b> {{ $blog->blog_picOwner }}
         <b>Image Location:</b> {{ $blog->blog_picLocation }}
       </div>
 
