@@ -148,7 +148,9 @@
                                                         <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $complaints->blotter_id }})">Print</button>
                                                     </li>
                                                     <li>
-                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $complaints->blotter_id }}, 'ready to pick up')">Ready</button>
+                                                        <button type="button" class="dropdown-item" onclick="updateStatusAndSendEmailBlotter({{ $complaints->blotter_id }}, '{{ $complaints->res_email }}', '{{ $complaints->res_fname }}', '{{ $complaints->res_lname }}', 'ready to pick up')">
+                                                            Ready
+                                                        </button>
                                                     </li>
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $complaints->blotter_id }}, 'archive')">Archive</button>
@@ -157,9 +159,6 @@
                                                     <!-- Actions for 'ready to pick up' status -->
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $complaints->blotter_id }})">Print</button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="button" class="dropdown-item" onclick="sendEmail('{{ $complaints->res_email }}', '{{ $complaints->res_fname }}', '{{ $complaints->res_lname }}')">Send Email</button>
                                                     </li>
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $complaints->blotter_id }}, 'completed')">Completed</button>
@@ -819,64 +818,41 @@
         });
     });
     
-    
-    function sendEmail(email, firstName, lastName) {
-                console.log("Email:", email);
-                console.log("First Name:", firstName);
-                console.log("Last Name:", lastName);
-
-                var subject = encodeURIComponent("Request/Issuance Ready for Pick Up");
-                var body = encodeURIComponent(`Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 25 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`);
-
-                var mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
-
-                window.open(mailtoUrl, '_blank');
-            }
 
 
-            $(document).on('click', '.update_employee', function (e) {
-        e.preventDefault();
-        var employee_id = $('#emp_id').val();
+    function updateStatusAndSendEmailBlotter(blotterId, email, firstName, lastName, newStatus) {
+        // Prepare the email content
+        const subject = "Request/Issuance Ready for Pick Up";
+        const body = `Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`;
 
-        var formData = new FormData();
-        formData.append('fname', $('#emp_fname').val());
-        formData.append('lname', $('#emp_lname').val());
-        formData.append('email', $('#emp_email').val());
-        formData.append('password', $('#emp_password').val());
-        formData.append('address', $('#emp_address').val());
-        formData.append('contact', $('#emp_contact').val());
-        formData.append('position', $('#emp_position').val());
-        if ($('#emp_profile')[0].files.length > 0) {
-            formData.append('picture', $('#emp_profile')[0].files[0]); // Append the file only if selected
-        }
-        
-        $.ajax({
-            type: "POST",
-            url: "/update-employee/" + employee_id,
-            data: formData,
-            dataType: "json",
-            contentType: false, // Needed for FormData
-            processData: false, // Needed for FormData
+        // Send the request to the server
+        fetch('/update-status-and-send-email-blotter', {
+            method: 'POST',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure CSRF token for security
             },
-            success: function(response) {
-                console.log(response);
-                if(response.status == 400) {
-                    alert("Validation Error");
-                } else if(response.status == 404) {
-                    alert("Employee Not Found");
-                } else {
-                    alert("Success");
-                    document.querySelector('.editEmployeeAccount').style.display = 'none';
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("An error occurred. Check the console for details.");
+            body: JSON.stringify({
+                id: blotterId,
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                status: newStatus,
+                subject: subject,
+                body: body
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Blotter status updated and email sent successfully');
+                location.reload(); // Optionally reload the page
+            } else {
+                alert('Failed to process the request');
             }
-        });
-    });
+        })
+        .catch(error => console.error('Error:', error));
+    }
    </script>
     
 </body>

@@ -143,12 +143,13 @@
                                                 @elseif($permit->bc_status === 'processed')
                                                     <!-- Actions for 'processed' status -->
                                                     <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $permit->id }})">Print</button>
-                                                    <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'ready to pick up')">Ready</button>
+                                                    <button type="button" class="dropdown-item" onclick="updateStatusAndSendEmailPermit({{ $permit->id }}, '{{ $permit->res_email }}', '{{ $permit->res_fname }}', '{{ $permit->res_lname }}', 'ready to pick up')">
+                                                        Ready
+                                                    </button>
                                                     <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
                                                 @elseif($permit->bc_status === 'ready to pick up')
                                                     <!-- Actions for 'ready to pick up' status -->
                                                     <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $permit->id }})">Print</button>
-                                                    <button type="button" class="dropdown-item btnview" onclick="sendEmail('{{ $permit->res_email }}', '{{ $permit->res_fname }}', '{{ $permit->res_lname }}')">Send Email</button>
                                                     <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'completed')">Completed</button>
                                                     <button type="button" class="dropdown-item" onclick="updateBusiStatus({{ $permit->id }}, 'archive')">Archive</button>
                                                 @elseif($permit->bc_status === 'rejected')
@@ -818,17 +819,38 @@
         });
 
 
-        function sendEmail(email, firstName, lastName) {
-            console.log("Email:", email);
-            console.log("First Name:", firstName);
-            console.log("Last Name:", lastName);
+        function updateStatusAndSendEmailPermit(permitId, email, firstName, lastName, newStatus) {
+            // Prepare the email content
+            const subject = "Request/Issuance Ready for Pick Up";
+            const body = `Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 30 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`;
 
-            var subject = encodeURIComponent("Request/Issuance Ready for Pick Up");
-            var body = encodeURIComponent(`Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 30 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`);
-
-            var mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
-
-            window.open(mailtoUrl, '_blank');
+            // Send the request to the server
+            fetch('/update-status-and-send-email-permit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure CSRF token for security
+                },
+                body: JSON.stringify({
+                    id: permitId,
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    status: newStatus,
+                    subject: subject,
+                    body: body
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Business Permit status updated and email sent successfully');
+                    location.reload(); // Optionally reload the page
+                } else {
+                    alert('Failed to process the request');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
     

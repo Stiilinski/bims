@@ -150,7 +150,9 @@
                                                         <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $clearances->bcl_id }})">Print</button>
                                                     </li>
                                                     <li>
-                                                        <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'ready to pick up')">Ready</button>
+                                                        <button type="button" class="dropdown-item" onclick="updateStatusAndSendEmailClearance({{ $clearances->bcl_id }}, '{{ $clearances->res_email }}', '{{ $clearances->res_fname }}', '{{ $clearances->res_lname }}', 'ready to pick up')">
+                                                            Ready
+                                                        </button>
                                                     </li>
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'archive')">Archive</button>
@@ -159,9 +161,6 @@
                                                     <!-- Actions for 'ready to pick up' status -->
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="redirectToPurpose({{ $clearances->bcl_id }})">Print</button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="button" class="dropdown-item" onclick="sendEmail('{{ $clearances->res_email }}', '{{ $clearances->res_fname }}', '{{ $clearances->res_lname }}')">Send Email</button>
                                                     </li>
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateBclStatus({{ $clearances->bcl_id }}, 'completed')">Completed</button>
@@ -951,20 +950,40 @@
             });
         });
     });
-    
-    
-    function sendEmail(email, firstName, lastName) {
-                console.log("Email:", email);
-                console.log("First Name:", firstName);
-                console.log("Last Name:", lastName);
 
-                var subject = encodeURIComponent("Request/Issuance Ready for Pick Up");
-                var body = encodeURIComponent(`Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 25 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`);
+    function updateStatusAndSendEmailClearance(clearId, email, firstName, lastName, newStatus) {
+        // Prepare the email content
+        const subject = "Request/Issuance Ready for Pick Up";
+        const body = `Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 25 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`;
 
-                var mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
-
-                window.open(mailtoUrl, '_blank');
+        // Send the request to the server
+        fetch('/update-status-and-send-email-clearance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure CSRF token for security
+            },
+            body: JSON.stringify({
+                id: clearId,
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                status: newStatus,
+                subject: subject,
+                body: body
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Barangay Clearance status updated and email sent successfully');
+                location.reload(); // Optionally reload the page
+            } else {
+                alert('Failed to process the request');
             }
+        })
+        .catch(error => console.error('Error:', error));
+    }
    </script>
     
 </body>

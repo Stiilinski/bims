@@ -37,6 +37,7 @@ use App\Models\antepartum_tbl;
 use App\Models\postpartum_tbl;
 use App\Models\delbirth_tbl;
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -831,6 +832,36 @@ class regValidation extends Controller
         ]);
     }
 
+    public function updateStatusAndSendEmail(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:brgy_certificate_tbls,id',
+            'email' => 'required|email',
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+            'status' => 'required|string',
+            'subject' => 'required|string',
+            'body' => 'required|string',
+        ]);
+
+        try {
+            // Update certificate status
+            $certificate = BrgyCertificate_tbl::findOrFail($request->id);
+            $certificate->certStatus = $request->status;
+            $certificate->save();
+
+            // Send email
+            Mail::raw($request->body, function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject($request->subject);
+            });
+
+            return response()->json(['success' => true, 'message' => 'Status updated and email sent']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to process request', 'error' => $e->getMessage()], 500);
+        }
+    }
+
 // FOR BARANGAY CLEARANCE/BUSINESS INPUT
     public function saveBusinessClearance(Request $request)
     {
@@ -989,7 +1020,35 @@ class regValidation extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function updateStatusAndSendEmailPermit(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:business_brgy_clearance_tbls,id',
+            'email' => 'required|email',
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+            'status' => 'required|string',
+            'subject' => 'required|string',
+            'body' => 'required|string',
+        ]);
 
+        try {
+            // Update certificate status
+            $permit = businessBrgyClearance_tbl::findOrFail($request->id);
+            $permit->bc_status = $request->status;
+            $permit->save();
+
+            // Send email
+            Mail::raw($request->body, function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject($request->subject);
+            });
+
+            return response()->json(['success' => true, 'message' => 'Status updated and email sent']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to process request', 'error' => $e->getMessage()], 500);
+        }
+    }
 
 //MULTI PURPOSE BARANGAY CLEARANCE
     public function saveBrgyClearance(Request $request)
@@ -1078,6 +1137,36 @@ class regValidation extends Controller
             Log::error($e->getMessage());
             // Return error response
             return response()->json(['status' => 0, 'msg' => 'Failed To Submit'], 500);
+        }
+    }
+
+    public function updateStatusAndSendEmailClearance(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:brgy_clearance_tbls,bcl_id',
+            'email' => 'required|email',
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+            'status' => 'required|string',
+            'subject' => 'required|string',
+            'body' => 'required|string',
+        ]);
+
+        try {
+            // Update certificate status
+            $clearance = BrgyClearance_tbl::findOrFail($request->id);
+            $clearance->bcl_status = $request->status;
+            $clearance->save();
+
+            // Send email
+            Mail::raw($request->body, function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject($request->subject);
+            });
+
+            return response()->json(['success' => true, 'message' => 'Status updated and email sent']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to process request', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -1851,22 +1940,7 @@ class regValidation extends Controller
         return response()->json(['success' => false], 404);
     }
 
-    public function updateBcStatus(Request $request)
-    {
-        // Validate the request
-        $request->validate([
-            'id' => 'required|integer|exists:business_brgy_clearance_tbls,id',
-            'status' => 'required|string'
-        ]);
 
-        // Find the certificate and update its status
-        $certificate = businessBrgyClearance_tbl::find($request->id);
-        $certificate->bc_status = $request->status;
-        $certificate->bc_pickUpDate = now(); // Optionally update the pickup date
-        $certificate->save();
-
-        return response()->json(['success' => true]);
-    }
 
 //for complaint
     public function saveComplaints(Request $request)
@@ -2110,21 +2184,34 @@ class regValidation extends Controller
         }
     }
 
-
-    public function updateBlotterStatus(Request $request)
+    public function updateStatusAndSendEmailBlotter(Request $request)
     {
-        // Validate the request
         $request->validate([
             'id' => 'required|integer|exists:blotter_tbls,blotter_id',
-            'status' => 'required|string'
+            'email' => 'required|email',
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+            'status' => 'required|string',
+            'subject' => 'required|string',
+            'body' => 'required|string',
         ]);
 
-        // Find the certificate and update its status
-        $certificate = blotter_tbl::find($request->id);
-        $certificate->blotter_status = $request->status;
-        $certificate->save();
+        try {
+            // Update certificate status
+            $blotter = blotter_tbl::findOrFail($request->id);
+            $blotter->blotter_status = $request->status;
+            $blotter->save();
 
-        return response()->json(['success' => true]);
+            // Send email
+            Mail::raw($request->body, function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject($request->subject);
+            });
+
+            return response()->json(['success' => true, 'message' => 'Status updated and email sent']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to process request', 'error' => $e->getMessage()], 500);
+        }
     }
 
     public function rejectBlotter(Request $request) 
@@ -6001,7 +6088,7 @@ class regValidation extends Controller
             'fpDateVisit' => 'required',
             'fpMedFind' => 'required',
             'fpMetAcc' => 'required',
-            'fpDateFfVisit' => 'required',
+            // 'fpDateFfVisit' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules, [

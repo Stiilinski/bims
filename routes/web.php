@@ -55,6 +55,12 @@ Route::post('insertCertTransaction', [regValidation::class, 'insertCertTransacti
 Route::get('/resident/{id}', [regValidation::class, 'getResidentData'])->name('resident.data');
 Route::put('/certificate/{id}', [regValidation::class, 'updateTransaction'])->name('updateTransaction');
 Route::post('/update-cert-status', [regValidation::class, 'updateStatus']);
+
+Route::post('/update-status-and-send-email', [regValidation::class, 'updateStatusAndSendEmail']);
+Route::post('/update-status-and-send-email-permit', [regValidation::class, 'updateStatusAndSendEmailPermit']);
+Route::post('/update-status-and-send-email-blotter', [regValidation::class, 'updateStatusAndSendEmailBlotter']);
+Route::post('/update-status-and-send-email-clearance', [regValidation::class, 'updateStatusAndSendEmailClearance']);
+
 Route::post('/reject-certificate', [regValidation::class, 'rejectCertificate']);
 Route::get('/dashboards/secretariesDb/certification', [regValidation::class, 'viewCertification']);
 Route::get('/dashboards/secretariesDb/brgyCertification', [regValidation::class, 'viewBrgyCertification']);

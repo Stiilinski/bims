@@ -161,7 +161,9 @@
                                                 
                                                 @if($certificate->certStatus === 'processed')
                                                     <li>
-                                                        <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'ready to pick up')">Ready</button>
+                                                        <button type="button" class="dropdown-item" onclick="updateStatusAndSendEmail({{ $certificate->id }}, '{{ $certificate->res_email }}', '{{ $certificate->res_fname }}', '{{ $certificate->res_lname }}', 'ready to pick up')">
+                                                            Ready
+                                                        </button>
                                                     </li>
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="showPurposeContainer({{ $certificate->id }}, '{{ $certificate->cert_type }}')">Print</button>
@@ -179,9 +181,6 @@
                                                         <button type="button" class="dropdown-item" onclick="showRejectForm({{ $certificate->id }})">Reject</button>
                                                     </li>
                                                 @elseif($certificate->certStatus == 'ready to pick up')
-                                                    <li>
-                                                        <button type="button" class="dropdown-item" onclick="sendEmail('{{ $certificate->res_email }}', '{{ $certificate->res_fname }}', '{{ $certificate->res_lname }}')">Send Email</button>
-                                                    </li>
                                                     <li>
                                                         <button type="button" class="dropdown-item" onclick="updateCertStatus({{ $certificate->id }}, 'completed')">Completed</button>
                                                     </li>
@@ -1006,31 +1005,64 @@
 
 
 
-    function updateCertStatus(certId, newStatus) 
-    {
-        fetch('/update-cert-status', {
+    // function updateCertStatus(certId, newStatus) 
+    // {
+    //     fetch('/update-cert-status', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure you include the CSRF token for security
+    //         },
+    //         body: JSON.stringify({
+    //             id: certId,
+    //             status: newStatus
+    //         })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.success) {
+    //             alert('Certificate status updated successfully');
+    //             location.reload(); // Optionally, reload the page to reflect the changes
+    //         } else {
+    //             alert('Failed to update certificate status');
+    //         }
+    //     })
+    //     .catch(error => console.error('Error:', error));
+    // }
+
+    function updateStatusAndSendEmail(certId, email, firstName, lastName, newStatus) {
+        // Prepare the email content
+        const subject = "Request/Issuance Ready for Pick Up";
+        const body = `Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 25 pesos as you get it here.\n\nThank you.\n\n\nPLEASE DO NOT REPLY!`;
+
+        // Send the request to the server
+        fetch('/update-status-and-send-email', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure you include the CSRF token for security
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure CSRF token for security
             },
             body: JSON.stringify({
                 id: certId,
-                status: newStatus
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                status: newStatus,
+                subject: subject,
+                body: body
             })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Certificate status updated successfully');
-                location.reload(); // Optionally, reload the page to reflect the changes
+                alert('Certificate status updated and email sent successfully');
+                location.reload(); // Optionally reload the page
             } else {
-                alert('Failed to update certificate status');
+                alert('Failed to process the request');
             }
         })
         .catch(error => console.error('Error:', error));
     }
-
 
 
     function hideRejectForm() {
@@ -1120,63 +1152,65 @@
     });
     
     
-    function sendEmail(email, firstName, lastName) {
-                console.log("Email:", email);
-                console.log("First Name:", firstName);
-                console.log("Last Name:", lastName);
+    // function sendEmail(email, firstName, lastName) {
+    //             console.log("Email:", email);
+    //             console.log("First Name:", firstName);
+    //             console.log("Last Name:", lastName);
 
-                var subject = encodeURIComponent("Request/Issuance Ready for Pick Up");
-                var body = encodeURIComponent(`Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 25 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`);
+    //             var subject = encodeURIComponent("Request/Issuance Ready for Pick Up");
+    //             var body = encodeURIComponent(`Good Day! ${firstName} ${lastName},\n\nThis is Barangay Ward II. We would like you to know that your request or issuance has been printed and is ready to pick up anytime within your pick up date you input. Please prepare 25 pesos as you get it here.\n\nThank you. \n\n\n PLEASE DO NOT REPLY!`);
 
-                var mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
+    //             var mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
 
-                window.open(mailtoUrl, '_blank');
-            }
+    //             window.open(mailtoUrl, '_blank');
+    //         }
 
 
-            $(document).on('click', '.update_employee', function (e) {
-        e.preventDefault();
-        var employee_id = $('#emp_id').val();
+    //         $(document).on('click', '.update_employee', function (e) {
+    //     e.preventDefault();
+    //     var employee_id = $('#emp_id').val();
 
-        var formData = new FormData();
-        formData.append('fname', $('#emp_fname').val());
-        formData.append('lname', $('#emp_lname').val());
-        formData.append('email', $('#emp_email').val());
-        formData.append('password', $('#emp_password').val());
-        formData.append('address', $('#emp_address').val());
-        formData.append('contact', $('#emp_contact').val());
-        formData.append('position', $('#emp_position').val());
-        if ($('#emp_profile')[0].files.length > 0) {
-            formData.append('picture', $('#emp_profile')[0].files[0]); // Append the file only if selected
-        }
+    //     var formData = new FormData();
+    //     formData.append('fname', $('#emp_fname').val());
+    //     formData.append('lname', $('#emp_lname').val());
+    //     formData.append('email', $('#emp_email').val());
+    //     formData.append('password', $('#emp_password').val());
+    //     formData.append('address', $('#emp_address').val());
+    //     formData.append('contact', $('#emp_contact').val());
+    //     formData.append('position', $('#emp_position').val());
+    //     if ($('#emp_profile')[0].files.length > 0) {
+    //         formData.append('picture', $('#emp_profile')[0].files[0]); // Append the file only if selected
+    //     }
         
-        $.ajax({
-            type: "POST",
-            url: "/update-employee/" + employee_id,
-            data: formData,
-            dataType: "json",
-            contentType: false, // Needed for FormData
-            processData: false, // Needed for FormData
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                console.log(response);
-                if(response.status == 400) {
-                    alert("Validation Error");
-                } else if(response.status == 404) {
-                    alert("Employee Not Found");
-                } else {
-                    alert("Success");
-                    document.querySelector('.editEmployeeAccount').style.display = 'none';
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("An error occurred. Check the console for details.");
-            }
-        });
-    });
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "/update-employee/" + employee_id,
+    //         data: formData,
+    //         dataType: "json",
+    //         contentType: false, // Needed for FormData
+    //         processData: false, // Needed for FormData
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         success: function(response) {
+    //             console.log(response);
+    //             if(response.status == 400) {
+    //                 alert("Validation Error");
+    //             } else if(response.status == 404) {
+    //                 alert("Employee Not Found");
+    //             } else {
+    //                 alert("Success");
+    //                 document.querySelector('.editEmployeeAccount').style.display = 'none';
+    //             }
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error(xhr.responseText);
+    //             alert("An error occurred. Check the console for details.");
+    //         }
+    //     });
+    // });
+
+    
 
     function openEditEmpForm(employee) {
         // Now you have the employee object directly

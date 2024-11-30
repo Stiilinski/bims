@@ -603,7 +603,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script>
-        $(function(){      
+$(function(){      
     $("#insertTransactions").on('submit', function(e){
         e.preventDefault();
 
@@ -682,104 +682,10 @@ function openRephrasePurpose()
     myModal.show();
 }
 
-
-
-
 const printBtn = document.getElementById('print');
 printBtn.addEventListener('click', function() {
     window.print();
 });
 
-
-$(document).on('click', '.update_employee', function (e) {
-    e.preventDefault();
-    var employee_id = $('#e_id').val();
-
-    var formData = new FormData();
-    formData.append('fname', $('#emp_fname').val());
-    formData.append('lname', $('#emp_lname').val());
-    formData.append('email', $('#emp_email').val());
-    formData.append('password', $('#emp_password').val());
-    formData.append('address', $('#emp_address').val());
-    formData.append('contact', $('#emp_contact').val());
-    formData.append('position', $('#emp_position').val());
-    if ($('#e_profile')[0].files.length > 0) {
-        formData.append('picture', $('#e_profile')[0].files[0]); // Append the file only if selected
-    }
-    
-    $.ajax({
-        type: "POST",
-        url: "/update-employee/" + employee_id,
-        data: formData,
-        dataType: "json",
-        contentType: false, // Needed for FormData
-        processData: false, // Needed for FormData
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            console.log(response);
-            if(response.status == 400) {
-                alert("Validation Error");
-            } else if(response.status == 404) {
-                alert("Employee Not Found");
-            } else {
-                alert("Success");
-                document.querySelector('.editEmployeeAccount').style.display = 'none';
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("An error occurred. Check the console for details.");
-        }
-    });
-});
-
-function openEditEmpForm(employee) {
-    // Now you have the employee object directly
-    console.log(employee);
-
-    $.ajax({
-        type: "GET",
-        url: "/edit-employee/" + employee.em_id,
-        success: function(response) {
-            console.log(response);
-            if(response.status == 404) {
-                alert("Employee Not Found");
-            } else {
-                $('#e_path').val(response.LoggedUserInfo.em_picture);
-                $('#emp_fname').val(response.LoggedUserInfo.em_fname);
-                $('#emp_lname').val(response.LoggedUserInfo.em_lname);
-                $('#emp_email').val(response.LoggedUserInfo.em_email);
-                $('#emp_address').val(response.LoggedUserInfo.em_address);
-                $('#emp_contact').val(response.LoggedUserInfo.em_contact);
-                $('#emp_position').val(response.LoggedUserInfo.em_position);
-                $('#emp_profilePreview').attr('src', '/storage/' + response.LoggedUserInfo.em_picture);
-                $('#e_id').val(employee.em_id);
-
-                $('.editEmployeeAccount').css('display', 'flex'); // Show the edit form container with flex display
-            }
-        },
-        error: function(xhr, status, error) {
-            console.log(xhr.responseText);
-        }
-    });
-}
-
-function closeEditEmpForm() {
-    $('.editEmployeeAccount').css('display', 'none'); // Hide the edit form container
-}
-
-// PARA DISPLAY PICTURES INIG PILI
-document.getElementById('e_profile').addEventListener('change', function() {
-    var file = this.files[0];
-    if (file) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            document.getElementById('emp_profilePreview').src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
     </script>
 </body>

@@ -465,20 +465,20 @@
 
                             <div class="leftInfo">
                                 <h6 class="infoTitle">Residence Certificate No.:</h6>
-                                <h6>{{ $certificate->tr_residenceCertNum ?? 'XXX' }}</h6>
+                                <h6>{{ $certificate->tr_residenceCertNum ?? 'N/A' }}</h6>
 
                                 <h6 class="infoTitle">Paid Under O.R No.:</h6>
-                                <h6>{{ $certificate->tr_orNum ?? 'XXX' }}</h6>
+                                <h6>{{ $certificate->tr_orNum ?? 'N/A' }}</h6>
 
                                 <h6 class="infoTitle">Amount Paid:</h6>
                                 <h6> @if(isset($certificate->tr_amountPaid))
                                     ₱{{ $certificate->tr_amountPaid }}
                                 @else
-                                    XXX
+                                    ₱0.00
                                 @endif</h6>
 
                                 <h6 class="infoTitle">Date:</h6>
-                                <h6>{{ $certificate->tr_date ?? 'XXX' }}</h6>
+                                <h6>{{ $certificate->tr_date ?? 'N/A' }}</h6>
                             </div>
 
                             <div class="leftInfoFooter">

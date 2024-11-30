@@ -510,7 +510,7 @@
 
                             <div class="footerLetter">
                                 <h5 class="dateFoot">
-                                    {{ isset($certificate->tr_date) ? date('F j, Y', strtotime($certificate->tr_date)) : 'XXX' }}
+                                    {{ isset($certificate->tr_date) ? date('F j, Y', strtotime($certificate->tr_date)) : 'N/A' }}
                                 </h5>
                                 <h6 class="capitan1">Witnessed By:</h6>
                             </div>
