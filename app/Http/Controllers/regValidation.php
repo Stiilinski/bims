@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ResidentExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ResidentImport;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Hash;
@@ -46,9 +49,10 @@ use Illuminate\Support\Facades\File;
 
 
 
+
 class regValidation extends Controller
 {
-    //for employees ni dapit!    
+//for employees ni dapit!    
     public function reg()
     {
         return view('registration');
@@ -479,6 +483,26 @@ class regValidation extends Controller
                 return response()->json(['status' => 0, 'msg' => 'Failed to add new Resident'], 500);
             }
         }
+    }
+
+    public function importResidents(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:20480', // Validate file type and size
+        ]);
+
+        // Upload the file to a temporary directory
+        $filePath = $request->file('file')->store('temp', 'public');
+
+        // Import the file
+        Excel::import(new ResidentImport, storage_path('app/public/' . $filePath));
+
+        return back()->with('success', 'Residents imported successfully!');
+    }
+
+    public function exportResidents()
+    {
+        return Excel::download(new ResidentExport, 'residents_backup_' . now()->format('Y_m_d_His') . '.xlsx');
     }
 
     public function editResident($id)

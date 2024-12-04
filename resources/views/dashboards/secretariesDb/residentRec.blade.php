@@ -102,7 +102,11 @@
         <div class="pagetitle">
             <h1>Resident</h1>
             <div class="btnArea">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">Add Resident</button>  
+                <a href="{{ route('export.residents') }}" class="btn btn-primary">
+                    Export
+                </a>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal">Import</button>  
+                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">Add Resident</button>  
             </div>
         </div>
 
@@ -626,6 +630,32 @@
             </div>
         </div>
         {{-- END OF EDIT RESIDENT --}}
+
+        {{-- CSV/EXCEL --}}
+        <div class="modal fade" id="Modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Import CSV/Excel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('import.residents') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body"> 
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Choose Excel File</label>
+                                <input type="file" name="file" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary">Clear</button>
+                            <button type="submit" class="btn btn-primary">Import</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{-- END OF CSV/EXCEL --}}
     </main>
 
    
